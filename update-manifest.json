@@ -1,0 +1,14 @@
+{
+  "app": "ARALVERSE",
+  "version": "1.0.5",
+  "published": "2026-08-24",
+  "packageType": "app",
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.0.5.zip",
+  "sha256": "e8edb8139fdb86e44e327d269f0faeede008985c7aac73572055c7440ba36338",
+  "size": 5918963,
+  "notes": [
+    "Removed the MAKABANSA answer-revealing clue line 'LOKASYON • LAWAK • PALATANDAAN' from battle questions.",
+    "Keeps the v1.0.4 readable-answer font and full-width wrapping fixes.",
+    "Keeps the v1.0.2 battle turn-freeze fix."
+  ]
+}
