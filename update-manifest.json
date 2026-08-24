@@ -1,17 +1,16 @@
 {
   "app": "ARALVERSE",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "published": "2026-08-24",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.0.6.zip",
-  "sha256": "9ec3111a8b7e7b097c0ca28effa387eeb29d23322f17d1e664ed2af684d6e6df",
-  "size": 5923351,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.0.7.zip",
+  "sha256": "9884779250fbfdaf8e5bf4170295e9cb617781b1913e8e0cf06bb11d02fd145e",
+  "size": 5910738,
   "notes": [
-    "Combat layout revised: battle background remains dominant and the question panel is more compact.",
-    "Normal three-answer questions stay left / center / right on desktop instead of stacking vertically.",
-    "Long answers use smaller adaptive fonts while keeping the three-column battle layout.",
-    "Removed large MAKABANSA topic/answer clues from combat questions.",
-    "MAKABANSA question stems and competency labels revised to follow the Grade 2 Budget of Work terminology more closely.",
-    "Includes the prior battle turn-freeze and readable-answer fixes."
+    "Restores the MATH-a-PANG combat geometry and timer/timeline placement in Group Battle and Tournament.",
+    "Restores the original MATH-a-PANG question-panel proportions in all combat modes; ARALVERSE now changes text size only, not battle layout.",
+    "Keeps three choices left / center / right on desktop and automatically shrinks long all-subject wording inside those original choice boxes.",
+    "Keeps the Grade 2 Budget of Work-aligned MAKABANSA wording and removes answer-revealing topic clue text.",
+    "Keeps the battle turn-freeze and readable-text fixes."
   ]
 }
