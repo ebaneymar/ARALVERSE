@@ -1,16 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.0",
+  "version": "1.5.2",
   "published": "2026-09-15",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.0.zip",
-  "sha256": "fc451fcbdad25941f705741b62af90e7cd8595e6e0b74cab876aba82e4f328fb",
-  "size": 15252539,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.2.zip",
+  "sha256": "35dabda8a6a3615cca46ee788c7e2ed8ef653fa282518910fee281454fc0a24c",
+  "size": 15277620,
   "notes": [
-    "Reference-based illustrated schoolyard theme across the shell and all five embedded game documents.",
-    "New student artwork and four illustrated game-mode cards, embedded for offline use.",
-    "Wooden headers, cream question panels, large answer buttons, themed rankings, roster, Progress Hub and dialogs.",
-    "Existing questions, gameplay scripts, scoring, photos, saves and updater behavior preserved.",
-    "Offline gameplay, cosmetic persistence, timers, desktop sizing and 27 embedded visual states checked."
+    "Replaces sangkapat with the familiar math term quarter.",
+    "Adds Math, English, Filipino, GMRC, Makabansa and Overall leaderboards under Rankings.",
+    "One correct answer earns one subject Learning Point across all four game modes. Tracking starts with 1.5.2; previous RP, coins, XP and saves are preserved."
   ]
 }
