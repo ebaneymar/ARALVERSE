@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "published": "2026-09-15",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.2.zip",
-  "sha256": "35dabda8a6a3615cca46ee788c7e2ed8ef653fa282518910fee281454fc0a24c",
-  "size": 15277620,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.3.zip",
+  "sha256": "ef04f3130827ae6dee3c7fe0df4a911decfc410acef1021e6326daff9e5f55f9",
+  "size": 15275868,
   "notes": [
-    "Replaces sangkapat with the familiar math term quarter.",
-    "Adds Math, English, Filipino, GMRC, Makabansa and Overall leaderboards under Rankings.",
-    "One correct answer earns one subject Learning Point across all four game modes. Tracking starts with 1.5.2; previous RP, coins, XP and saves are preserved."
+    "English Math terms and number names with short Tagalog question wording across all 27 Math topics.",
+    "Clarifies the etiketa prompt and tens-count display.",
+    "Existing subject leaderboards, RP, rewards and saves retained."
   ]
 }
