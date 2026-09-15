@@ -1,16 +1,15 @@
 {
   "app": "ARALVERSE",
-  "version": "1.0.7",
-  "published": "2026-08-24",
+  "version": "1.4.1",
+  "published": "2026-09-15",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.0.7.zip",
-  "sha256": "9884779250fbfdaf8e5bf4170295e9cb617781b1913e8e0cf06bb11d02fd145e",
-  "size": 5910738,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.4.1.zip",
+  "sha256": "48e3d7350a203cc9c90d4d6a20609ed0606f2e87ac76db94c25bda707da1b5aa",
+  "size": 6142367,
   "notes": [
-    "Restores the MATH-a-PANG combat geometry and timer/timeline placement in Group Battle and Tournament.",
-    "Restores the original MATH-a-PANG question-panel proportions in all combat modes; ARALVERSE now changes text size only, not battle layout.",
-    "Keeps three choices left / center / right on desktop and automatically shrinks long all-subject wording inside those original choice boxes.",
-    "Keeps the Grade 2 Budget of Work-aligned MAKABANSA wording and removes answer-revealing topic clue text.",
-    "Keeps the battle turn-freeze and readable-text fixes."
+    "Fixes conflicting scenario text sizing and restores clear readable descriptions.",
+    "Restores side-by-side answers and keeps names, portraits, HP and benches inside the battle arena.",
+    "Replaces crowded map text with a directional map layout.",
+    "Keeps working quiz countdowns, pause/resume, Filipino Math and shortened Makabansa content."
   ]
 }
