@@ -1,15 +1,16 @@
 {
   "app": "ARALVERSE",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "published": "2026-09-15",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.4.1.zip",
-  "sha256": "48e3d7350a203cc9c90d4d6a20609ed0606f2e87ac76db94c25bda707da1b5aa",
-  "size": 6142367,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.0.zip",
+  "sha256": "fc451fcbdad25941f705741b62af90e7cd8595e6e0b74cab876aba82e4f328fb",
+  "size": 15252539,
   "notes": [
-    "Fixes conflicting scenario text sizing and restores clear readable descriptions.",
-    "Restores side-by-side answers and keeps names, portraits, HP and benches inside the battle arena.",
-    "Replaces crowded map text with a directional map layout.",
-    "Keeps working quiz countdowns, pause/resume, Filipino Math and shortened Makabansa content."
+    "Reference-based illustrated schoolyard theme across the shell and all five embedded game documents.",
+    "New student artwork and four illustrated game-mode cards, embedded for offline use.",
+    "Wooden headers, cream question panels, large answer buttons, themed rankings, roster, Progress Hub and dialogs.",
+    "Existing questions, gameplay scripts, scoring, photos, saves and updater behavior preserved.",
+    "Offline gameplay, cosmetic persistence, timers, desktop sizing and 27 embedded visual states checked."
   ]
 }
