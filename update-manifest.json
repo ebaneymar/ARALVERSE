@@ -1,16 +1,17 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.11",
+  "version": "1.5.14",
   "published": "2026-09-16",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.11.zip",
-  "sha256": "3bbbf772264e2679099bebb51aee33a0029dd234371980f703aee2cbef44c9e6",
-  "size": 21712415,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.14.zip",
+  "sha256": "2820a4a03226c03ce823d99beb5836c6a8ffdba728d27ea93d16761733460ab8",
+  "size": 21720049,
   "notes": [
-    "Filipino Tournament questions now consistently use exactly four answer choices.",
-    "Added large D-pad style answer controls: 1st choice = LEFT, 2nd = UP, 3rd = RIGHT, 4th = DOWN, with visible arrow and number labels.",
-    "Increased Filipino Tournament choice size for classroom readability while preserving responsive mobile layout.",
-    "The newly supplied Grand Finals replacement video from v1.5.10 remains embedded directly in Tournament Mode and applies across all subjects and competencies.",
-    "Existing bracket creation intro, bracket logic, third-place match, Best-of-3 final, rankings and RESET STATS TO 0 are preserved."
+    "Fixed Tournament battle layout so the three large answer choices no longer consume or cover the question area.",
+    "Tournament answers now stay in one horizontal row: 1st = LEFT, 2nd = UP, 3rd = RIGHT. The oversized center D-pad guide was removed.",
+    "Question text has protected screen space and remains large/readable while answer buttons retain large classroom-friendly text.",
+    "Tournament Mode still uses exactly 3 choices across all subjects and competencies.",
+    "The large red RESET ALL PLAYER STATS button remains near the top of Tournament Setup and keeps names/photos while resetting player progress to zero.",
+    "Cinematic bracket intro and the replacement Grand Finals video remain preserved."
   ]
 }
