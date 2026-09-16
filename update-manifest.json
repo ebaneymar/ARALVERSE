@@ -1,17 +1,16 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.14",
+  "version": "1.5.15",
   "published": "2026-09-16",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.14.zip",
-  "sha256": "2820a4a03226c03ce823d99beb5836c6a8ffdba728d27ea93d16761733460ab8",
-  "size": 21720049,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.15.zip",
+  "sha256": "0117c6d478b0d7ba3a19792f0fa4935ebde24a150fe1ea3b3b6a57262fcf48e4",
+  "size": 21719964,
   "notes": [
-    "Fixed Tournament battle layout so the three large answer choices no longer consume or cover the question area.",
-    "Tournament answers now stay in one horizontal row: 1st = LEFT, 2nd = UP, 3rd = RIGHT. The oversized center D-pad guide was removed.",
-    "Question text has protected screen space and remains large/readable while answer buttons retain large classroom-friendly text.",
-    "Tournament Mode still uses exactly 3 choices across all subjects and competencies.",
-    "The large red RESET ALL PLAYER STATS button remains near the top of Tournament Setup and keeps names/photos while resetting player progress to zero.",
-    "Cinematic bracket intro and the replacement Grand Finals video remain preserved."
+    "Tournament answer choices now match Math-a-Pang: exactly 3 choices in one horizontal row.",
+    "Removed the tournament center guide and removed arrow/number labels from the visible answer buttons.",
+    "Question area stays separate from the answers so the choices do not cover the question.",
+    "Big RESET ALL PLAYER STATS button remains near the top of Tournament Setup.",
+    "Grand Finals still use the replacement finalist video with the actual finalists' saved student photos/images over the video."
   ]
 }
