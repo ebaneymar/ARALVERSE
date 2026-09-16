@@ -1,16 +1,16 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.7",
+  "version": "1.5.9",
   "published": "2026-09-16",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.7.zip",
-  "sha256": "ec1d2be52eaafea583883523078a980f7ea93f1f1238aad32a645ed61bcf30b5",
-  "size": 26000725,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.9.zip",
+  "sha256": "1b817cf3116a34ebdd023922240c693c35111c20c51c99ccc12d71089273ca85",
+  "size": 21223918,
   "notes": [
-    "Replaced the old Grand Finals championship face-off media with the newly supplied video.",
-    "The finals video replacement now applies globally to Tournament Mode across all subjects and competencies.",
-    "The actual two finalists' saved character photos and names are still shown over the championship video before the Best-of-3 final battle; missing photos fall back to the existing ARALVERSE placeholder/avatar behavior.",
-    "RESET STATS TO 0 remains in Tournament setup. It preserves student names, character photos and rosters while clearing RP, wins/rewards, XP/coins, subject and competency scores, boss points, tournament history/meta and unfinished tournament progress.",
-    "Existing tournament bracket flow, third-place match, Best-of-3 championship logic and other ARALVERSE game modes are preserved."
+    "GitHub-safe build: both tournament videos are optimized to 720p and the update ZIP is below 25 MB.",
+    "Grand Finals now loads the supplied championship face-off video from a unique v1.5.9 asset path, preventing the embedded Tournament frame from reusing the previous finals media.",
+    "The actual two finalists saved photos and names remain over the Grand Finals video across every subject and competency.",
+    "The cinematic tournament intro still plays immediately after bracket creation and uses the selected players saved photos/avatars.",
+    "RESET STATS TO 0 and the existing bracket, third-place, and Best-of-3 logic are preserved."
   ]
 }
