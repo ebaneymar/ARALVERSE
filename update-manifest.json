@@ -1,16 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.19",
+  "version": "1.5.20",
   "published": "2026-09-16",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.19.zip",
-  "sha256": "d02fa4f704286a0691a6432b5c426a1c6bf4a1176da3263faa9b4d599f75a6db",
-  "size": 21899027,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.20.zip",
+  "sha256": "6d88009ce1633b18cc02a6429a20ebe5af6e9ffa21b7c22c8050f041c8ed6f1a",
+  "size": 21905547,
   "notes": [
-    "Fixed Tournament intro audio: Electron now permits audible autoplay and explicitly unmutes the game window.",
-    "Removed the old silent autoplay fallback that could make the bracket and Grand Finals intros play muted.",
-    "Both tournament intro videos now use normalized, louder audio while preserving the video visuals.",
-    "If a PC still blocks autoplay audio, a PLAY INTRO WITH SOUND button appears and restarts the intro with sound after one click.",
-    "Grand Finals still place the actual finalist student photos/images into the left and right character positions of the championship video."
+    "Blue Team turn now displays a blue banner; Red Team turn displays a red banner in Multiplayer and Tournament.",
+    "Tournament character selection has larger portraits and names, clear selected-card indicators, compact edit controls, and a responsive grid.",
+    "Retains v1.5.19 tournament videos, audio fixes, game rules, scoring and existing save keys."
   ]
 }
