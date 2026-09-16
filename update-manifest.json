@@ -1,18 +1,15 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.17",
+  "version": "1.5.18",
   "published": "2026-09-16",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.17.zip",
-  "sha256": "d1c44fdadb312ea7be232ffd60a082d69505e4f98a1849f725f7ba876e7be1e9",
-  "size": 21729432,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.18.zip",
+  "sha256": "24cb2b59f2709e50f42a33eadcf1260903e7be73ab0788b339a4abad96c7dc67",
+  "size": 21729762,
   "notes": [
-    "Corrected Filipino Kamalayang Ponolohikal items: paaralan is 4 pantig (pa-a-ra-lan), and puno now uses the clear rhyme tuno; ambiguous rhyme pairs were removed.",
-    "Expanded Filipino questions across all seven competencies used in Terms 1, 2 and 3 to reduce repetition.",
-    "Added a question-integrity guard across all subjects so the stored correct answer cannot be omitted from the available choices.",
-    "Tournament Mode remains exactly 3 choices in one horizontal row with no guide or arrow labels.",
-    "Tournament answer buttons now turn solid BLUE on Blue Team turn and solid RED on Red Team turn; correct answers still highlight green.",
-    "Larger Tournament question/choice fonts and editable character names from v1.5.16 are preserved.",
-    "Bracket intro, replacement Grand Finals video, finalist student photos/images, Reset Stats, rankings, third place and Best-of-3 finals are preserved."
+    "Grand Finals intro now places the finalists into the left and right character positions of the championship video instead of covering the video with large overlay cards.",
+    "Finalists still use the actual saved student photos/images, with avatar fallback if no photo exists.",
+    "Minimal cinematic nameplates and a smaller center VS badge preserve more of the video.",
+    "Other v1.5.17 improvements remain, including Filipino answer-bank fixes, turn-colored choices, larger fonts, and 3-choice Tournament layout."
   ]
 }
