@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "published": "2026-09-16",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.4.zip",
-  "sha256": "1e8dfcf33bd74655667266290b226a2195bb72d794403ee26e2391c13be1748e",
-  "size": 15278617,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.5.zip",
+  "sha256": "bad2f146a8602e7c6c77a78416a6984b274bffd9ce1f660b83b59c1f6fb4a76c",
+  "size": 17145870,
   "notes": [
-    "Standardizes remaining game controls and labels in English.",
-    "Keeps English Math terms, natural bilingual instructions and subject-appropriate lesson language.",
-    "Preserves subject leaderboards, rewards, saves and existing gameplay."
+    "In-game character name editor and synchronized renamed students.",
+    "Subject-specific cosmetic titles and competency leaderboards; previous subject totals retained.",
+    "Supplied app icon for home, browser, desktop window and existing app shortcuts; corrected menu artwork proportions."
   ]
 }
