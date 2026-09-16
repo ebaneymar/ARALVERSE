@@ -1,16 +1,18 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.15",
+  "version": "1.5.17",
   "published": "2026-09-16",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.15.zip",
-  "sha256": "0117c6d478b0d7ba3a19792f0fa4935ebde24a150fe1ea3b3b6a57262fcf48e4",
-  "size": 21719964,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.17.zip",
+  "sha256": "d1c44fdadb312ea7be232ffd60a082d69505e4f98a1849f725f7ba876e7be1e9",
+  "size": 21729432,
   "notes": [
-    "Tournament answer choices now match Math-a-Pang: exactly 3 choices in one horizontal row.",
-    "Removed the tournament center guide and removed arrow/number labels from the visible answer buttons.",
-    "Question area stays separate from the answers so the choices do not cover the question.",
-    "Big RESET ALL PLAYER STATS button remains near the top of Tournament Setup.",
-    "Grand Finals still use the replacement finalist video with the actual finalists' saved student photos/images over the video."
+    "Corrected Filipino Kamalayang Ponolohikal items: paaralan is 4 pantig (pa-a-ra-lan), and puno now uses the clear rhyme tuno; ambiguous rhyme pairs were removed.",
+    "Expanded Filipino questions across all seven competencies used in Terms 1, 2 and 3 to reduce repetition.",
+    "Added a question-integrity guard across all subjects so the stored correct answer cannot be omitted from the available choices.",
+    "Tournament Mode remains exactly 3 choices in one horizontal row with no guide or arrow labels.",
+    "Tournament answer buttons now turn solid BLUE on Blue Team turn and solid RED on Red Team turn; correct answers still highlight green.",
+    "Larger Tournament question/choice fonts and editable character names from v1.5.16 are preserved.",
+    "Bracket intro, replacement Grand Finals video, finalist student photos/images, Reset Stats, rankings, third place and Best-of-3 finals are preserved."
   ]
 }
