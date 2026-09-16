@@ -1,14 +1,18 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.20",
+  "version": "1.5.21",
   "published": "2026-09-16",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.20.zip",
-  "sha256": "6d88009ce1633b18cc02a6429a20ebe5af6e9ffa21b7c22c8050f041c8ed6f1a",
-  "size": 21905547,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.21.zip",
+  "sha256": "41f4c12e71d57b81848338abfbe56b8e55c429fa788425d438da6d33ed53055e",
+  "size": 19937111,
   "notes": [
-    "Blue Team turn now displays a blue banner; Red Team turn displays a red banner in Multiplayer and Tournament.",
-    "Tournament character selection has larger portraits and names, clear selected-card indicators, compact edit controls, and a responsive grid.",
-    "Retains v1.5.19 tournament videos, audio fixes, game rules, scoring and existing save keys."
+    "Replaced the obsolete mode menu with one modern Home > Select Game Mode > Game flow.",
+    "Added the offline animated Live Leaderboard using existing student photos, names and RP.",
+    "Embedded Tara Na Aralverse home music with looping playback, fading and a saved Music ON/OFF preference.",
+    "Embedded the existing Tournament creation intro and preserved Grand Finals finalist photos and audio.",
+    "Fixed blue/red turn-choice colors and exact correct-answer inclusion for Filipino capitalization questions.",
+    "Preserves existing roster, photos, rankings, subject/competency data, tournament rules, Progress Hub and save keys.",
+    "Smaller offline update: shared theme images are embedded once and reused losslessly; all music, videos and gameplay remain intact."
   ]
 }
