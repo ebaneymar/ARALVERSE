@@ -1,17 +1,17 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.41",
+  "version": "1.5.42",
   "published": "2026-09-17",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.41.zip",
-  "sha256": "6f1bbcb5c64cbba743ba3ddf7f3494aae93a22135df94bbb0a03006360c37e9c",
-  "size": 16816440,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.42.zip",
+  "sha256": "1a29cb1c2e8d451ec8c90c674304dd3117d0fd6134f5983050b0ec9db13ed7cd",
+  "size": 16817530,
   "notes": [
-    "Replaced the Home video background with the exact supplied still image.",
-    "Recreated sparkles, orbiting light trails, glowing portal rings and character auras in canvas code; no Home video playback.",
-    "Connected the image menu and all five subject characters to existing game features.",
-    "The Home leaderboard and status cards show actual saved student names, photos and rank points.",
-    "Added effect pause/resume, full screen and larger portrait controls, with reduced-motion support.",
+    "Fixed soft Home artwork by removing enlargement beyond the original 1024px image width.",
+    "Loads the exact original PNG directly, with no recompression or artwork filters; removed the blurred duplicate backdrop.",
+    "Light effects now match the display resolution and resize correctly on high-DPI screens.",
+    "Retained the working image controls, subject choices, live student leaderboard, music and motion settings.",
+    "Home uses the supplied still image with code-based effects, and no video background.",
     "Preserved all six gameplay payloads, saved characters, student photos, rankings, question banks and storage keys."
   ]
 }
