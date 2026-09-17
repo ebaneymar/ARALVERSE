@@ -1,15 +1,15 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.37",
+  "version": "1.5.38",
   "published": "2026-09-17",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.37.zip",
-  "sha256": "9d44a6743bffb3e099c2323185189838adf9950648ffc60f54e14d2808abd23e",
-  "size": 24990841,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.38.zip",
+  "sha256": "100534e83d2ce5f8d5c8ffa714b0a1f75bff9fb1a8c08559fc5c3b26748d65ed",
+  "size": 24968663,
   "notes": [
-    "Removes the redundant second Multiplayer landing screen from the normal Team Battle flow.",
-    "Team Battle now opens directly to Choose Two Teams / roster setup.",
-    "The setup Back button now returns to the TEAM MODE selector.",
-    "Preserves the Guardian Team Tournament and the new Blue/Red battle videos from v1.5.36."
+    "Restores audio to both Guardian Team Tournament introduction videos.",
+    "Blue Team introduction plays its original audio, followed by Red Team introduction with its original audio.",
+    "Battle-screen Blue and Red Guardian loops remain muted so audio does not overlap during questions.",
+    "Preserves v1.5.37 Multiplayer direct setup and v1.5.36 Guardian battle videos."
   ]
 }
