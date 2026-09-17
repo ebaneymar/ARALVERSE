@@ -1,10 +1,14 @@
 {
+  "app": "ARALVERSE",
   "version": "1.5.29",
-  "url": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.29.zip",
+  "published": "2026-09-17",
+  "packageType": "app",
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.29.zip",
   "sha256": "3a4f58ff7f5f0d39911baa1e8aff3868af9680294c0c0133309c7e6cfb477e9d",
+  "size": 23663193,
   "notes": [
-    "Restored game selection as a separate full-screen screen after START GAME, not inside the Home screen.",
-    "Four large animated illustrated mode cards for Classic Adventure, Multiplayer, Tournament, and Class Boss.",
+    "Restored Game Selection as a separate large full-screen screen after START GAME.",
+    "Uses four large animated illustrated mode cards for Classic Adventure, Multiplayer, Tournament, and Class Boss.",
     "Keeps the approved v1.5.21 Tournament battle layout and blue/red choice colors unchanged.",
     "Keeps the expanded Makabansa Term 2 question bank and anti-repeat question system."
   ]
