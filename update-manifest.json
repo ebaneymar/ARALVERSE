@@ -1,17 +1,17 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.42",
+  "version": "1.5.43",
   "published": "2026-09-17",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.42.zip",
-  "sha256": "1a29cb1c2e8d451ec8c90c674304dd3117d0fd6134f5983050b0ec9db13ed7cd",
-  "size": 16817530,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.43.zip",
+  "sha256": "2eb3f969e6472073908bbc6521bc9820e1c47299889e6fb39fd7932a0b93567c",
+  "size": 15449093,
   "notes": [
-    "Fixed soft Home artwork by removing enlargement beyond the original 1024px image width.",
-    "Loads the exact original PNG directly, with no recompression or artwork filters; removed the blurred duplicate backdrop.",
-    "Light effects now match the display resolution and resize correctly on high-DPI screens.",
-    "Retained the working image controls, subject choices, live student leaderboard, music and motion settings.",
-    "Home uses the supplied still image with code-based effects, and no video background.",
-    "Preserved all six gameplay payloads, saved characters, student photos, rankings, question banks and storage keys."
+    "Rebuilt Home using the original larger meadow and character artwork from the uploaded game.",
+    "Removed the screenshot interface; title, portal, school objects, icons and labels are now scalable elements.",
+    "Restored a window-filling layout with display-resolution effects and clear text.",
+    "Preserved animated light trails, sparkles, portal rings, subject auras and added floating school objects.",
+    "Retained all Home controls, real student rankings, music, pause and reduced-motion support.",
+    "Preserved all six gameplay payloads, student photos, questions, ranks, storage keys and desktop bridge."
   ]
 }
