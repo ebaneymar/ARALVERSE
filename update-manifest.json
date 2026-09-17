@@ -1,15 +1,15 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.29",
+  "version": "1.5.30",
   "published": "2026-09-17",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.29.zip",
-  "sha256": "3a4f58ff7f5f0d39911baa1e8aff3868af9680294c0c0133309c7e6cfb477e9d",
-  "size": 23663193,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.30.zip",
+  "sha256": "7f449e86d95dd2c532c248095024a298a4cde2687d64a7ad46859fd187124957",
+  "size": 23814296,
   "notes": [
-    "Restored Game Selection as a separate large full-screen screen after START GAME.",
-    "Uses four large animated illustrated mode cards for Classic Adventure, Multiplayer, Tournament, and Class Boss.",
-    "Keeps the approved v1.5.21 Tournament battle layout and blue/red choice colors unchanged.",
-    "Keeps the expanded Makabansa Term 2 question bank and anti-repeat question system."
+    "Restores the full ARALVERSE game icon/favicon instead of the single-letter A icon.",
+    "Uses the permanent official ARALVERSE update-manifest.json source.",
+    "Internally bypasses stale manifest caching while keeping the visible JSON link unchanged.",
+    "Keeps the approved v1.5.21 Tournament battle layout and v1.5.29 large game-selection screen."
   ]
 }
