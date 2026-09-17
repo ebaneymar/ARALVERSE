@@ -1,18 +1,11 @@
 {
-  "app": "ARALVERSE",
-  "version": "1.5.22",
-  "published": "2026-09-17",
-  "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.22.zip",
-  "sha256": "7b38f9ee19a0886e3f35226ede7cb12ff07db2be614ae27bd7adfe4fa416a665",
-  "size": 21846761,
+  "version": "1.5.29",
+  "url": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.29.zip",
+  "sha256": "3a4f58ff7f5f0d39911baa1e8aff3868af9680294c0c0133309c7e6cfb477e9d",
   "notes": [
-    "Finished the interrupted UI update using the uploaded v1.5.20 file as the base.",
-    "Tournament turn banner moved below the arena and now follows Blue/Red turn colors without covering the fighters.",
-    "Restored the illustrated cartoon game-mode cards and prevented the legacy layout from flashing before the modern UI loads.",
-    "Progress Hub redesigned with cleaner profile, competitive rank, challenges and unlock-shop layout.",
-    "Makabansa battle layout keeps the timer visible and exactly three readable choices in one row.",
-    "Added 32 concise Term 2 Makabansa questions plus stronger match-level anti-repetition.",
-    "Restored the animated live Tournament leaderboard and added a launcher-bar shortcut."
+    "Restored game selection as a separate full-screen screen after START GAME, not inside the Home screen.",
+    "Four large animated illustrated mode cards for Classic Adventure, Multiplayer, Tournament, and Class Boss.",
+    "Keeps the approved v1.5.21 Tournament battle layout and blue/red choice colors unchanged.",
+    "Keeps the expanded Makabansa Term 2 question bank and anti-repeat question system."
   ]
 }
