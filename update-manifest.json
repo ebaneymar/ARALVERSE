@@ -1,15 +1,17 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.38",
+  "version": "1.5.40",
   "published": "2026-09-17",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.38.zip",
-  "sha256": "100534e83d2ce5f8d5c8ffa714b0a1f75bff9fb1a8c08559fc5c3b26748d65ed",
-  "size": 24968663,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.40.zip",
+  "sha256": "d3c00bbb6ae22e762d1647d2b4128d1217dafb0481b38bed7023316bb41916d8",
+  "size": 18294098,
   "notes": [
-    "Restores audio to both Guardian Team Tournament introduction videos.",
-    "Blue Team introduction plays its original audio, followed by Red Team introduction with its original audio.",
-    "Battle-screen Blue and Red Guardian loops remain muted so audio does not overlap during questions.",
-    "Preserves v1.5.37 Multiplayer direct setup and v1.5.36 Guardian battle videos."
+    "Redesigned Home to match the supplied ARALVERSE landscape and circular portal menu.",
+    "Embedded the reference animation: floating school supplies, sparkling trails, animated pupils and glowing portal rings.",
+    "Connected Start Game, Music, Rankings, Live Ranks, Settings and Lessons to the existing game features.",
+    "Added a More menu for Progress Hub, Tutorial & Demo, live standings, manual updates and Exit.",
+    "Added animation pause/resume, full screen and larger portrait-screen controls, with reduced-motion support.",
+    "Preserved all six gameplay payloads, saved characters, student photos, rankings, question banks and storage keys."
   ]
 }
