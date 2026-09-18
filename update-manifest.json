@@ -1,15 +1,16 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.48",
+  "version": "1.5.49",
   "published": "2026-09-18",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.48.zip",
-  "sha256": "2480bc7de4dbd5d8405d9a302aa7fc52d013f238a2368417ea941dd9510c663d",
-  "size": 15453909,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.49.zip",
+  "sha256": "de3ae1b563c01f7af38439198125219e0ca849bdf0c0fd50de24609cd16f4866",
+  "size": 15444318,
   "notes": [
-    "Keeps the v1.5.44 Tournament battle scene, player cards, arena, question font, and three answer choices unchanged.",
-    "Moves/compacts only the question content and timer rows upward so the timer stays visible on shorter or zoomed screens.",
-    "Preserves the expanded Mathematics Term 2 Week 1 pool from the recent build.",
-    "On very short Grand Finals viewports, hides only the duplicate bottom Grand Finals status line because the same status remains visible in the top Grand Finals banner."
+    "Deletes obsolete stacked Home Screen visual patches instead of adding another layer.",
+    "Keeps one canonical Home Screen implementation only.",
+    "Prevents previous Home Screen layouts from flashing during startup.",
+    "Preserves the v1.5.48 Tournament battle layout and timer visibility fix.",
+    "Preserves the expanded Mathematics Term 2 Week 1 question pool and existing game logic."
   ]
 }
