@@ -1,17 +1,16 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.43",
-  "published": "2026-09-17",
+  "version": "1.5.45",
+  "published": "2026-09-18",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.43.zip",
-  "sha256": "2eb3f969e6472073908bbc6521bc9820e1c47299889e6fb39fd7932a0b93567c",
-  "size": 15449093,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.45.zip",
+  "sha256": "31d8738f01fbeb22e7549482f65e46d3ce40e6cfb51e9e4d48ec334456dae861",
+  "size": 15453746,
   "notes": [
-    "Rebuilt Home using the original larger meadow and character artwork from the uploaded game.",
-    "Removed the screenshot interface; title, portal, school objects, icons and labels are now scalable elements.",
-    "Restored a window-filling layout with display-resolution effects and clear text.",
-    "Preserved animated light trails, sparkles, portal rings, subject auras and added floating school objects.",
-    "Retained all Home controls, real student rankings, music, pause and reduced-motion support.",
-    "Preserved all six gameplay payloads, student photos, questions, ranks, storage keys and desktop bridge."
+    "Expands Mathematics Term 2 Week 1 measurement questions from a few repetitive formats to 15 clear question families plus a varied classic generator.",
+    "Removes the confusing non-zero ruler-start pencil format from the Week 1 pool; ruler-reading questions now start at 0 cm.",
+    "Adds variety for cm/m unit choice, ruler reading, longer/shorter/equal comparisons, measuring tools, longest/shortest, and school-distance questions.",
+    "Moves Tournament questions higher by reducing unused arena height and gives the timer its own visible row directly below the question.",
+    "Applies the expanded Term 2 Week 1 Math pool to Adventure, Team Battle, Tournament, and Class Boss curriculum question generators."
   ]
 }
