@@ -1,16 +1,15 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.45",
+  "version": "1.5.48",
   "published": "2026-09-18",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.45.zip",
-  "sha256": "31d8738f01fbeb22e7549482f65e46d3ce40e6cfb51e9e4d48ec334456dae861",
-  "size": 15453746,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.48.zip",
+  "sha256": "2480bc7de4dbd5d8405d9a302aa7fc52d013f238a2368417ea941dd9510c663d",
+  "size": 15453909,
   "notes": [
-    "Expands Mathematics Term 2 Week 1 measurement questions from a few repetitive formats to 15 clear question families plus a varied classic generator.",
-    "Removes the confusing non-zero ruler-start pencil format from the Week 1 pool; ruler-reading questions now start at 0 cm.",
-    "Adds variety for cm/m unit choice, ruler reading, longer/shorter/equal comparisons, measuring tools, longest/shortest, and school-distance questions.",
-    "Moves Tournament questions higher by reducing unused arena height and gives the timer its own visible row directly below the question.",
-    "Applies the expanded Term 2 Week 1 Math pool to Adventure, Team Battle, Tournament, and Class Boss curriculum question generators."
+    "Keeps the v1.5.44 Tournament battle scene, player cards, arena, question font, and three answer choices unchanged.",
+    "Moves/compacts only the question content and timer rows upward so the timer stays visible on shorter or zoomed screens.",
+    "Preserves the expanded Mathematics Term 2 Week 1 pool from the recent build.",
+    "On very short Grand Finals viewports, hides only the duplicate bottom Grand Finals status line because the same status remains visible in the top Grand Finals banner."
   ]
 }
