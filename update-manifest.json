@@ -1,16 +1,16 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.50",
-  "published": "2026-09-19",
+  "version": "1.5.51",
+  "published": "2026-10-01",
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.51.zip",
+  "sha256": "df223ea63ae3a6bd4c68ff8b234602c91940763cd669fbe8ce0e8fdc4f7386a1",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.50.zip",
-  "sha256": "38f229b1f62d5b4836c49d2642bfe0ad4ebfa0cb67b42c30f7ae07e208100cf3",
-  "size": 20467273,
+  "size": 20625829,
   "notes": [
-    "New Team Mode screen based on the supplied school/meadow design, with Team Battle and Guardian Team Tournament cards.",
-    "Separate artwork and scalable title, sharp live text, working PLAY buttons and responsive layouts.",
-    "Fixed text and element overflow in rosters, long questions/answers, Guardian setup/battles, tournament screens, Progress Hub and dialogs.",
-    "Improved Home leaderboard preview spacing on small screens.",
-    "Preserved v1.5.49 gameplay logic, questions, original assets, save keys, student photos, ranks and desktop bridge."
+    "Adds an in-game Question Editor using the existing Term, Subject and Topic curriculum.",
+    "Browse and search built-in questions, teacher questions and saved edits.",
+    "Save reversible built-in overrides, restore originals, and add or delete teacher questions.",
+    "Saved questions and answers are immediately used by Tournament.",
+    "Home, battles, character cards, scoring, other modes, audio, animations and existing saves are preserved."
   ]
 }
