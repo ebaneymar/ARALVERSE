@@ -1,9 +1,9 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.51",
+  "version": "1.5.52",
   "published": "2026-10-01",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.51.zip",
-  "sha256": "77a2668a34bba2d5fac37471f9e5f99661cae1044ab88a322cf8c677fdf0e40d",
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.52.zip",
+  "sha256": "64b4ddd760160e299d98612439a8ec855f61600428f346ac491f83c6179f5ee0",
   "packageType": "app",
   "size": 20627976,
   "notes": [
