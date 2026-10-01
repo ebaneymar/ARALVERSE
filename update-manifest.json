@@ -1,16 +1,16 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.52",
+  "version": "1.5.53",
   "published": "2026-10-01",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.52.zip",
-  "sha256": "64b4ddd760160e299d98612439a8ec855f61600428f346ac491f83c6179f5ee0",
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.53.zip",
+  "sha256": "07130a0546533a80ba546ecd229620f61a2b433f981a0ab2b1e605d814b76a4b",
   "packageType": "app",
-  "size": 20627976,
+  "size": 20629188,
   "notes": [
     "Adds an in-game Question Editor using the existing Term, Subject and Topic curriculum.",
     "Browse and search built-in questions, teacher questions and saved edits.",
     "Save reversible built-in overrides, restore originals, and add or delete teacher questions.",
-    "Choose Built-in Questions or Edited Questions in Tournament lesson setup.",
+    "Tournament Questions replaces Math Mode in Tournament setup: choose Built-in Questions or Edited Questions.",
     "Edited mode plays saved edits and manual questions in random order within the selected lesson.",
     "Home, battles, character cards, scoring, other modes, audio, animations and existing saves are preserved."
   ]
