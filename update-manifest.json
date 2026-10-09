@@ -1,14 +1,18 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.57",
+  "version": "1.5.59",
   "published": "2026-10-09",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.57.zip",
-  "sha256": "7b9853d478d467c838738598a160eafdb74bb2147b29dcb26f3e1ac643101269",
-  "size": 20683352,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.59.zip",
+  "sha256": "aa5c2087f995a0e37409cf7f5a44465d80cc4e27294e12be3d4b71ff6b68efc3",
+  "size": 24739063,
   "notes": [
-    "Rebuilt the Tournament podium with readable standings, consistent photos, labelled achievements and a highlighted champion.",
-    "Added manual font family/style and independent text/button size adjustments inside in-game Display settings, with live preview, exact percentage fields and saved settings.",
-    "Improved wrapping for larger names, HP bars and buttons; preserved bottom-aligned built-in/edited choices, original artwork, gameplay and saved data."
+    "Applied the approved cream-and-gold schoolyard home with the school and Philippine flag clearly visible above the controls.",
+    "Kept the approved background at its full 1672x941 resolution with lossless pixel-identical encoding. Title, controls and moving objects remain separate scalable elements.",
+    "Added gentle movement to eleven school objects around the stationary title, with saved Pause/Play and reduced-motion and visual-effects preferences.",
+    "Home and Live Leaderboard now use saved student rosters across modes and support additional photo fields and saved photo paths. Long names wrap without overlapping the controls.",
+    "Connected every home control to its existing menu, with a readable portrait-screen menu and reliable game-mode loading after returning Home.",
+    "Included the enhanced Guardian introductions, Left/Up/Right difficulty keys, skill and damage sounds, saved mute setting and attack-resolution protection.",
+    "Preserved other game modes, Tournament podium, in-game Display font/button adjustments, edited questions, bottom-aligned choices and saved data."
   ]
 }
