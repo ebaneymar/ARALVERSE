@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.56",
-  "published": "2026-10-06",
+  "version": "1.5.57",
+  "published": "2026-10-09",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.56.zip",
-  "sha256": "f99ff9cdc512b0169b0eb5a176d0dd019d938ca55ffa557411cd3a737428de6c",
-  "size": 20667670,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.57.zip",
+  "sha256": "7b9853d478d467c838738598a160eafdb74bb2147b29dcb26f3e1ac643101269",
+  "size": 20683352,
   "notes": [
-    "Removed the white corner frame around Home controls and rebuilt the portal with clean, sharp vector controls.",
-    "Modern navy, teal and gold styling across the Home leaderboard, menus, dialogs, editor, battle HUDs and question panels.",
-    "Preserved original artwork and effects, all gameplay and saved data, Question Editor/imports, and bottom-aligned choices."
+    "Rebuilt the Tournament podium with readable standings, consistent photos, labelled achievements and a highlighted champion.",
+    "Added manual font family/style and independent text/button size adjustments inside in-game Display settings, with live preview, exact percentage fields and saved settings.",
+    "Improved wrapping for larger names, HP bars and buttons; preserved bottom-aligned built-in/edited choices, original artwork, gameplay and saved data."
   ]
 }
