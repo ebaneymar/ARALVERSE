@@ -1,17 +1,16 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.62",
+  "version": "1.5.63",
   "published": "2026-10-10",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.62.zip?sha256=73dbe59826edf73d57efb957649377287b381c62411c421261e598ecbc14dd95",
-  "sha256": "73dbe59826edf73d57efb957649377287b381c62411c421261e598ecbc14dd95",
-  "size": 24983586,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.63.zip?sha256=9502a7f090ec6b81a201fc125aeb240a926afad52242c19b3f8b40e1db02fab8",
+  "sha256": "9502a7f090ec6b81a201fc125aeb240a926afad52242c19b3f8b40e1db02fab8",
+  "size": 24985171,
   "notes": [
-    "Simplified Home to Start Game, Leaderboards and a small Settings entry. Other controls are organized inside Settings.",
-    "Added a moving gold glow, orbiting rim lights, tiny sparkles, a soft sheen and hover/click feedback to Start.",
-    "Preserved the original lossless schoolyard artwork, visible school and eleven moving objects around ARALVERSE.",
-    "Settings retains display/font/button adjustments, music, motion, fullscreen, lessons, subjects, progress, rankings, tutorial, updates, save summary and Exit.",
-    "Motion respects saved pause, Full/Lite/Off and reduced-motion preferences; pauses while Settings is open or Home is hidden.",
-    "Preserves all game engines, shared media, Guardian introductions, wrong-answer self-damage and saved-data bridge. ZIP and manifest are one verified release pair."
+    "Restores only the v1.5.54 Home screen: original artwork, engraved Start wheel, subject characters, leaderboard, cream/gold palette and adventure-hub layout.",
+    "Restores the original moving school objects, orbiting light trails, portal glow and sparkles; retains saved motion/music/effects preferences.",
+    "Preserves all v1.5.62 gameplay, game-mode screens, podium, question-editor/overflow fixes, in-game font/button adjustments, Guardian introductions/sounds and incorrect-answer self-damage.",
+    "All six game engines, all 94 shared assets, other media and the saved-data bridge are unchanged. Newer roster/photo compatibility and updater repairs are retained.",
+    "Installed version remains a new release, 1.5.63. Only the Home design returns to 1.5.54. ZIP and manifest form one verified update pair."
   ]
 }
