@@ -1,18 +1,17 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.59",
-  "published": "2026-10-09",
+  "version": "1.5.60",
+  "published": "2026-10-10",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.59.zip",
-  "sha256": "aa5c2087f995a0e37409cf7f5a44465d80cc4e27294e12be3d4b71ff6b68efc3",
-  "size": 24739063,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.60.zip",
+  "sha256": "9e616d3bf43775d57682bf12495158d2170287e9097e30330c60bb3b796ff2f3",
+  "size": 24978877,
   "notes": [
-    "Applied the approved cream-and-gold schoolyard home with the school and Philippine flag clearly visible above the controls.",
-    "Kept the approved background at its full 1672x941 resolution with lossless pixel-identical encoding. Title, controls and moving objects remain separate scalable elements.",
-    "Added gentle movement to eleven school objects around the stationary title, with saved Pause/Play and reduced-motion and visual-effects preferences.",
-    "Home and Live Leaderboard now use saved student rosters across modes and support additional photo fields and saved photo paths. Long names wrap without overlapping the controls.",
-    "Connected every home control to its existing menu, with a readable portrait-screen menu and reliable game-mode loading after returning Home.",
-    "Included the enhanced Guardian introductions, Left/Up/Right difficulty keys, skill and damage sounds, saved mute setting and attack-resolution protection.",
-    "Preserved other game modes, Tournament podium, in-game Display font/button adjustments, edited questions, bottom-aligned choices and saved data."
+    "Repaired the missing school background, fonts and Guardian introductions after desktop installation. Required media now loads directly from the game page, even through the older updater.",
+    "Restored the approved schoolyard home and moving school objects with the same lossless full-resolution background, live controls and saved motion preferences.",
+    "Incorrect Guardian answers immediately damage the answering team itself: Easy 50 HP, Medium 100 HP, Hard 150 HP. Damage feedback, sound, mute and zero-HP match results are supported.",
+    "Repeated answer or teacher inputs cannot duplicate or bypass the self-damage penalty. Empty answers cause no damage; correct answers still require accepted explanations to attack.",
+    "Updated the desktop updater to copy asset folders recursively, preserve unrelated files and restore previous game and asset files if copying fails.",
+    "Preserved other game modes, saved data, edited questions, bottom-aligned choices, Tournament podium and in-game Display font/button adjustments."
   ]
 }
