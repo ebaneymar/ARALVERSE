@@ -1,16 +1,17 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.63",
+  "version": "1.5.64",
   "published": "2026-10-10",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.63.zip?sha256=9502a7f090ec6b81a201fc125aeb240a926afad52242c19b3f8b40e1db02fab8",
-  "sha256": "9502a7f090ec6b81a201fc125aeb240a926afad52242c19b3f8b40e1db02fab8",
-  "size": 24985171,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.64.zip?sha256=e813ed6e4319b4506290d1283a8ef51b9f78867846d28f3e9bf2e1ac19259f2c",
+  "sha256": "e813ed6e4319b4506290d1283a8ef51b9f78867846d28f3e9bf2e1ac19259f2c",
+  "size": 24999877,
   "notes": [
-    "Restores only the v1.5.54 Home screen: original artwork, engraved Start wheel, subject characters, leaderboard, cream/gold palette and adventure-hub layout.",
-    "Restores the original moving school objects, orbiting light trails, portal glow and sparkles; retains saved motion/music/effects preferences.",
-    "Preserves all v1.5.62 gameplay, game-mode screens, podium, question-editor/overflow fixes, in-game font/button adjustments, Guardian introductions/sounds and incorrect-answer self-damage.",
-    "All six game engines, all 94 shared assets, other media and the saved-data bridge are unchanged. Newer roster/photo compatibility and updater repairs are retained.",
-    "Installed version remains a new release, 1.5.63. Only the Home design returns to 1.5.54. ZIP and manifest form one verified update pair."
+    "Removed the large white Home frame and crowded portal shortcuts. Kept the engraved Start ring, moving glow, original artwork and all 17 floating objects.",
+    "Organized secondary controls inside one labeled Settings button and changed the Home leaderboard to compact photo rows.",
+    "Added Import Questions and Download Template to Guardian Team Tournament Write Questions, with offline Excel and CSV support.",
+    "Guardian import previews errors and difficulty counts, skips duplicates, preserves existing questions and saves confirmed additions.",
+    "Preserved the multiple-choice question importer, all original media, other game changes, HD Guardian introductions, wrong-answer self-damage and display adjustment controls.",
+    "ZIP and manifest are one verified release pair. Upload both together without recompressing the ZIP."
   ]
 }
