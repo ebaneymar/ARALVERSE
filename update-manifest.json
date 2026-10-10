@@ -1,17 +1,17 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.64",
+  "version": "1.5.65",
   "published": "2026-10-10",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.64.zip?sha256=e813ed6e4319b4506290d1283a8ef51b9f78867846d28f3e9bf2e1ac19259f2c",
-  "sha256": "e813ed6e4319b4506290d1283a8ef51b9f78867846d28f3e9bf2e1ac19259f2c",
-  "size": 24999877,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.65.zip?sha256=cdfd41f53a3d0cd1fb4dabbe51aa7e8dc0b47a1b59df47e5d4fa7dcca8a23561",
+  "sha256": "cdfd41f53a3d0cd1fb4dabbe51aa7e8dc0b47a1b59df47e5d4fa7dcca8a23561",
+  "size": 24763197,
   "notes": [
-    "Removed the large white Home frame and crowded portal shortcuts. Kept the engraved Start ring, moving glow, original artwork and all 17 floating objects.",
-    "Organized secondary controls inside one labeled Settings button and changed the Home leaderboard to compact photo rows.",
-    "Added Import Questions and Download Template to Guardian Team Tournament Write Questions, with offline Excel and CSV support.",
-    "Guardian import previews errors and difficulty counts, skips duplicates, preserves existing questions and saves confirmed additions.",
-    "Preserved the multiple-choice question importer, all original media, other game changes, HD Guardian introductions, wrong-answer self-damage and display adjustment controls.",
-    "ZIP and manifest are one verified release pair. Upload both together without recompressing the ZIP."
+    "New Home uses the supplied artwork at its original 1672\u00d7941 resolution with exactly matching decoded pixels.",
+    "Start has a traveling gold highlight, shine sweep and small sparkles; Start, Settings and leaderboard heads are interactive.",
+    "Guardian explanation: Left Arrow accepts and attacks; Right Arrow heals. Heal replaces No Attack.",
+    "Small healing: Easy 10 HP, Medium 20 HP, Hard 30 HP, capped at 500. Damage stays 50/100/150; wrong answers still cause self-damage.",
+    "Preserves Guardian import/templates, HD introductions, other game engines, shared assets, saved data and in-game display adjustments.",
+    "ZIP and manifest form one verified release pair. Upload both together without recompressing the ZIP."
   ]
 }
