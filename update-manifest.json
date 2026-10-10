@@ -1,17 +1,17 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.65",
+  "version": "1.5.66",
   "published": "2026-10-10",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.65.zip?sha256=cdfd41f53a3d0cd1fb4dabbe51aa7e8dc0b47a1b59df47e5d4fa7dcca8a23561",
-  "sha256": "cdfd41f53a3d0cd1fb4dabbe51aa7e8dc0b47a1b59df47e5d4fa7dcca8a23561",
-  "size": 24763197,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.66.zip?sha256=7c33c65a195fe4d22b01adf0bb33fe5d1e8724b5171bb7a3ed571d5aa9a96bd8",
+  "sha256": "7c33c65a195fe4d22b01adf0bb33fe5d1e8724b5171bb7a3ed571d5aa9a96bd8",
+  "size": 24757588,
   "notes": [
-    "New Home uses the supplied artwork at its original 1672\u00d7941 resolution with exactly matching decoded pixels.",
-    "Start has a traveling gold highlight, shine sweep and small sparkles; Start, Settings and leaderboard heads are interactive.",
-    "Guardian explanation: Left Arrow accepts and attacks; Right Arrow heals. Heal replaces No Attack.",
-    "Small healing: Easy 10 HP, Medium 20 HP, Hard 30 HP, capped at 500. Damage stays 50/100/150; wrong answers still cause self-damage.",
-    "Preserves Guardian import/templates, HD introductions, other game engines, shared assets, saved data and in-game display adjustments.",
-    "ZIP and manifest form one verified release pair. Upload both together without recompressing the ZIP."
+    "Settings redesigned from the supplied cream-and-gold reference, with a different straight-haired schoolboy and school background.",
+    "Working sidebar, font sizes, music, four saved Home motion presets, fullscreen, lessons, progress, tutorial, updates and About.",
+    "Home keeps its original full-resolution artwork. Generic/missing avatars no longer cover the illustrated leaderboard characters; actual portraits keep rank medals visible.",
+    "Preserves the Start glow and shine, all six game engines, shared assets, saved data, question imports/templates, HD introductions and in-game display adjustments.",
+    "Guardian Heal remains small: 10/20/30 HP versus 50/100/150 damage; incorrect answers still cause self-damage.",
+    "Lossless multiplayer artwork is embedded for older root-only updaters. ZIP and manifest form one verified pair; upload both together without recompressing."
   ]
 }
