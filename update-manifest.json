@@ -1,17 +1,18 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.66",
+  "version": "1.5.67",
   "published": "2026-10-10",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.66.zip?sha256=7c33c65a195fe4d22b01adf0bb33fe5d1e8724b5171bb7a3ed571d5aa9a96bd8",
-  "sha256": "7c33c65a195fe4d22b01adf0bb33fe5d1e8724b5171bb7a3ed571d5aa9a96bd8",
-  "size": 24757588,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.67.zip?sha256=0e17a42ffde1f302373b0d24c6fa8be952c051ee4326412748507df2c6915273",
+  "sha256": "0e17a42ffde1f302373b0d24c6fa8be952c051ee4326412748507df2c6915273",
+  "size": 26073052,
   "notes": [
-    "Settings redesigned from the supplied cream-and-gold reference, with a different straight-haired schoolboy and school background.",
-    "Working sidebar, font sizes, music, four saved Home motion presets, fullscreen, lessons, progress, tutorial, updates and About.",
-    "Home keeps its original full-resolution artwork. Generic/missing avatars no longer cover the illustrated leaderboard characters; actual portraits keep rank medals visible.",
-    "Preserves the Start glow and shine, all six game engines, shared assets, saved data, question imports/templates, HD introductions and in-game display adjustments.",
-    "Guardian Heal remains small: 10/20/30 HP versus 50/100/150 damage; incorrect answers still cause self-damage.",
-    "Lossless multiplayer artwork is embedded for older root-only updaters. ZIP and manifest form one verified pair; upload both together without recompressing."
+    "Tournament battle, bracket and character selection redesigned with the cream, gold and blue schoolyard theme. Player photos, names, scores and HP use actual saved data.",
+    "Large tournament brackets scroll horizontally and vertically. Roster selection, photo/name/stats editing, save/load and Grand Finals remain functional.",
+    "Live leaderboard uses actual uploaded photos and achievements, gold/silver/bronze ranks, existing RP format filters and a scrolling list.",
+    "Topic selection uses working Term, Subject and Topic controls, actual curriculum text, question tools and a shining Next button.",
+    "Guardian question setup retains schoolchildren and guardian decoration, editable Easy/Medium/Hard questions, accepted variants, imports and template downloads.",
+    "Online updater keeps real versions, release notes, source settings and progress in a school-themed layout. ZIP and manifest form one verified pair.",
+    "Preserves original Home artwork, moving Start effects, Settings, saved content, HD introductions, combat rules, small healing, self-damage and display adjustments."
   ]
 }
