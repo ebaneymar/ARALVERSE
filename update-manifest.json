@@ -1,18 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.68",
+  "version": "1.5.69",
   "published": "2026-10-11",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.68.zip?sha256=467dd145b7eee53298dd1045bb9db68fb7555fa4d79e89e271b7b85b042ea31c",
-  "sha256": "467dd145b7eee53298dd1045bb9db68fb7555fa4d79e89e271b7b85b042ea31c",
-  "size": 28186006,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.69.zip?sha256=6797655d177c90ab43e7117398e1717f4aa91393eda7cbd556b5bd262b7797f7",
+  "sha256": "6797655d177c90ab43e7117398e1717f4aa91393eda7cbd556b5bd262b7797f7",
+  "size": 29384213,
   "notes": [
-    "Guardian victory podium redesigned in navy and gold. The actual winning team name and every member photo/name are shown, with a slot for each winner and responsive scrolling.",
-    "Classic Tournament character selection now uses four desktop columns, an Add Character tile, large Add/Save/Load actions and live saved student cards.",
-    "Guardian team assignment updated with schoolyard panels, live team names and all seven member slots. Added crisp blue/gold Guardian heading decoration.",
-    "Added moving gold/silver/bronze Home frame highlights, ARALVERSE title shine and small prop glints while retaining the original lossless Home image and Start glow.",
-    "Disabled native dragging of game images throughout Home and all six game frames.",
-    "Added Menu Font inside Settings > General. Battle fonts remain independent and are adjusted through in-game Display.",
-    "Preserves previous gameplay, HD introductions, question imports/templates, combat sounds, small healing, wrong-answer self-damage, brackets, rankings and saved content. ZIP and manifest are one verified pair."
+    "Rebuilt both Guardian introductions with sharper detailed artwork, scalable glowing pilot frames, animated lightning links, rotating portal effects and chest-core charging.",
+    "Preserves the original introduction soundtracks, actual team names and uploaded member photos, with individual slots for up to seven team members. Skip and automatic transitions remain available.",
+    "Keeps all v1.5.68 Home artwork/effects, podiums, roster selection, font settings, combat, incorrect-answer self-damage, question imports/templates, brackets, rankings and saved content. ZIP and manifest are a matching verified pair."
   ]
 }
