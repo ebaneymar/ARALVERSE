@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.71",
+  "version": "1.5.72",
   "published": "2026-10-11",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.71.zip?sha256=29bd0919dc71d0a89faea471040e24fe5b95a79b2c3ebb29dff2f5c40b58f094",
-  "sha256": "29bd0919dc71d0a89faea471040e24fe5b95a79b2c3ebb29dff2f5c40b58f094",
-  "size": 95500177,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.72.zip?sha256=b30b2adee9148cb89dec80711d51ec3a7fa705e3611b9a8db399957b7e4eacbf",
+  "sha256": "b30b2adee9148cb89dec80711d51ec3a7fa705e3611b9a8db399957b7e4eacbf",
+  "size": 59829595,
   "notes": [
-    "Clean transparent Home artwork: lossless native-resolution RGBA image frames replace alpha video rendering and remove exterior white/gray matte.",
-    "Characters and ARALVERSE objects stay still until clicked, play once and return. Flag remains click-only. Start sheen, medal glow, school, music and real rankings stay live.",
-    "Preserves all previous gameplay, Guardian intros, podiums, teams, font controls, questions/imports/templates, combat and saved content. Verified ZIP and manifest match exactly."
+    "Restores the exact v1.5.67 Home artwork and layout without resizing or re-encoding the original image.",
+    "Keeps ARALVERSE shine and the click-only flag Easter egg. Removes all added character and object movement.",
+    "Preserves all other current gameplay changes, settings, teams, questions, Guardian introductions and saves. ZIP checksum and byte size match the manifest."
   ]
 }
