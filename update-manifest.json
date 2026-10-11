@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.69",
+  "version": "1.5.70",
   "published": "2026-10-11",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.69.zip?sha256=6797655d177c90ab43e7117398e1717f4aa91393eda7cbd556b5bd262b7797f7",
-  "sha256": "6797655d177c90ab43e7117398e1717f4aa91393eda7cbd556b5bd262b7797f7",
-  "size": 29384213,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.70.zip?sha256=4856f9b80dc2f024fc4c3ab9d96da56e0e9f8e39da4ce5dc8d0bbae4e85e0cfe",
+  "sha256": "4856f9b80dc2f024fc4c3ab9d96da56e0e9f8e39da4ce5dc8d0bbae4e85e0cfe",
+  "size": 92720049,
   "notes": [
-    "Rebuilt both Guardian introductions with sharper detailed artwork, scalable glowing pilot frames, animated lightning links, rotating portal effects and chest-core charging.",
-    "Preserves the original introduction soundtracks, actual team names and uploaded member photos, with individual slots for up to seven team members. Skip and automatic transitions remain available.",
-    "Keeps all v1.5.68 Home artwork/effects, podiums, roster selection, font settings, combat, incorrect-answer self-damage, question imports/templates, brackets, rankings and saved content. ZIP and manifest are a matching verified pair."
+    "Moving schoolyard Home with your children and ARALVERSE logo videos at native Full HD, transparent backgrounds, smooth loops and the existing Start/medal glow effects.",
+    "Click-only flag Easter egg: transforms, flies below Settings, visits the logo and returns. Never autoplays; restores the still flag after each flight.",
+    "Home Motion/reduced-motion and original-Home media fallback remain available. Retains all v1.5.69 Guardian, podium, roster, font, combat, import/template, ranking and saved-content changes. ZIP and manifest are a verified matching pair."
   ]
 }
