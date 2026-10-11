@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.70",
+  "version": "1.5.71",
   "published": "2026-10-11",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.70.zip?sha256=4856f9b80dc2f024fc4c3ab9d96da56e0e9f8e39da4ce5dc8d0bbae4e85e0cfe",
-  "sha256": "4856f9b80dc2f024fc4c3ab9d96da56e0e9f8e39da4ce5dc8d0bbae4e85e0cfe",
-  "size": 92720049,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.71.zip?sha256=29bd0919dc71d0a89faea471040e24fe5b95a79b2c3ebb29dff2f5c40b58f094",
+  "sha256": "29bd0919dc71d0a89faea471040e24fe5b95a79b2c3ebb29dff2f5c40b58f094",
+  "size": 95500177,
   "notes": [
-    "Moving schoolyard Home with your children and ARALVERSE logo videos at native Full HD, transparent backgrounds, smooth loops and the existing Start/medal glow effects.",
-    "Click-only flag Easter egg: transforms, flies below Settings, visits the logo and returns. Never autoplays; restores the still flag after each flight.",
-    "Home Motion/reduced-motion and original-Home media fallback remain available. Retains all v1.5.69 Guardian, podium, roster, font, combat, import/template, ranking and saved-content changes. ZIP and manifest are a verified matching pair."
+    "Clean transparent Home artwork: lossless native-resolution RGBA image frames replace alpha video rendering and remove exterior white/gray matte.",
+    "Characters and ARALVERSE objects stay still until clicked, play once and return. Flag remains click-only. Start sheen, medal glow, school, music and real rankings stay live.",
+    "Preserves all previous gameplay, Guardian intros, podiums, teams, font controls, questions/imports/templates, combat and saved content. Verified ZIP and manifest match exactly."
   ]
 }
