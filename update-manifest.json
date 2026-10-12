@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.74",
+  "version": "1.5.75",
   "published": "2026-10-12",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.74.zip?sha256=80a4ec39c71dd031b1384940d28b8301bb744deea28c7fe0c4e5b1bb88da9f4a",
-  "sha256": "80a4ec39c71dd031b1384940d28b8301bb744deea28c7fe0c4e5b1bb88da9f4a",
-  "size": 59836622,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.75.zip?sha256=d09f63a6577f5640a910b6ae1b778c8b4d98598f6cd4ee5f75a9d045a65ce859",
+  "sha256": "d09f63a6577f5640a910b6ae1b778c8b4d98598f6cd4ee5f75a9d045a65ce859",
+  "size": 59837813,
   "notes": [
-    "Guardian battles fit the viewport: answer controls, Accept & Attack and Heal stay visible while artwork uses the remaining space.",
-    "Adds Guardian font family/style and text/button size adjustments in in-game Display. Save, Cancel, Reset and auto fit work with independent Guardian preferences.",
-    "Preserves Continue/New Tournament, combat, questions, saved players, artwork, Home and all other modes. Verified final ZIP checksum and size match the manifest."
+    "Guardian podium now celebrates with a floating trophy, moving gold photo rims, title shine, sparkles, one-time confetti and a staggered victory entrance.",
+    "Keeps all seven live player slots, real team/player names and original photos. Continue has reserved space; effects stop when hidden and respect Effects Off/reduced motion.",
+    "Preserves Guardian resume, Display adjustments, battle fit, questions, combat, Home and all other modes. Verified final ZIP checksum and size match the manifest."
   ]
 }
