@@ -10,5 +10,6 @@
     "Guardian battle now uses the same original high-quality blue/red robot artwork as the introduction, with idle motion and core glow.",
     "Adds blue/red victory finishers: charge, strike, opponent knockdown and victory pose before the animated live podium. Includes Skip, sound-toggle support and tournament resume.",
     "Preserves Home, flag, seven live player slots, Display adjustments, questions, combat and all other modes. Final ZIP SHA-256 and size exactly match this manifest."
+
   ]
 }
