@@ -1,15 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.76",
+  "version": "1.5.77",
   "published": "2026-10-12",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.76.zip?sha256=0b52e68edacea6986b3967ec27a7e83c7f939f75ff524e42534c6a80fc1f0a53",
-  "sha256": "0b52e68edacea6986b3967ec27a7e83c7f939f75ff524e42534c6a80fc1f0a53",
-  "size": 59844993,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.77.zip?sha256=07545e691478595f64e361f775c0b9c857b14d7649cddb18aa10ecd5a917fb5b",
+  "sha256": "07545e691478595f64e361f775c0b9c857b14d7649cddb18aa10ecd5a917fb5b",
+  "size": 59849313,
   "notes": [
-    "Guardian battle now uses the same original high-quality blue/red robot artwork as the introduction, with idle motion and core glow.",
-    "Adds blue/red victory finishers: charge, strike, opponent knockdown and victory pose before the animated live podium. Includes Skip, sound-toggle support and tournament resume.",
-    "Preserves Home, flag, seven live player slots, Display adjustments, questions, combat and all other modes. Final ZIP SHA-256 and size exactly match this manifest."
-
+    "Adds 20, 30 and 40-second question timer choices to Guardian character/team selection; defaults to 30. Numeric countdown appears above VS.",
+    "Time up damages the answering team like a wrong answer: Easy 50, Medium 100, Hard 150 HP. Applies once; a lethal timeout opens the opponent finisher and podium.",
+    "Clock stops on answer lock, pauses for Display/hidden app, and retains remaining time on Continue. Preserves artwork, Home, cutscenes, podium, controls and other modes. Exact ZIP SHA-256 and size match."
   ]
 }
