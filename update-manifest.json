@@ -1,15 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.73",
+  "version": "1.5.74",
   "published": "2026-10-12",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.73.zip?sha256=d03ec984a305c5d034febe8e504e71e993174b62f2a93b775e5f5650a8afa83d",
-  "sha256": "d03ec984a305c5d034febe8e504e71e993174b62f2a93b775e5f5650a8afa83d",
-  "size": 59832692,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.74.zip?sha256=80a4ec39c71dd031b1384940d28b8301bb744deea28c7fe0c4e5b1bb88da9f4a",
+  "sha256": "80a4ec39c71dd031b1384940d28b8301bb744deea28c7fe0c4e5b1bb88da9f4a",
+  "size": 59836622,
   "notes": [
-    "Guardian Game Modes/Back now save your tournament. Reopen Guardian to choose Continue Tournament or New Tournament.",
-    "Continue restores bracket winners, HP, turn, pilot order, question history, current question and typed/locked answers. Pending damage and healing resolve once.",
-    "New Tournament resets Guardian progress while retaining roster, photos, questions and team setup. Home and all other game changes remain unchanged."
-
+    "Guardian battles fit the viewport: answer controls, Accept & Attack and Heal stay visible while artwork uses the remaining space.",
+    "Adds Guardian font family/style and text/button size adjustments in in-game Display. Save, Cancel, Reset and auto fit work with independent Guardian preferences.",
+    "Preserves Continue/New Tournament, combat, questions, saved players, artwork, Home and all other modes. Verified final ZIP checksum and size match the manifest."
   ]
 }
