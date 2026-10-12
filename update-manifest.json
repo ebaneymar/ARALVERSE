@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.72",
-  "published": "2026-10-11",
+  "version": "1.5.76",
+  "published": "2026-10-12",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.72.zip?sha256=b30b2adee9148cb89dec80711d51ec3a7fa705e3611b9a8db399957b7e4eacbf",
-  "sha256": "b30b2adee9148cb89dec80711d51ec3a7fa705e3611b9a8db399957b7e4eacbf",
-  "size": 59829595,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.76.zip?sha256=0b52e68edacea6986b3967ec27a7e83c7f939f75ff524e42534c6a80fc1f0a53",
+  "sha256": "0b52e68edacea6986b3967ec27a7e83c7f939f75ff524e42534c6a80fc1f0a53",
+  "size": 59844993,
   "notes": [
-    "Restores the exact v1.5.67 Home artwork and layout without resizing or re-encoding the original image.",
-    "Keeps ARALVERSE shine and the click-only flag Easter egg. Removes all added character and object movement.",
-    "Preserves all other current gameplay changes, settings, teams, questions, Guardian introductions and saves. ZIP checksum and byte size match the manifest."
+    "Guardian battle now uses the same original high-quality blue/red robot artwork as the introduction, with idle motion and core glow.",
+    "Adds blue/red victory finishers: charge, strike, opponent knockdown and victory pose before the animated live podium. Includes Skip, sound-toggle support and tournament resume.",
+    "Preserves Home, flag, seven live player slots, Display adjustments, questions, combat and all other modes. Final ZIP SHA-256 and size exactly match this manifest."
   ]
 }
