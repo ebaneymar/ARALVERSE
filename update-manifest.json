@@ -1,16 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.45",
-  "published": "2026-09-18",
+  "version": "1.5.73",
+  "published": "2026-10-12",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.45.zip",
-  "sha256": "31d8738f01fbeb22e7549482f65e46d3ce40e6cfb51e9e4d48ec334456dae861",
-  "size": 15453746,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.73.zip?sha256=d03ec984a305c5d034febe8e504e71e993174b62f2a93b775e5f5650a8afa83d",
+  "sha256": "d03ec984a305c5d034febe8e504e71e993174b62f2a93b775e5f5650a8afa83d",
+  "size": 59832692,
   "notes": [
-    "Expands Mathematics Term 2 Week 1 measurement questions from a few repetitive formats to 15 clear question families plus a varied classic generator.",
-    "Removes the confusing non-zero ruler-start pencil format from the Week 1 pool; ruler-reading questions now start at 0 cm.",
-    "Adds variety for cm/m unit choice, ruler reading, longer/shorter/equal comparisons, measuring tools, longest/shortest, and school-distance questions.",
-    "Moves Tournament questions higher by reducing unused arena height and gives the timer its own visible row directly below the question.",
-    "Applies the expanded Term 2 Week 1 Math pool to Adventure, Team Battle, Tournament, and Class Boss curriculum question generators."
+    "Guardian Game Modes/Back now save your tournament. Reopen Guardian to choose Continue Tournament or New Tournament.",
+    "Continue restores bracket winners, HP, turn, pilot order, question history, current question and typed/locked answers. Pending damage and healing resolve once.",
+    "New Tournament resets Guardian progress while retaining roster, photos, questions and team setup. Home and all other game changes remain unchanged."
   ]
 }
