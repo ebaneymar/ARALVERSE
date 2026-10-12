@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.77",
+  "version": "1.5.78",
   "published": "2026-10-12",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.77.zip?sha256=07545e691478595f64e361f775c0b9c857b14d7649cddb18aa10ecd5a917fb5b",
-  "sha256": "07545e691478595f64e361f775c0b9c857b14d7649cddb18aa10ecd5a917fb5b",
-  "size": 59849313,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.78.zip?sha256=da0cce83219cd0cb9affae0b62b2bd6750cc93c59efce8d3f2e9d0830807d578",
+  "sha256": "da0cce83219cd0cb9affae0b62b2bd6750cc93c59efce8d3f2e9d0830807d578",
+  "size": 59857641,
   "notes": [
-    "Adds 20, 30 and 40-second question timer choices to Guardian character/team selection; defaults to 30. Numeric countdown appears above VS.",
-    "Time up damages the answering team like a wrong answer: Easy 50, Medium 100, Hard 150 HP. Applies once; a lethal timeout opens the opponent finisher and podium.",
-    "Clock stops on answer lock, pauses for Display/hidden app, and retains remaining time on Continue. Preserves artwork, Home, cutscenes, podium, controls and other modes. Exact ZIP SHA-256 and size match."
+    "Guardian attacks now lunge to the opponent with an arm strike and return; hits show recoil, flash, sparks and armor fragments. Wrong answers/timeouts show self-hits.",
+    "Lower HP progressively exposes torn armor, mechanisms, missing plates and critical smoke. Damage appearance restores on Continue and follows healing; finishers use the current damaged robots.",
+    "Preserves original artwork, HP rules, 20/30/40 timer, live photos/podium, Home and other modes. Display pauses movement and resolution together. Exact final ZIP SHA-256 and size match."
   ]
 }
