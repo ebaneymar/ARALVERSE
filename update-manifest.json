@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.75",
-  "published": "2026-10-12",
+  "version": "1.5.79",
+  "published": "2026-10-13",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.75.zip?sha256=d09f63a6577f5640a910b6ae1b778c8b4d98598f6cd4ee5f75a9d045a65ce859",
-  "sha256": "d09f63a6577f5640a910b6ae1b778c8b4d98598f6cd4ee5f75a9d045a65ce859",
-  "size": 59837813,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.79.zip?sha256=9cb990aec74cf0a586d5dcc7c63cc3fbd66f2563fb74051ab679fb18ee64a722",
+  "sha256": "9cb990aec74cf0a586d5dcc7c63cc3fbd66f2563fb74051ab679fb18ee64a722",
+  "size": 59859590,
   "notes": [
-    "Guardian podium now celebrates with a floating trophy, moving gold photo rims, title shine, sparkles, one-time confetti and a staggered victory entrance.",
-    "Keeps all seven live player slots, real team/player names and original photos. Continue has reserved space; effects stop when hidden and respect Effects Off/reduced motion.",
-    "Preserves Guardian resume, Display adjustments, battle fit, questions, combat, Home and all other modes. Verified final ZIP checksum and size match the manifest."
+    "Guardian Question Timer now offers No Time alongside 20, 30 and 40 seconds. Infinity above VS means unlimited answering; wrong answers still cause self-damage.",
+    "Spacebar outside text fields and the battle Pause button freeze the clock, attack movement, turn resolution and victory cutscene. Resume continues from the same point. Continue retains a manually paused tournament.",
+    "Display and manual pause work together. Preserves original artwork, previous Guardian/Home effects, HP rules, uploaded players, questions and other modes. Exact final ZIP SHA-256 and size match."
   ]
 }
