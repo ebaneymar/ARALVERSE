@@ -19,6 +19,7 @@ const near = (a,b,label) => assert.ok(Math.abs(a-b)<3,`${label}: expected ${b}, 
   try {
     browser = await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage'],...(process.env.ARALVERSE_BROWSER?{executablePath:process.env.ARALVERSE_BROWSER}:{})});
     const page = await browser.newPage({viewport:{width:1910,height:1080}});
+    page.setDefaultTimeout(20000);
     const errors=[];page.on('pageerror',e=>errors.push(e.message));
     const url = 'http://127.0.0.1:'+server.address().port+'/game.html';
     await page.goto(url);
@@ -107,7 +108,10 @@ const near = (a,b,label) => assert.ok(Math.abs(a-b)<3,`${label}: expected ${b}, 
     await frame.waitForFunction(()=>AVLayoutEditor1580.screen==='battle');
     await page.locator('#avleLauncher1580').click();const bossTime=await frame.locator('#time').textContent();await page.waitForTimeout(1150);
     assert.equal(await frame.locator('#time').textContent(),bossTime,'Class Boss countdown pauses during editing');
-    await frame.locator('[data-action=cancel]').click();await page.waitForTimeout(1100);
+    await frame.locator('[data-action=cancel]').click();
+    // A resumed clock can reach its next one-second callback before a full
+    // active second has elapsed. Wait for the displayed tick, not 1.1s of wall time.
+    await frame.waitForFunction(previous=>document.getElementById('time').textContent!==previous,bossTime,{timeout:3500});
     assert.notEqual(await frame.locator('#time').textContent(),bossTime,'Class Boss countdown resumes');
     frame=await launch('teamTournament');await page.locator('#avleLauncher1580').click();assert.equal(await frame.locator('.avle-toolbar').count(),1,'Guardian mode supports editing');await frame.locator('[data-action=cancel]').click();
     frame=await launch('pve');await page.locator('#avleLauncher1580').click();assert.equal(await frame.locator('.avle-toolbar').count(),1,'Classic Adventure supports editing');await frame.locator('[data-action=cancel]').click();
