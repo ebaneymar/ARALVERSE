@@ -1,13 +1,7 @@
 name: Build and publish layout editor 1.5.80
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - src/layout-editor.js
-      - tools/build_layout_update.py
-      - tools/test_layout_update.cjs
-      - .github/workflows/publish-layout-update.yml
+  # Historical release builder; newer releases have their own guarded publisher.
   workflow_dispatch:
 
 permissions:

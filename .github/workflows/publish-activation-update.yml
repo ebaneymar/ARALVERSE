@@ -1,0 +1,89 @@
+name: Build and publish activation update 1.5.81
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - src/license-engine.cjs
+      - src/license-public-key.json
+      - src/activation-ui.js
+      - tools/build_activation_update.py
+      - tools/test_activation_engine.cjs
+      - tools/test_activation_desktop.cjs
+      - tools/test_activation_ui.cjs
+      - tools/test_layout_update.cjs
+      - .github/workflows/publish-activation-update.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aralverse-activation-1-5-81
+  cancel-in-progress: false
+
+jobs:
+  verify-windows:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /ARALVERSE_Update_1.5.80.zip
+            /src/
+            /tools/
+      - name: Build and verify Windows licensing
+        run: |
+          python tools/build_activation_update.py
+          python -c "import os,zipfile; zipfile.ZipFile('ARALVERSE_Update_1.5.81.zip').extractall(os.path.join(os.environ['RUNNER_TEMP'],'aral-activation-preview'))"
+          node tools/test_activation_engine.cjs
+          node tools/test_activation_desktop.cjs "$env:RUNNER_TEMP\aral-activation-preview\app"
+  publish:
+    needs: verify-windows
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /ARALVERSE_Update_1.5.80.zip
+            /update-manifest.json
+            /src/
+            /tools/
+            /.github/
+      - name: Verify release target
+        run: |
+          python3 - <<'PY'
+          import json
+          assert json.load(open('update-manifest.json'))['version']=='1.5.80', 'Review the newer published version before rebuilding.'
+          PY
+      - name: Build update and verify licensing
+        run: |
+          python3 tools/build_activation_update.py
+          python3 - <<'PY'
+          import os,zipfile
+          with zipfile.ZipFile('ARALVERSE_Update_1.5.81.zip') as package:
+              package.extractall(os.environ['RUNNER_TEMP']+'/aral-activation-preview')
+          PY
+          node tools/test_activation_engine.cjs
+          node tools/test_activation_desktop.cjs "$RUNNER_TEMP/aral-activation-preview/app"
+      - name: Prepare browser checks
+        run: |
+          npm install --prefix "$RUNNER_TEMP/aral-activation-test" --no-audit --no-fund playwright@1.62.1
+          node "$RUNNER_TEMP/aral-activation-test/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Verify activation and existing game layouts
+        run: |
+          ARALVERSE_PLAYWRIGHT="$RUNNER_TEMP/aral-activation-test/node_modules/playwright" node tools/test_activation_ui.cjs "$RUNNER_TEMP/aral-activation-preview/app"
+          ARALVERSE_LICENSE_FIXTURE=trial ARALVERSE_PLAYWRIGHT="$RUNNER_TEMP/aral-activation-test/node_modules/playwright" node tools/test_layout_update.cjs "$RUNNER_TEMP/aral-activation-preview/app"
+      - name: Publish verified package and matching manifest
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --sparse -- ARALVERSE_Update_1.5.81.zip update-manifest.json
+          git commit -m 'Publish ARALVERSE v1.5.81 with device trials and activation'
+          git push origin HEAD:main

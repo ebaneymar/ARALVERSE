@@ -1,0 +1,5 @@
+{
+  "schema": 1,
+  "algorithm": "Ed25519",
+  "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0df4t6TWf1N8T5eYgtbmBruExb+lLvyfa3XaIUOo/gY=\n-----END PUBLIC KEY-----\n"
+}

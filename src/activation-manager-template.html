@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'">
+<title>ARALVERSE · Private Activation Manager</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#e9f1f5;color:#173c50;font:16px/1.5 'Segoe UI',Arial,sans-serif}main{width:min(760px,calc(100% - 28px));margin:40px auto;background:#fffdf6;border:1px solid #d5c58e;border-radius:22px;overflow:hidden;box-shadow:0 16px 50px #153d5018}header{padding:28px 30px;background:#163f55;color:white}header p{color:#b4d7e0;margin:8px 0 0}h1{font-size:27px;line-height:1.2;margin:0}.content{padding:28px 30px}label{display:block;font-weight:700;margin:16px 0 6px}input,textarea{width:100%;padding:13px;font:15px/1.4 Consolas,monospace;color:#153c50;background:#fff;border:1px solid #b0c6cf;border-radius:9px}textarea{min-height:150px;resize:vertical;overflow-wrap:anywhere}button{padding:12px 18px;border:1px solid #aac6d0;border-radius:9px;background:#e8f1f5;color:#234b60;font-size:15px;font-weight:700;cursor:pointer}button.primary{background:#087e86;border-color:#087e86;color:white}button:disabled{opacity:.45;cursor:default}.row{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}.row input{flex:1;min-width:160px}small,.hint{color:#58727f}.hint{font-size:14px}#status{padding:13px 15px;border-radius:10px;background:#e8f2ee;color:#2c5e4d;margin:18px 0 0}#status[data-error=true]{background:#ffedf0;color:#9c3541}[hidden]{display:none!important}:focus-visible{outline:3px solid #f0b53c;outline-offset:3px}.private{display:inline-block;padding:4px 10px;border:1px solid #e0c77e;border-radius:99px;color:#f7e4a9;font-size:12px;font-weight:700;letter-spacing:.05em;margin-bottom:10px}footer{padding:18px 30px;background:#f1eedf;color:#62737a;font-size:13px}@media(max-width:500px){main{margin:14px auto}.content,header{padding:22px}}
+</style></head><body><main><header><span class="private">OWNER ONLY · KEEP PRIVATE</span><h1>ARALVERSE Activation Manager</h1><p>Generate permanent keys for individual devices.</p></header><div class="content">
+<section id="unlockPanel"><p>Open the separate manager password file, then unlock this tool. It works offline in Microsoft Edge or Chrome.</p><label for="password">Manager password</label><div class="row"><input id="password" type="password" autocomplete="off"><button id="unlock" class="primary" type="button">Unlock manager</button></div></section>
+<section id="generator" hidden><label for="device">Customer device code</label><input id="device" placeholder="AV-XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX" spellcheck="false" autocomplete="off"><p class="hint">The customer copies this from ARALVERSE → Settings → Activation Key. Each generated key activates that device permanently, including future updates.</p><div class="row"><button id="generate" class="primary" type="button">Generate activation key</button><button id="lock" type="button">Lock manager</button></div><label for="key">Activation key</label><textarea id="key" readonly spellcheck="false"></textarea><div class="row"><button id="copy" type="button" disabled>Copy key</button><button id="download" type="button" disabled>Save key as TXT</button></div><p class="hint">Send the customer their activation key. Keep this manager and its password for yourself.</p></section>
+<p id="status" role="status" aria-live="polite">Manager locked.</p></div><footer>No account or internet connection is required. Customer device codes and generated keys stay in this tool.</footer></main>
+<script>
+(()=>{'use strict';
+ const VAULT=__ARALVERSE_OWNER_VAULT__;
+ const $=id=>document.getElementById(id),encoder=new TextEncoder();let privateKey=null,lastDevice='';
+ const bytes=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+ const base64url=b=>{let s='';for(const n of new Uint8Array(b))s+=String.fromCharCode(n);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+ function message(text,error=false){$('status').textContent=text;$('status').dataset.error=String(error)}
+ $('unlock').onclick=async()=>{
+  const password=$('password').value;if(!password)return message('Enter your manager password.',true);
+  $('unlock').disabled=true;
+  try{
+   if(!crypto.subtle)throw Error('Unsupported browser');
+   const material=await crypto.subtle.importKey('raw',encoder.encode(password),'PBKDF2',false,['deriveKey']);
+   const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:bytes(VAULT.salt),iterations:VAULT.iterations,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['decrypt']);
+   const clear=await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(VAULT.iv)},key,bytes(VAULT.ciphertext));
+   privateKey=await crypto.subtle.importKey('pkcs8',clear,{name:'Ed25519'},false,['sign']);
+   new Uint8Array(clear).fill(0);$('password').value='';$('unlockPanel').hidden=true;$('generator').hidden=false;$('device').focus();message('Manager unlocked. Paste the customer device code.');
+  }catch(_){privateKey=null;message('Could not unlock. Check the manager password and use a current version of Edge or Chrome.',true)}
+  finally{$('unlock').disabled=false}
+ };
+ $('password').addEventListener('keydown',e=>{if(e.key==='Enter')$('unlock').click()});
+ $('generate').onclick=async()=>{
+  const deviceCode=$('device').value.replace(/\s+/g,'').toUpperCase();
+  if(!/^AV-(?:[A-F0-9]{8}-){3}[A-F0-9]{8}$/.test(deviceCode))return message('Paste the complete device code shown in ARALVERSE.',true);
+  if(!privateKey)return message('Unlock the manager first.',true);
+  $('generate').disabled=true;
+  try{
+   const data={schema:1,app:'ARALVERSE',deviceCode,licenseId:crypto.randomUUID(),issuedAt:Date.now(),expiresAt:null};
+   const body=base64url(encoder.encode(JSON.stringify(data))),signature=await crypto.subtle.sign('Ed25519',privateKey,encoder.encode('ARALVERSE_LICENSE_V1\n'+body));
+   $('key').value='AV1.'+body+'.'+base64url(signature);lastDevice=deviceCode;$('copy').disabled=false;$('download').disabled=false;message('Permanent activation key generated for '+deviceCode+'.');
+  }catch(_){message('Could not generate a key. Try a current version of Edge or Chrome.',true)}finally{$('generate').disabled=false}
+ };
+ $('copy').onclick=async()=>{try{await navigator.clipboard.writeText($('key').value);message('Activation key copied.')}catch(_){$('key').focus();$('key').select();message('Key selected. Press Ctrl+C to copy it.')}};
+ $('download').onclick=()=>{const blob=new Blob(['ARALVERSE DEVICE ACTIVATION\r\n\r\nDevice: '+lastDevice+'\r\nLicense: Permanent\r\n\r\n'+$('key').value+'\r\n'],{type:'text/plain'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='ARALVERSE_'+lastDevice+'.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+ $('lock').onclick=()=>{privateKey=null;$('key').value='';$('device').value='';$('copy').disabled=true;$('download').disabled=true;$('generator').hidden=true;$('unlockPanel').hidden=false;message('Manager locked.')};
+})();
+</script></body></html>

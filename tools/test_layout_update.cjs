@@ -20,6 +20,10 @@ const near = (a,b,label) => assert.ok(Math.abs(a-b)<3,`${label}: expected ${b}, 
     browser = await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage'],...(process.env.ARALVERSE_BROWSER?{executablePath:process.env.ARALVERSE_BROWSER}:{})});
     const page = await browser.newPage({viewport:{width:1910,height:1080}});
     page.setDefaultTimeout(20000);
+    if(process.env.ARALVERSE_LICENSE_FIXTURE==='trial')await page.addInitScript(()=>{
+      if(window.top!==window)return;
+      window.mathAPangDesktop={isDesktop:true,activation:{status:async()=>({state:'trial',canPlay:true,activated:false,remainingDays:7,deviceCode:'AV-00000000-00000000-00000000-00000000',trialEndsAt:Date.now()+604800000}),activate:async()=>({ok:false}),copyDeviceCode:async()=>({ok:true})},updater:{info:async()=>({version:'1.5.81',configured:false,config:{autoCheck:false}}),onProgress:()=>()=>{}},openDataFolder:async()=>{},exit(){}};
+    });
     const errors=[];page.on('pageerror',e=>errors.push(e.message));
     const url = 'http://127.0.0.1:'+server.address().port+'/game.html';
     await page.goto(url);
