@@ -1,14 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.79",
-  "published": "2026-10-13",
+  "version": "1.5.80",
+  "published": "2026-10-28",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.79.zip?sha256=9cb990aec74cf0a586d5dcc7c63cc3fbd66f2563fb74051ab679fb18ee64a722",
-  "sha256": "9cb990aec74cf0a586d5dcc7c63cc3fbd66f2563fb74051ab679fb18ee64a722",
-  "size": 59859590,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.80.zip?sha256=c5045907340f9803db16d506b9783f6200c6338b7067d1811b3dbab970cfa3be",
+  "sha256": "c5045907340f9803db16d506b9783f6200c6338b7067d1811b3dbab970cfa3be",
+  "size": 59869543,
   "notes": [
-    "Guardian Question Timer now offers No Time alongside 20, 30 and 40 seconds. Infinity above VS means unlimited answering; wrong answers still cause self-damage.",
-    "Spacebar outside text fields and the battle Pause button freeze the clock, attack movement, turn resolution and victory cutscene. Resume continues from the same point. Continue retains a manually paused tournament.",
-    "Display and manual pause work together. Preserves original artwork, previous Guardian/Home effects, HP rules, uploaded players, questions and other modes. Exact final ZIP SHA-256 and size match."
+    "New Move & Resize Objects setting and in-game Layout button. Drag player cards, question boxes, answer buttons, photos, HP bars and other game objects to new places.",
+    "Resize from all eight handles or enter exact X, Y, width and height. Optional full width reduces empty side margins. Select whole cards or their individual parts.",
+    "Save keeps a separate layout for each mode and screen on this device. Undo, Redo, Reset Object, Reset Screen and Cancel are included. Game clocks pause while editing; existing player data, questions and artwork are preserved."
   ]
 }
