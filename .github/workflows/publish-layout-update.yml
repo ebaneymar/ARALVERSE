@@ -1,0 +1,64 @@
+name: Build and publish layout editor 1.5.80
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - src/layout-editor.js
+      - tools/build_layout_update.py
+      - tools/test_layout_update.cjs
+      - .github/workflows/publish-layout-update.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aralverse-layout-1-5-80
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'ebaneymar/ARALVERSE'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out release inputs
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /ARALVERSE_Update_1.5.79.zip
+            /update-manifest.json
+            /src/
+            /tools/
+            /.github/
+      - name: Verify release target
+        run: |
+          python3 - <<'PY'
+          import json
+          assert json.load(open('update-manifest.json'))['version'] == '1.5.79', 'A different version is already published. Review before rebuilding.'
+          PY
+      - name: Build update and verify package integrity
+        run: |
+          python3 tools/build_layout_update.py
+          python3 - <<'PY'
+          import os, zipfile
+          with zipfile.ZipFile('ARALVERSE_Update_1.5.80.zip') as package:
+              package.extractall(os.environ['RUNNER_TEMP']+'/aral-layout-preview')
+          PY
+      - name: Prepare browser checks
+        run: |
+          npm install --prefix "$RUNNER_TEMP/aral-layout-test" --no-audit --no-fund playwright@1.62.1
+          node "$RUNNER_TEMP/aral-layout-test/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Verify the actual game and editor
+        run: |
+          ARALVERSE_PLAYWRIGHT="$RUNNER_TEMP/aral-layout-test/node_modules/playwright" node tools/test_layout_update.cjs "$RUNNER_TEMP/aral-layout-preview/app"
+      - name: Publish the verified ZIP and matching manifest together
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --sparse -- ARALVERSE_Update_1.5.80.zip update-manifest.json
+          git commit -m 'Publish ARALVERSE v1.5.80 with draggable and resizable game objects'
+          git push origin HEAD:main
