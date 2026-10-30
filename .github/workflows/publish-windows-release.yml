@@ -1,0 +1,73 @@
+name: Build and verify complete Windows installer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - tools/prepare_windows_release.py
+      - tools/finish_windows_release.py
+      - tools/windows/**
+      - .github/workflows/publish-windows-release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aralverse-windows-1-5-81
+  cancel-in-progress: false
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /ARALVERSE_Update_1.5.81.zip
+            /update-manifest.json
+            /src/
+            /tools/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Stage the complete verified app
+        run: |
+          python tools/prepare_windows_release.py
+          node tools/test_activation_engine.cjs
+          node tools/test_activation_desktop.cjs .build/windows/app
+      - name: Install pinned Windows build tools
+        run: npm ci --prefix tools/windows --no-audit --no-fund
+      - name: Build complete installer and portable download
+        run: |
+          node tools/windows/build.cjs
+          python tools/finish_windows_release.py .build/windows
+      - name: Install and launch the actual Windows EXEs
+        run: node tools/windows/test-release.cjs
+      - name: Keep verified downloads
+        uses: actions/upload-artifact@v4
+        with:
+          name: ARALVERSE-Windows-1.5.81-x64
+          compression-level: 0
+          path: |
+            .build/windows/dist/ARALVERSE_Setup_1.5.81_x64.exe
+            .build/windows/dist/ARALVERSE_Windows_1.5.81_x64.zip
+            .build/windows/dist/SHA256SUMS.txt
+            .build/windows/dist/WINDOWS_README.txt
+      - name: Publish verified Windows downloads
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view v1.5.81 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload v1.5.81 .build/windows/dist/ARALVERSE_Setup_1.5.81_x64.exe .build/windows/dist/ARALVERSE_Windows_1.5.81_x64.zip .build/windows/dist/SHA256SUMS.txt .build/windows/dist/WINDOWS_README.txt --repo "$GITHUB_REPOSITORY" --clobber
+          else
+            gh release create v1.5.81 .build/windows/dist/ARALVERSE_Setup_1.5.81_x64.exe .build/windows/dist/ARALVERSE_Windows_1.5.81_x64.zip .build/windows/dist/SHA256SUMS.txt .build/windows/dist/WINDOWS_README.txt --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title 'ARALVERSE 1.5.81 - Complete Windows Download' --notes-file .build/windows/RELEASE_NOTES.md --draft
+            gh release edit v1.5.81 --repo "$GITHUB_REPOSITORY" --draft=false --latest
+          fi
+

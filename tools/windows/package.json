@@ -1,0 +1,12 @@
+{
+  "name": "aralverse-windows-build",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reproducible tools for the complete ARALVERSE Windows distribution",
+  "devDependencies": {
+    "electron": "44.10.0",
+    "electron-builder": "26.18.0",
+    "playwright": "1.62.1"
+  }
+}
+
