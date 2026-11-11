@@ -1,14 +1,15 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.81",
-  "published": "2026-10-28",
+  "version": "1.5.82",
+  "published": "2026-11-11",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.81.zip?sha256=68ec2cb186ddccf56f3487a94dce7ad07b0989caa17574a0f2fe504b1ed29022",
-  "sha256": "68ec2cb186ddccf56f3487a94dce7ad07b0989caa17574a0f2fe504b1ed29022",
-  "size": 59878417,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.82.zip?sha256=ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c",
+  "sha256": "ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c",
+  "size": 60293439,
   "notes": [
-    "Each device starts one 7-day trial the first time it runs v1.5.81. Updates retain the original trial and activation; they do not start a new trial.",
-    "Activation Key is directly below Check for Updates in Settings. Copy the device code, request a matching key from your ARALVERSE provider, then paste it to activate this device permanently.",
-    "When the trial ends, activation is required to play. Updates and saved-data access remain available. Existing players, photos, progress, questions, artwork and the v1.5.80 layout editor are preserved."
+    "New Single Player mode: Pakainin ang mga Alaga. Choose a puppy, owl, or carabao; correct answers feed the pet, make it jump happily, and help it grow until Busog.",
+    "Choose Nina in her story outfit (yellow shirt, blue shorts, yellow hair bow, brown sandals), viewed from behind, or add a different character and activity name.",
+    "Import Excel/CSV questions from both Classic Adventure and the new feeding activity. Built-in and imported/edited question sources are selectable per activity and lesson.",
+    "The existing device trial, activation, classroom saves, questions, other game modes, and manual layout editor are retained."
   ]
 }
