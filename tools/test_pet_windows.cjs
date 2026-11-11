@@ -25,5 +25,11 @@ const {_electron:electron}=require('./windows/node_modules/playwright');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avQuestionEditorV1')&&value.includes('Native feeding question')),'Imported questions reach the real desktop save file');
   await running.close();running=null;
   console.log('PASS: real Windows EXE opens the feeding mode, loads rear-view character art, feeds/grows the pet, and saves imported questions through the native bridge.');
- }finally{if(running)await running.close().catch(()=>{});fs.rmSync(temporary,{recursive:true,force:true})}
+ }finally{
+  if(running)await running.close().catch(()=>{});
+  // Windows may retain a short-lived handle after Electron has exited.
+  // Cleanup must not replace the result of the actual application assertions.
+  try{fs.rmSync(temporary,{recursive:true,force:true,maxRetries:10,retryDelay:150})}
+  catch(error){if(['EPERM','EBUSY','ENOTEMPTY'].includes(error.code))console.warn('Windows is still releasing the temporary test folder; runner cleanup will remove it.');else throw error}
+ }
 })().catch(error=>{console.error(error);process.exitCode=1});

@@ -136,9 +136,11 @@ jobs:
           git fetch origin main
           git checkout --detach origin/main
           python3 - <<'PY'
-          import hashlib,json,pathlib,shutil
+          import hashlib,json,os,pathlib,shutil,subprocess
           root=pathlib.Path('.build/release');new=json.loads((root/'update-manifest.json').read_text());old=json.loads(pathlib.Path('update-manifest.json').read_text())
           assert old['version']=='1.5.81' or (old['version']==new['version'] and old['sha256']==new['sha256']), 'Review a newer published update before replacing it.'
+          if old['version']=='1.5.81':
+              assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==os.environ['GITHUB_SHA'], 'Source changed during verification. Build from the current source before publishing.'
           package=root/'ARALVERSE_Update_1.5.82.zip';assert hashlib.sha256(package.read_bytes()).hexdigest()==new['sha256'] and package.stat().st_size==new['size']
           shutil.copyfile(package,package.name);shutil.copyfile(root/'update-manifest.json','update-manifest.json')
           names=['ARALVERSE_Setup_1.5.82_x64.exe','ARALVERSE_Windows_1.5.82_x64.zip','ARALVERSE_Update_1.5.82.zip','update-manifest.json','WINDOWS_README.txt']

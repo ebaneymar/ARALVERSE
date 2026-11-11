@@ -72,6 +72,10 @@ def build(base, root, output):
     editor = once(editor, 'function openEditor(){\n  if(dialog.open)return;', '''function openEditor(){
   if(dialog.open)return;
   try{const fw=document.getElementById('gameFrame')?.contentWindow;if(fw?.AVQECanOpen1582&&!fw.AVQECanOpen1582()){alert('Please wait for the current action to finish before opening questions.');return}}catch(_){}''')
+    # On a fresh launch the hidden lesson controls can still have their defaults.
+    # Single Player imports must use the activity's saved lesson instead.
+    editor = once(editor, "  selected={term:term?.value||'1',subject:CURRICULUM.subjects[subject?.value]?subject.value:'math',topic:topic?.value||''};", """  selected={term:term?.value||'1',subject:CURRICULUM.subjects[subject?.value]?subject.value:'math',topic:topic?.value||''};
+  try{if(document.getElementById('gameFrame')?.contentWindow?.AVSinglePlayerQuestions1582){const current=currentSelection();selected={...current,subject:CURRICULUM.subjects[current.subject]?current.subject:'math'}}}catch(_){}""")
     editor = once(editor, "if(mode==='tournament'){", "if(['tournament','pve','petFeeding'].includes(mode)){")
     editor = editor.replace('Teacher questions for Tournament', 'Teacher questions for Single Player and Tournament')
     editor = editor.replace('Choose Use Edited Questions in Tournament setup to play them.', 'Choose Imported / Edited Questions in Single Player, or Edited Questions in Tournament, to play them.')

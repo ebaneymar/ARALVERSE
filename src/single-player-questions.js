@@ -81,7 +81,10 @@
   }
   function changed() { notify(); }
   function imported(event) {
-    if (importOwner && event.detail?.added > 0 && count()) setSource('edited');
+    const lesson = event.detail?.lesson;
+    const appliesHere = lesson && editor()?.editedRows(selection()).some(row =>
+      String(row.lesson.term) === String(lesson.term) && row.lesson.subject === lesson.subject && row.lesson.topic === lesson.topic);
+    if (importOwner && event.detail?.added > 0 && appliesHere) setSource('edited');
     notify();
   }
   parentWindow.addEventListener('avquestionschanged1582', changed);
