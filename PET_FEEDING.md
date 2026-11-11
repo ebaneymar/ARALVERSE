@@ -1,0 +1,26 @@
+# Pakainin ang mga Alaga — v1.5.82
+
+Choose **Pakainin ang mga Alaga** from the game-mode menu. Nina, the girl in
+yellow from the user's story, is a selectable full-body character seen from
+behind. **Magdagdag ng Tauhan** accepts another named character image, so the
+mode can be reused for other classroom activities. Give the activity its own
+name and choose a puppy, owl, or carabao.
+
+Correct answers send a heart to the animal, make it jump, reduce its Gutom Meter
+by 20, and visibly increase its size. Five successful feedings make it **Busog**.
+A wrong answer leaves the pet hungry and reduces the character's energy by 10;
+the answer is explained and the learner can retry. At zero energy, the activity
+offers rest and then continues. There is no answer timer or combat in this mode.
+
+Both this mode and the existing Classic Adventure have **Import Questions** and
+**Question Editor** controls. Use the editor's Excel template, import `.xlsx` or
+UTF-8 `.csv`, review the preview, then save. Imported/edited questions are stored
+with the selected curriculum lesson. The question bank is shared with Tournament;
+Single Player's source choice is stored independently for each activity/lesson.
+No questions are saved merely by previewing a file, and invalid rows cannot be
+saved. Existing classroom records and the device's trial/activation are retained.
+
+The manual layout editor can move/resize the new scene's character, pet, question
+panel, and other objects. The live energy/hunger fills are excluded from resizing.
+
+Assets and the generation prompts are documented in [src/assets/README.md](src/assets/README.md).
