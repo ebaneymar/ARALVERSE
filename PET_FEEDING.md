@@ -1,4 +1,4 @@
-# Pakainin ang mga Alaga — v1.5.85
+# Pakainin ang mga Alaga — v1.5.86
 
 Choose **Pakainin ang mga Alaga** from the game-mode menu. Nina, the girl in
 yellow from the user's story, is a selectable full-body character seen from
@@ -44,3 +44,8 @@ Keyboard: **A** selects the left answer, **B** the middle, and **C** the right.
 Uppercase and lowercase both work. **Enter** activates the visible next/retry
 button after feedback. Typing in editors, dialogs, and paused activities does
 not submit answers; repeated key-down events are ignored.
+
+Answer feedback: the selected answer letter and text turn **green** when correct
+and **red** when incorrect. The correct option is also shown in green after a
+missed answer. These feedback colors remain fully visible while choices are
+locked, and return to normal for the next question or retry.

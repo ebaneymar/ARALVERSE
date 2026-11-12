@@ -1,4 +1,4 @@
-name: Build and publish mode-card size fix 1.5.85
+name: Build and publish answer-color update 1.5.86
 
 on:
   push:
@@ -22,7 +22,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: aralverse-pet-feeding-1-5-85
+  group: aralverse-pet-feeding-1-5-86
   cancel-in-progress: true
 
 jobs:
@@ -64,10 +64,10 @@ jobs:
           ARALVERSE_LICENSE_FIXTURE=trial node tools/test_layout_update.cjs .build/pet-preview/app
       - uses: actions/upload-artifact@v4
         with:
-          name: pet-update-1.5.85
+          name: pet-update-1.5.86
           compression-level: 0
           path: |
-            .build/pet-release/ARALVERSE_Update_1.5.85.zip
+            .build/pet-release/ARALVERSE_Update_1.5.86.zip
             .build/pet-release/update-manifest.json
       - uses: actions/upload-artifact@v4
         if: always()
@@ -93,7 +93,7 @@ jobs:
           node-version: '24'
       - uses: actions/download-artifact@v4
         with:
-          name: pet-update-1.5.85
+          name: pet-update-1.5.86
           path: .build/pet-release
       - name: Stage the verified update and build Windows downloads
         run: |
@@ -107,11 +107,11 @@ jobs:
           node tools/test_pet_windows.cjs .build/pet-windows
       - uses: actions/upload-artifact@v4
         with:
-          name: pet-windows-1.5.85
+          name: pet-windows-1.5.86
           compression-level: 0
           path: |
-            .build/pet-windows/dist/ARALVERSE_Setup_1.5.85_x64.exe
-            .build/pet-windows/dist/ARALVERSE_Windows_1.5.85_x64.zip
+            .build/pet-windows/dist/ARALVERSE_Setup_1.5.86_x64.exe
+            .build/pet-windows/dist/ARALVERSE_Windows_1.5.86_x64.zip
             .build/pet-windows/dist/SHA256SUMS.txt
             .build/pet-windows/dist/WINDOWS_README.txt
   publish:
@@ -127,11 +127,11 @@ jobs:
             /update-manifest.json
       - uses: actions/download-artifact@v4
         with:
-          name: pet-update-1.5.85
+          name: pet-update-1.5.86
           path: .build/release
       - uses: actions/download-artifact@v4
         with:
-          name: pet-windows-1.5.85
+          name: pet-windows-1.5.86
           path: .build/release
       - name: Publish verified update and matching manifest
         run: |
@@ -140,27 +140,27 @@ jobs:
           python3 - <<'PY'
           import hashlib,json,os,pathlib,shutil,subprocess
           root=pathlib.Path('.build/release');new=json.loads((root/'update-manifest.json').read_text());old=json.loads(pathlib.Path('update-manifest.json').read_text())
-          assert old['version']=='1.5.84' or (old['version']==new['version'] and old['sha256']==new['sha256']), 'Review a newer published update before replacing it.'
-          if old['version']=='1.5.84':
+          assert old['version']=='1.5.85' or (old['version']==new['version'] and old['sha256']==new['sha256']), 'Review a newer published update before replacing it.'
+          if old['version']=='1.5.85':
               assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==os.environ['GITHUB_SHA'], 'Source changed during verification. Build from the current source before publishing.'
-          package=root/'ARALVERSE_Update_1.5.85.zip';assert hashlib.sha256(package.read_bytes()).hexdigest()==new['sha256'] and package.stat().st_size==new['size']
+          package=root/'ARALVERSE_Update_1.5.86.zip';assert hashlib.sha256(package.read_bytes()).hexdigest()==new['sha256'] and package.stat().st_size==new['size']
           shutil.copyfile(package,package.name);shutil.copyfile(root/'update-manifest.json','update-manifest.json')
-          names=['ARALVERSE_Setup_1.5.85_x64.exe','ARALVERSE_Windows_1.5.85_x64.zip','ARALVERSE_Update_1.5.85.zip','update-manifest.json','WINDOWS_README.txt']
+          names=['ARALVERSE_Setup_1.5.86_x64.exe','ARALVERSE_Windows_1.5.86_x64.zip','ARALVERSE_Update_1.5.86.zip','update-manifest.json','WINDOWS_README.txt']
           (root/'SHA256SUMS.txt').write_text(''.join(hashlib.sha256((root/n).read_bytes()).hexdigest()+'  '+n+'\n' for n in names))
-          (root/'RELEASE_NOTES.md').write_text('Fixed the oversized Pakainin ang mga Alaga mode card. Its artwork now sits in the same standard thumbnail and card layout as the other modes. The illustrated activity scene is retained. Feed the puppy with a blue food bowl; it becomes happy and grows after correct answers. FONT opens saved controls for font family, title/question/answer/label sizes, boldness, and text color, with preview, Cancel, and Default. A/B/C choose the left/middle/right answer, and Enter advances or retries a question, including when focus is on the launcher.\n\nExcel/CSV question importing is available in both Classic Adventure and the new activity. Existing modes, classroom saves, questions, layouts, device trial, and activation are retained.\n\nExisting v1.5.84 users: Check for Updates inside ARALVERSE. New Windows 10/11 x64 users: download the Setup EXE, or extract the complete portable ZIP. Back up the Data folder before replacing a copy with saved classroom progress.\n')
+          (root/'RELEASE_NOTES.md').write_text('Answer letters and text turn green for a correct answer and red for an incorrect selection. Feedback colors remain bright while choices are disabled. Its artwork now sits in the same standard thumbnail and card layout as the other modes. The illustrated activity scene is retained. Feed the puppy with a blue food bowl; it becomes happy and grows after correct answers. FONT opens saved controls for font family, title/question/answer/label sizes, boldness, and text color, with preview, Cancel, and Default. A/B/C choose the left/middle/right answer, and Enter advances or retries a question, including when focus is on the launcher.\n\nExcel/CSV question importing is available in both Classic Adventure and the new activity. Existing modes, classroom saves, questions, layouts, device trial, and activation are retained.\n\nExisting v1.5.85 users: Check for Updates inside ARALVERSE. New Windows 10/11 x64 users: download the Setup EXE, or extract the complete portable ZIP. Back up the Data folder before replacing a copy with saved classroom progress.\n')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add --sparse -- ARALVERSE_Update_1.5.85.zip update-manifest.json
-          if ! git diff --cached --quiet; then git commit -m 'Publish ARALVERSE v1.5.85 with the standard pet mode card size'; git push origin HEAD:main; fi
+          git add --sparse -- ARALVERSE_Update_1.5.86.zip update-manifest.json
+          if ! git diff --cached --quiet; then git commit -m 'Publish ARALVERSE v1.5.86 with green and red answer feedback'; git push origin HEAD:main; fi
       - name: Publish complete Windows downloads
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          files=(.build/release/ARALVERSE_Setup_1.5.85_x64.exe .build/release/ARALVERSE_Windows_1.5.85_x64.zip .build/release/ARALVERSE_Update_1.5.85.zip .build/release/update-manifest.json .build/release/SHA256SUMS.txt .build/release/WINDOWS_README.txt)
-          if gh release view v1.5.85 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload v1.5.85 "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
+          files=(.build/release/ARALVERSE_Setup_1.5.86_x64.exe .build/release/ARALVERSE_Windows_1.5.86_x64.zip .build/release/ARALVERSE_Update_1.5.86.zip .build/release/update-manifest.json .build/release/SHA256SUMS.txt .build/release/WINDOWS_README.txt)
+          if gh release view v1.5.86 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload v1.5.86 "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
           else
-            gh release create v1.5.85 "${files[@]}" --repo "$GITHUB_REPOSITORY" --target "$(git rev-parse HEAD)" --title 'ARALVERSE 1.5.85 - Mode Card Size Fix' --notes-file .build/release/RELEASE_NOTES.md --draft
+            gh release create v1.5.86 "${files[@]}" --repo "$GITHUB_REPOSITORY" --target "$(git rev-parse HEAD)" --title 'ARALVERSE 1.5.86 - Answer Feedback Colors' --notes-file .build/release/RELEASE_NOTES.md --draft
           fi
-          gh release edit v1.5.85 --repo "$GITHUB_REPOSITORY" --draft=false --latest --notes-file .build/release/RELEASE_NOTES.md
+          gh release edit v1.5.86 --repo "$GITHUB_REPOSITORY" --draft=false --latest --notes-file .build/release/RELEASE_NOTES.md

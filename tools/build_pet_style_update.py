@@ -1,4 +1,4 @@
-"""Build v1.5.85 from the exact published v1.5.82 package."""
+"""Build v1.5.86 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import zipfile
 
-VERSION = '1.5.85'
+VERSION = '1.5.86'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -67,7 +67,7 @@ def build(base, root, output):
     # Other game modes remain byte-identical to the published base.
     for name in other_modes:
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
-    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.85\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
+    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.86\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
     output.mkdir(parents=True, exist_ok=True)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
@@ -79,7 +79,7 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
-        'Fixed the oversized Pakainin ang mga Alaga mode card. It now uses the same card layout and thumbnail size as the other game modes.',
+        'Answer letters and text now turn green for a correct answer and red for an incorrect selection. Feedback stays bright and readable while the choices are disabled.',
         'Feed the pet with a blue food bowl instead of hearts. The puppy becomes happy after feeding, grows with correct answers, and looks sad when hungry.',
         'Use FONT in the activity to preview and save font family, title/question/answer/label sizes, boldness, and text color. Cancel or restore defaults anytime.',
         'Answer with A, B, or C for the left, middle, or right choice. Press Enter for the next question or retry. Shortcuts also work when focus is on the launcher.',
