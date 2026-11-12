@@ -1,4 +1,4 @@
-# Pakainin ang mga Alaga — v1.5.84
+# Pakainin ang mga Alaga — v1.5.85
 
 Choose **Pakainin ang mga Alaga** from the game-mode menu. Nina, the girl in
 yellow from the user's story, is a selectable full-body character seen from
@@ -23,7 +23,7 @@ saved. Existing classroom records and the device's trial/activation are retained
 The manual layout editor can move/resize the new scene's character, pet, question
 panel, and other objects. The live energy/hunger fills are excluded from resizing.
 
-The game-mode card now uses the supplied illustrated design. The activity has a
+The game-mode card uses the supplied illustration within the same standard card and thumbnail layout as the other modes. The activity has a
 wide Philippine schoolyard scene with a blue food bowl, a sad/happy puppy, and
 large question and answer panels. The puppy still grows after every feeding.
 

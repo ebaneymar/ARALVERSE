@@ -1,4 +1,4 @@
-"""Build v1.5.84 from the exact published v1.5.82 package."""
+"""Build v1.5.85 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import zipfile
 
-VERSION = '1.5.84'
+VERSION = '1.5.85'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -41,14 +41,14 @@ def build(base, root, output):
     game = game[:start] + encode(packed) + game[end:]
     tile = re.search(r'<button\b[^>]*id="petFeedingMode1582"[\s\S]*?</button>', game)
     assert tile
-    replacement = '''<button type="button" id="petFeedingMode1582" class="mode-card av-pet-mode1582" onclick="launchGame('petFeeding')" aria-label="Play Pakainin ang mga Alaga. Single Player, Growing Pets, Import Questions."><img src="assets/pet-mode-card-1583.webp" alt="Pakainin ang mga Alaga — Sagutin, magpakain, at palakihin ang alaga. Pumili ng tauhan at gamitin ang sariling mga tanong. PLAY." loading="eager"></button>'''
+    replacement = '''<button type="button" id="petFeedingMode1582" class="mode-card av-pet-mode1582" style="--av-i:1" onclick="launchGame('petFeeding')" aria-label="Play Pakainin ang mga Alaga. Single Player, Growing Pets, Import Questions.">
+<span class="mode-art av-pet-art1585" aria-hidden="true"><img src="assets/pet-mode-card-1583.webp" alt="" loading="eager"></span><span class="mode-icon" aria-hidden="true">💛</span>
+<strong>PAKAININ ANG MGA ALAGA</strong><small>Sagutin ang mga tanong para pakainin at palakihin ang alaga.</small>
+<span class="badges"><span class="badge">Single Player</span><span class="badge">Growing Pets</span><span class="badge">Import Questions</span></span><span class="mode-play">PLAY →</span></button>'''
     game = game[:tile.start()] + replacement + game[tile.end():]
-    menu_style = '''<style id="av-pet-card1583">
-#modeMenu #petFeedingMode1582{display:block!important;grid-column:1/-1!important;width:100%!important;max-width:1100px!important;min-height:0!important;height:auto!important;padding:0!important;margin:8px auto!important;background:transparent!important;border:0!important;border-radius:25px!important;box-shadow:none!important;overflow:hidden!important;transform:none!important}
-#modeMenu #petFeedingMode1582::before,#modeMenu #petFeedingMode1582::after{display:none!important}
-#modeMenu #petFeedingMode1582 img{display:block!important;width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important;filter:none!important}
-#modeMenu #petFeedingMode1582:hover{filter:brightness(1.025)!important}
-#modeMenu #petFeedingMode1582:focus-visible{outline:4px solid #1d958c!important;outline-offset:4px!important}
+    menu_style = '''<style id="av-pet-card1585">
+#modeMenu #petFeedingMode1582 .av-pet-art1585{background-image:none!important;overflow:hidden!important}
+#modeMenu #petFeedingMode1582 .av-pet-art1585 img{position:absolute!important;inset:0 0 0 auto!important;display:block!important;width:210%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:right center!important;pointer-events:none!important}
 </style>'''
     game = once(game, '</head>', menu_style + '\n</head>')
     other_modes = ['PVE_SOURCE','PVP_SOURCE','TOURNAMENT_SOURCE','TEAM_TOURNAMENT_SOURCE','BOSS_SOURCE','PROGRESS_SOURCE']
@@ -67,7 +67,7 @@ def build(base, root, output):
     # Other game modes remain byte-identical to the published base.
     for name in other_modes:
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
-    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.84\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga: illustrated scene, matching mode card, food bowl, puppy emotions, and saved font controls.\n'
+    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.85\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
     output.mkdir(parents=True, exist_ok=True)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
@@ -79,7 +79,7 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
-        'Pakainin ang mga Alaga has a new illustrated game-mode card and a wide, cheerful Philippine schoolyard scene based on the supplied designs.',
+        'Fixed the oversized Pakainin ang mga Alaga mode card. It now uses the same card layout and thumbnail size as the other game modes.',
         'Feed the pet with a blue food bowl instead of hearts. The puppy becomes happy after feeding, grows with correct answers, and looks sad when hungry.',
         'Use FONT in the activity to preview and save font family, title/question/answer/label sizes, boldness, and text color. Cancel or restore defaults anytime.',
         'Answer with A, B, or C for the left, middle, or right choice. Press Enter for the next question or retry. Shortcuts also work when focus is on the launcher.',
