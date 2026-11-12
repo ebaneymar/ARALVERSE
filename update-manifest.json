@@ -1,13 +1,13 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.84",
+  "version": "1.5.85",
   "published": "2026-11-12",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.84.zip?sha256=db44b3382cfd9c8dd08e5b5d84091ca29fe789d2cbf55aca2fc8a6ffe0fd69d5",
-  "sha256": "db44b3382cfd9c8dd08e5b5d84091ca29fe789d2cbf55aca2fc8a6ffe0fd69d5",
-  "size": 61082092,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.85.zip?sha256=da5c12efe9689b8c0ff1510e61ba5f0c98154c4b1ff7cd0b8772e7ef00fe26f9",
+  "sha256": "da5c12efe9689b8c0ff1510e61ba5f0c98154c4b1ff7cd0b8772e7ef00fe26f9",
+  "size": 61082062,
   "notes": [
-    "Pakainin ang mga Alaga has a new illustrated game-mode card and a wide, cheerful Philippine schoolyard scene based on the supplied designs.",
+    "Fixed the oversized Pakainin ang mga Alaga mode card. It now uses the same card layout and thumbnail size as the other game modes.",
     "Feed the pet with a blue food bowl instead of hearts. The puppy becomes happy after feeding, grows with correct answers, and looks sad when hungry.",
     "Use FONT in the activity to preview and save font family, title/question/answer/label sizes, boldness, and text color. Cancel or restore defaults anytime.",
     "Answer with A, B, or C for the left, middle, or right choice. Press Enter for the next question or retry. Shortcuts also work when focus is on the launcher.",
