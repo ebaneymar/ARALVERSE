@@ -17,19 +17,23 @@ const {_electron:electron}=require('./windows/node_modules/playwright');
   const frame=page.frames().find(f=>f.parentFrame());await frame.evaluate(()=>AVSinglePlayerQuestions1582.setSource('edited'));
   await frame.locator('#petStart').click();await frame.waitForSelector('body[data-phase=question]');
   assert.equal(await frame.locator('#petQuestion').textContent(),'Native feeding question: 7 - 2 = ?');
-  await frame.locator('#petAnswers [data-choice="5"]').click();await frame.waitForFunction(()=>AVPetFeeding1582.getState().feeds===1);
+  const answerIndex=await frame.locator('#petAnswers button').evaluateAll(buttons=>buttons.findIndex(button=>button.dataset.choice==='5'));
+  await frame.locator('#petQuestion').click();await page.keyboard.press('abc'[answerIndex]);
+  await frame.waitForFunction(()=>AVPetFeeding1582.getState().feeds===1);
   assert.equal(await frame.locator('#petHungerText').textContent(),'80 / 100');
   assert.ok(await frame.locator('#petHeroImage').evaluate(image=>image.complete&&image.naturalHeight>image.naturalWidth));
   assert.ok(await frame.locator('#petFoodBowl img').evaluate(image=>image.complete&&image.naturalWidth>0));
   await frame.locator('#petFonts').click();await frame.locator('#petFont-family').selectOption('century');
   await frame.locator('#petFont-question').fill('42');await frame.locator('#petFontSave').click();
   await frame.locator('#petFontDialog').waitFor({state:'hidden'});
+  await frame.locator('#petQuestion').click();await page.keyboard.press('Enter');
+  assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().phase),'question','Enter advances in the real Windows app');
   await page.evaluate(()=>mathAPangDesktop.saveNow());
   const saved=JSON.parse(fs.readFileSync(path.join(folder,'Data/ARALVERSE_Data.json'),'utf8'));
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avQuestionEditorV1')&&value.includes('Native feeding question')),'Imported questions reach the real desktop save file');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avPetFeedingFontsV1')&&JSON.parse(value).question===42),'Font preferences reach the real desktop save file');
   await running.close();running=null;
-  console.log('PASS: real Windows EXE opens the feeding mode, loads rear-view character art, feeds/grows the pet, and saves imported questions through the native bridge.');
+  console.log('PASS: real Windows EXE opens the illustrated pet mode, feeds/grows with a letter key, advances with Enter, and saves imported questions and fonts through the native bridge.');
  }finally{
   if(running)await running.close().catch(()=>{});
   // Windows may retain a short-lived handle after Electron has exited.

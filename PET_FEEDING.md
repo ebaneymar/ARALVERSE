@@ -1,4 +1,4 @@
-# Pakainin ang mga Alaga — v1.5.83
+# Pakainin ang mga Alaga — v1.5.84
 
 Choose **Pakainin ang mga Alaga** from the game-mode menu. Nina, the girl in
 yellow from the user's story, is a selectable full-body character seen from
@@ -39,3 +39,8 @@ the published v1.5.82 base and preserves every other packed game mode.
 
 Assets and the generation prompts are documented in [src/assets/README.md](src/assets/README.md).
 The scene update's files and exact prompts are in [PET_STYLE_1583.md](src/assets/PET_STYLE_1583.md).
+
+Keyboard: **A** selects the left answer, **B** the middle, and **C** the right.
+Uppercase and lowercase both work. **Enter** activates the visible next/retry
+button after feedback. Typing in editors, dialogs, and paused activities does
+not submit answers; repeated key-down events are ignored.

@@ -145,7 +145,7 @@
         } else {
           phase = 'feedback'; $('petThought').textContent = 'Ang sarap!';
           $('petFeedback').textContent = 'Magaling! Mas lumaki ang alaga. ' + (question.explanation || '');
-          $('petNext').textContent = 'SUSUNOD NA TANONG →'; $('petNext').hidden = false;
+          $('petNext').textContent = 'SUSUNOD NA TANONG → · ENTER'; $('petNext').hidden = false;
         }
         controls();
       });
@@ -155,7 +155,7 @@
       for (const option of $('petAnswers').querySelectorAll('button')) if (option.dataset.choice === String(question.answer)) option.classList.add('correct');
       $('petThought').textContent = 'Gutom pa!'; $('petAnimalActor').classList.add('rumble'); cue('rumble');
       $('petFeedback').textContent = `Ang tamang sagot ay ${question.answer}. ${question.explanation || ''} ${energy ? 'Subukan nating muli.' : 'Pahinga muna ang tauhan. Maaari tayong magpatuloy pagkatapos.'}`;
-      $('petNext').textContent = 'SUBUKAN MULI'; $('petNext').hidden = !energy; $('petRest').hidden = !!energy;
+      $('petNext').textContent = 'SUBUKAN MULI · ENTER'; $('petNext').hidden = !energy; $('petRest').hidden = !!energy;
       meters(); controls();
     }
   }
@@ -219,11 +219,40 @@
   questions.bind($('petQuestionTools'));
   document.addEventListener('visibilitychange', () => document.hidden ? pause('hidden') : resume('hidden'));
   window.addEventListener('pagehide', () => { cancelAction(); imageToken++; audio?.close().catch(() => {}); }, { once: true });
-  document.addEventListener('keydown', event => {
-    if (event.ctrlKey || event.metaKey || event.altKey || $('petCharacterDialog').open || $('petFontDialog')?.open || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(event.target?.tagName || '')) return;
-    const index = { ArrowLeft:0, ArrowUp:1, ArrowRight:2, a:0, b:1, c:2, '1':0, '2':1, '3':2 }[event.key];
-    if (index !== undefined && phase === 'question' && !pauses.size) { event.preventDefault(); $('petAnswers').children[index]?.click(); }
-    if (event.code === 'Space' && phase !== 'setup') { event.preventDefault(); window.togglePause(); }
-  });
+  function handleKey(event) {
+    const target = event.target;
+    if (event.ctrlKey || event.metaKey || event.altKey || !$('petGame').classList.contains('active') || $('petCharacterDialog').open || $('petFontDialog')?.open || target?.isContentEditable || target?.closest?.('input,textarea,select,dialog,[role=dialog],.avle-ui')) return false;
+    const key = event.key.toLowerCase(), index = { arrowleft:0, arrowup:1, arrowright:2, a:0, b:1, c:2, '1':0, '2':1, '3':2 }[key];
+    if (event.repeat && (index !== undefined || key === 'enter')) { event.preventDefault();return true; }
+    if (index !== undefined && phase === 'question' && !pauses.size) {
+      const choice = $('petAnswers').children[index];
+      if (!choice || choice.disabled) return false;
+      event.preventDefault();choice.click();return true;
+    }
+    if (key === 'enter' && phase === 'feedback' && !pauses.size && !$('petNext').hidden && !$('petNext').disabled) {
+      // Keep Enter's normal behavior on focused settings/pause controls.
+      const button = target?.closest?.('button');
+      if (button && button !== $('petNext') && !button.closest('#petAnswers')) return false;
+      event.preventDefault();$('petNext').click();return true;
+    }
+    if (event.code === 'Space' && !event.repeat && phase !== 'setup' && !target?.closest?.('button')) {
+      event.preventDefault();window.togglePause();return true;
+    }
+    return false;
+  }
+  document.addEventListener('keydown', handleKey);
+  function shellKey(event) {
+    if (event.code === 'Space') return; // The launcher already forwards pause.
+    const parentDocument = window.parent.document;
+    if (parentDocument.getElementById('gameFrame')?.contentWindow !== window || parentDocument.getElementById('gameShell')?.style.display === 'none') return;
+    const overlayOpen = [...parentDocument.querySelectorAll('dialog,[role=dialog],#displaySettingsOverlay,#mqUpdateOverlay,#avLiveBoard')].some(element => {
+      if (element.tagName === 'DIALOG' && !element.open) return false;
+      const style = window.parent.getComputedStyle(element);
+      return element.getClientRects().length && style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+    });
+    if (!overlayOpen && handleKey(event)) event.stopImmediatePropagation();
+  }
+  window.parent.document.addEventListener('keydown', shellKey, true);
+  window.addEventListener('pagehide',()=>window.parent.document.removeEventListener('keydown',shellKey,true),{once:true});
   updateHeroes(); updatePetButtons(); meters(); scene(false); controls(); questions.refresh();
 })();

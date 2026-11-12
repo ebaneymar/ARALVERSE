@@ -21,7 +21,7 @@ const { chromium } = require(process.env.ARALVERSE_PLAYWRIGHT || 'playwright');
       window.mathAPangDesktop = { isDesktop:true, saveNow:async()=>({ok:true}), activation:{
         status:async()=>({state:window.__petTrialExpired?'expired':'trial',canPlay:!window.__petTrialExpired,activated:false,remainingDays:window.__petTrialExpired?0:7,deviceCode:'AV-00000000-00000000-00000000-00000000',trialEndsAt:Date.now()+604800000}),
         activate:async()=>({ok:false}),copyDeviceCode:async()=>({ok:true})},
-        updater:{info:async()=>({version:'1.5.83',configured:false,config:{autoCheck:false}}),onProgress:()=>()=>{}},openDataFolder:async()=>({ok:true}),exit(){} };
+        updater:{info:async()=>({version:'1.5.84',configured:false,config:{autoCheck:false}}),onProgress:()=>()=>{}},openDataFolder:async()=>({ok:true}),exit(){} };
     });
     const url = 'http://127.0.0.1:' + server.address().port + '/game.html';
     await page.goto(url); await page.waitForFunction(() => window.AVActivation1581?.getStatus().canPlay);
@@ -84,13 +84,30 @@ const { chromium } = require(process.env.ARALVERSE_PLAYWRIGHT || 'playwright');
     assert.match(await frame.locator('#petFoodToken img').getAttribute('src'),/pet-food-1583/);
     assert.ok((await frame.locator('#fullscreen-wrapper').boundingBox()).width>1250,'The activity uses the available screen width');
     assert.equal(await frame.locator('#petQuestion').textContent(),'Pet CSV question: 7 - 2 = ?');
+    for (let index=0;index<3;index++) {
+      const choice=frame.locator('#petAnswers button').nth(index), expected=await choice.getAttribute('data-choice');
+      const before=await frame.evaluate(()=>AVPetFeeding1582.getState().attempts);
+      if(index===1)await page.evaluate(()=>{document.body.tabIndex=-1;document.body.focus()});
+      else await frame.locator('#petQuestion').click();
+      await page.keyboard.press(['Shift+A','b','C'][index]);
+      await frame.waitForFunction(()=>AVPetFeeding1582.getState().phase==='feedback');
+      assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().attempts),before+1,'Each letter submits exactly one answer');
+      assert.match(await choice.getAttribute('class'),expected==='5'?/correct/:/incorrect/,'A, B, and C select the left, middle, and right visible buttons');
+      await page.keyboard.press('Enter');
+      assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().phase),'question','Enter advances or retries the question');
+      assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().attempts),before+1,'Enter does not submit an extra answer');
+    }
+    await frame.locator('#petPause').click();const pausedAttempts=await frame.evaluate(()=>AVPetFeeding1582.getState().attempts);
+    await page.keyboard.press('a');assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().attempts),pausedAttempts,'Answer keys are inactive while paused');
+    await frame.locator('#petPause').click();await frame.locator('#petHome').click();await frame.locator('#petStart').click();
     const initialSize=(await frame.locator('#petGrowth').boundingBox()).width;
     await frame.locator('#petAnswers [data-choice="4"]').click();
     assert.equal(await frame.locator('#petEnergyText').textContent(),'90 / 100');
     assert.equal(await frame.locator('#petHungerText').textContent(),'100 / 100');
     assert.equal(await frame.locator('#petThought').textContent(),'Gutom pa!');
     assert.equal(await frame.locator('#petAnimalActor').getAttribute('data-mood'),'hungry');
-    await frame.locator('#petNext').click(); await frame.locator('#petAnswers [data-choice="5"]').click();
+    await page.keyboard.press('Enter');assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().phase),'question','Enter works after clicking an answer');
+    await frame.locator('#petAnswers [data-choice="5"]').click();
     await frame.locator('#petPause').click(); await page.waitForTimeout(1100);
     assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().feeds),0,'Pausing freezes a food toss before it changes hunger/growth');
     await frame.locator('#petPause').click(); await frame.waitForFunction(()=>AVPetFeeding1582.getState().feeds===1);
@@ -185,6 +202,6 @@ const { chromium } = require(process.env.ARALVERSE_PLAYWRIGHT || 'playwright');
     assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().paused),true,'The new mode respects trial expiry and pauses under the activation dialog');
     assert.equal(await page.locator('#avActClose1581').isDisabled(),true);
     assert.deepEqual(errors,[]);
-    console.log('PASS: illustrated mode card and wide scene, food bowl, puppy emotions/growth, font preview/save/cancel/default/restart, pet choice, rear-view Nina, custom characters, hunger/rest/pause, CSV import in both single-player modes, saved data, and activation gate.');
+    console.log('PASS: A/B/C left-middle-right and Enter next/retry in game and launcher focus, illustrated scene/card, food bowl, puppy growth, font editing/persistence, pet/character choices, hunger/rest/pause, imports, saved data, and activation gate.');
   }finally{if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
 })().catch(error=>{console.error(error);process.exitCode=1});

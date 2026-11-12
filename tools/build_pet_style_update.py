@@ -1,4 +1,4 @@
-"""Build v1.5.83 from the exact published v1.5.82 package."""
+"""Build v1.5.84 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import zipfile
 
-VERSION = '1.5.83'
+VERSION = '1.5.84'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -55,7 +55,7 @@ def build(base, root, output):
     preserved_ranges = [packed_source(game,name)[1:] for name in other_modes]
     game = re.sub(r'1\.5\.82', lambda match: match.group() if any(start <= match.start() < end for start,end in preserved_ranges) else VERSION, game)
     files['app/game.html'] = game.encode('utf-8')
-    files['app/main.js'] = once(files['app/main.js'].decode(), '"1.5.82"', '"1.5.83"').encode()
+    files['app/main.js'] = once(files['app/main.js'].decode(), '"1.5.82"', json.dumps(VERSION)).encode()
     package = json.loads(files['app/package.json']); package['version'] = VERSION
     files['app/package.json'] = (json.dumps(package, indent=2) + '\n').encode()
     for source, destination in [('pet-feeding.js','pet-feeding-1583.js'),('pet-feeding.css','pet-feeding-1583.css'),('pet-fonts.js','pet-fonts-1583.js')]:
@@ -67,7 +67,7 @@ def build(base, root, output):
     # Other game modes remain byte-identical to the published base.
     for name in other_modes:
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
-    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.83\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga: illustrated scene, matching mode card, food bowl, puppy emotions, and saved font controls.\n'
+    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.84\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga: illustrated scene, matching mode card, food bowl, puppy emotions, and saved font controls.\n'
     output.mkdir(parents=True, exist_ok=True)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
@@ -82,6 +82,7 @@ def build(base, root, output):
         'Pakainin ang mga Alaga has a new illustrated game-mode card and a wide, cheerful Philippine schoolyard scene based on the supplied designs.',
         'Feed the pet with a blue food bowl instead of hearts. The puppy becomes happy after feeding, grows with correct answers, and looks sad when hungry.',
         'Use FONT in the activity to preview and save font family, title/question/answer/label sizes, boldness, and text color. Cancel or restore defaults anytime.',
+        'Answer with A, B, or C for the left, middle, or right choice. Press Enter for the next question or retry. Shortcuts also work when focus is on the launcher.',
         'Other game modes, imported questions, classroom saves, manual layouts, device trial, and activation are retained.'
       ]}
     (output / 'update-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
