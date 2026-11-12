@@ -1,13 +1,13 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.85",
+  "version": "1.5.86",
   "published": "2026-11-12",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.85.zip?sha256=da5c12efe9689b8c0ff1510e61ba5f0c98154c4b1ff7cd0b8772e7ef00fe26f9",
-  "sha256": "da5c12efe9689b8c0ff1510e61ba5f0c98154c4b1ff7cd0b8772e7ef00fe26f9",
-  "size": 61082062,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.86.zip?sha256=709af6ccf4d48154f82b049d54a8f889de13aba57a7a3e9154ee097ff86d047b",
+  "sha256": "709af6ccf4d48154f82b049d54a8f889de13aba57a7a3e9154ee097ff86d047b",
+  "size": 61082082,
   "notes": [
-    "Fixed the oversized Pakainin ang mga Alaga mode card. It now uses the same card layout and thumbnail size as the other game modes.",
+    "Answer letters and text now turn green for a correct answer and red for an incorrect selection. Feedback stays bright and readable while the choices are disabled.",
     "Feed the pet with a blue food bowl instead of hearts. The puppy becomes happy after feeding, grows with correct answers, and looks sad when hungry.",
     "Use FONT in the activity to preview and save font family, title/question/answer/label sizes, boldness, and text color. Cancel or restore defaults anytime.",
     "Answer with A, B, or C for the left, middle, or right choice. Press Enter for the next question or retry. Shortcuts also work when focus is on the launcher.",
