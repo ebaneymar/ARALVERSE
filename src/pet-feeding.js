@@ -87,6 +87,10 @@
     $('petHeroImage').alt = hero().id === 'nina' ? 'Nina sa dilaw na damit, tanaw mula sa likod' : hero().name;
     $('petAnimalSprite').style.setProperty('--pet-x', pets[pet].x + '%');
     $('petAnimalSprite').style.setProperty('--pet-y', happy ? '100%' : '0%');
+    $('petAnimalSprite').classList.toggle('puppy-sheet', pet === 'puppy');
+    $('petAnimalSprite').style.setProperty('--puppy-mood', happy ? '100%' : '0%');
+    $('petAnimalActor').dataset.pet = pet;
+    $('petAnimalActor').dataset.mood = happy ? 'happy' : 'hungry';
     $('petAnimalSprite').setAttribute('aria-label', (happy ? 'Masayang ' : 'Gutom na ') + pets[pet].name.toLowerCase());
   }
   function showQuestion(fresh = true) {
@@ -109,6 +113,7 @@
       $('petFeedback').textContent = 'Piliin ang tamang sagot. May oras kang mag-isip.';
       $('petThought').textContent = 'Gutom pa!';
       $('petAnimalActor').classList.remove('happy', 'growing', 'rumble'); $('petHeroActor').classList.remove('feeding'); $('petFoodToken').classList.remove('toss');
+      $('petFoodBowl').classList.remove('delivered');
       scene(false); controls();
     } catch (error) { phase = 'blocked'; $('petFeedback').textContent = error.message; $('petAnswers').replaceChildren(); controls(); }
   }
@@ -132,6 +137,7 @@
       cue('correct'); controls();
       after(900, () => {
         feeds++; correct++; hunger = Math.max(0, hunger - 20); meters(); scene(true);
+        $('petFoodBowl').classList.add('delivered');
         $('petAnimalActor').classList.remove('rumble'); $('petAnimalActor').classList.add('happy', 'growing'); $('petHeroActor').classList.remove('feeding');
         if (!hunger) {
           phase = 'complete'; $('petThought').textContent = 'Busog na!'; $('petQuestionArea').hidden = true; $('petComplete').hidden = false;
@@ -167,7 +173,7 @@
   $('petSound').onclick = () => { sound = !sound; savePreferences(); controls(); };
   $('petFull').onclick = async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await $('fullscreen-wrapper').requestFullscreen(); } catch (_) {} };
   $('petQuestions').onclick = () => questions.open(false);
-  $('petFoodToken').innerHTML = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 42S3 29 3 15C3 3 19 1 24 11 29 1 45 3 45 15 45 29 24 42 24 42Z" fill="#ed7f85" stroke="#fff3e3" stroke-width="3"/></svg>';
+  $('petFoodToken').innerHTML = '<img src="assets/pet-food-1583.webp" alt="">';
   $('petAddCharacter').onclick = () => { $('petCharacterForm').reset(); $('petCharacterStatus').textContent = ''; $('petCharacterDialog').showModal(); $('petCharacterName').focus(); };
   $('petCharacterCancel').onclick = () => { imageToken++; $('petCharacterDialog').close(); };
   $('petCharacterDialog').addEventListener('cancel', () => { imageToken++; });
@@ -199,6 +205,7 @@
   };
   window.AVQERefresh1551 = () => { refreshOnClose = true; questions.refresh(); };
   window.AVLayoutSession1580 = { begin() { pause('layout'); }, end() { resume('layout'); } };
+  window.AVPetFontSession1583 = { begin() { pause('fonts'); }, end() { resume('fonts'); } };
   window.togglePause = () => pauses.has('manual') ? resume('manual') : pause('manual');
   window.AVPetFeeding1582 = Object.freeze({
     isRunning: () => !['setup','complete'].includes(phase),
@@ -213,7 +220,7 @@
   document.addEventListener('visibilitychange', () => document.hidden ? pause('hidden') : resume('hidden'));
   window.addEventListener('pagehide', () => { cancelAction(); imageToken++; audio?.close().catch(() => {}); }, { once: true });
   document.addEventListener('keydown', event => {
-    if (event.ctrlKey || event.metaKey || event.altKey || $('petCharacterDialog').open || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(event.target?.tagName || '')) return;
+    if (event.ctrlKey || event.metaKey || event.altKey || $('petCharacterDialog').open || $('petFontDialog')?.open || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(event.target?.tagName || '')) return;
     const index = { ArrowLeft:0, ArrowUp:1, ArrowRight:2, a:0, b:1, c:2, '1':0, '2':1, '3':2 }[event.key];
     if (index !== undefined && phase === 'question' && !pauses.size) { event.preventDefault(); $('petAnswers').children[index]?.click(); }
     if (event.code === 'Space' && phase !== 'setup') { event.preventDefault(); window.togglePause(); }

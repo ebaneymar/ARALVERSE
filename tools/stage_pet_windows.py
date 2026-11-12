@@ -1,4 +1,4 @@
-"""Stage the already verified v1.5.82 update for complete Windows packaging."""
+"""Stage a verified pet-activity update for complete Windows packaging."""
 import argparse
 import hashlib
 import json
@@ -8,8 +8,8 @@ import zipfile
 
 def stage(release, output):
     manifest = json.loads((release / 'update-manifest.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '1.5.82'
-    package = release / 'ARALVERSE_Update_1.5.82.zip'
+    assert manifest['version'] in {'1.5.82','1.5.83'}
+    package = release / ('ARALVERSE_Update_' + manifest['version'] + '.zip')
     raw = package.read_bytes()
     assert len(raw) == manifest['size']
     assert hashlib.sha256(raw).hexdigest() == manifest['sha256']
@@ -24,6 +24,9 @@ def stage(release, output):
             target.write_bytes(archive.read(entry))
     for name in ['main.js','preload.js','game.html','assets/license-engine.cjs','assets/license-public-key.json','assets/layout-editor-1580.js','assets/activation-ui-1581.js','assets/single-player-questions-1582.js','assets/pet-feeding-1582.js','assets/nina-back-1582.webp','assets/pet-feeding-1582.webp']:
         assert (output / 'app' / name).is_file(), name
+    if manifest['version'] == '1.5.83':
+        for name in ['pet-feeding-1583.js','pet-feeding-1583.css','pet-fonts-1583.js','pet-garden-1583.webp','pet-food-1583.webp','puppy-emotions-1583.webp','pet-mode-card-1583.webp']:
+            assert (output / 'app/assets' / name).is_file(), name
     info = {'version':manifest['version'],'sourceSha256':manifest['sha256'],'electronVersion':'44.10.0','architecture':'x64'}
     (output / 'release.json').write_text(json.dumps(info, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(info))

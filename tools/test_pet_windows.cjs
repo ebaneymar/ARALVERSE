@@ -20,9 +20,14 @@ const {_electron:electron}=require('./windows/node_modules/playwright');
   await frame.locator('#petAnswers [data-choice="5"]').click();await frame.waitForFunction(()=>AVPetFeeding1582.getState().feeds===1);
   assert.equal(await frame.locator('#petHungerText').textContent(),'80 / 100');
   assert.ok(await frame.locator('#petHeroImage').evaluate(image=>image.complete&&image.naturalHeight>image.naturalWidth));
+  assert.ok(await frame.locator('#petFoodBowl img').evaluate(image=>image.complete&&image.naturalWidth>0));
+  await frame.locator('#petFonts').click();await frame.locator('#petFont-family').selectOption('century');
+  await frame.locator('#petFont-question').fill('42');await frame.locator('#petFontSave').click();
+  await frame.locator('#petFontDialog').waitFor({state:'hidden'});
   await page.evaluate(()=>mathAPangDesktop.saveNow());
   const saved=JSON.parse(fs.readFileSync(path.join(folder,'Data/ARALVERSE_Data.json'),'utf8'));
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avQuestionEditorV1')&&value.includes('Native feeding question')),'Imported questions reach the real desktop save file');
+  assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avPetFeedingFontsV1')&&JSON.parse(value).question===42),'Font preferences reach the real desktop save file');
   await running.close();running=null;
   console.log('PASS: real Windows EXE opens the feeding mode, loads rear-view character art, feeds/grows the pet, and saves imported questions through the native bridge.');
  }finally{
