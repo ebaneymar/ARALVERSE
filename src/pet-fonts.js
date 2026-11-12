@@ -49,9 +49,15 @@
   };
   $('petFontForm').addEventListener('input',()=>apply(readForm()));
   $('petFontReset').onclick=()=>fill(defaults);
-  $('petFontCancel').onclick=()=>{if(!saving)dialog.close()};
-  dialog.addEventListener('cancel',event=>{if(saving)event.preventDefault()});
-  dialog.addEventListener('close',()=>{if(!committed)apply(saved);window.AVPetFontSession1583?.end()});
+  function closePreview() { dialog.close();window.AVPetFontSession1583?.end(); }
+  function cancelPreview() { if(saving)return;apply(saved);committed=false;closePreview(); }
+  $('petFontCancel').onclick=cancelPreview;
+  dialog.addEventListener('cancel',event=>{event.preventDefault();cancelPreview()});
+  dialog.addEventListener('close',()=>{
+    // A queued close event from a previous preview must not end a newer one.
+    if(dialog.open)return;
+    if(!committed)apply(saved);window.AVPetFontSession1583?.end();
+  });
   dialog.addEventListener('keydown',event=>event.stopPropagation());
   dialog.addEventListener('keyup',event=>event.stopPropagation());
   $('petFontForm').onsubmit=async event=>{
@@ -62,7 +68,7 @@
       store.setItem(KEY,text);if(store.getItem(KEY)!==text)throw Error('Hindi na-save ang font.');
       const result = await window.parent.mathAPangDesktop?.saveNow?.();
       if (result?.ok === false) throw Error(result.error || 'Hindi na-save ang font sa device.');
-      saved=next;apply(saved);committed=true;dialog.close();
+      saved=next;apply(saved);committed=true;closePreview();
     }catch(error){
       try{if(previous===null)store.removeItem(KEY);else store.setItem(KEY,previous)}catch(_){}
       $('petFontStatus').textContent=error.message||'Hindi na-save ang font. Subukan muli.';
