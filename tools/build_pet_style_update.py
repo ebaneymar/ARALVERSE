@@ -1,4 +1,4 @@
-"""Build v1.5.86 from the exact published v1.5.82 package."""
+"""Build v1.5.87 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import zipfile
 
-VERSION = '1.5.86'
+VERSION = '1.5.87'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -62,12 +62,13 @@ def build(base, root, output):
         files['app/assets/' + destination] = (root / 'src' / source).read_bytes()
     for name in ['pet-garden-1583.webp','pet-food-1583.webp','puppy-emotions-1583.webp','pet-mode-card-1583.webp']:
         files['app/assets/' + name] = (root / 'src/assets' / name).read_bytes()
-    for name in ['app/preload.js','app/assets/license-engine.cjs','app/assets/license-public-key.json','app/assets/activation-ui-1581.js','app/assets/layout-editor-1580.js','app/assets/single-player-questions-1582.js']:
+    files['app/assets/layout-editor-1580.js'] = (root / 'src/layout-editor-1587.js').read_bytes()
+    for name in ['app/preload.js','app/assets/license-engine.cjs','app/assets/license-public-key.json','app/assets/activation-ui-1581.js','app/assets/single-player-questions-1582.js']:
         assert files[name] == original[name], 'Preserve existing data/licensing/tools: ' + name
     # Other game modes remain byte-identical to the published base.
     for name in other_modes:
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
-    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.86\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
+    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.87\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
     output.mkdir(parents=True, exist_ok=True)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
@@ -79,7 +80,8 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
-        'Answer letters and text now turn green for a correct answer and red for an incorrect selection. Feedback stays bright and readable while the choices are disabled.',
+        'Move and resize one object without pushing nearby objects. The scene background, character, pet, food bowl, and question-box background are separate editable layers.',
+        'Resizing text or a button keeps its original space in the layout. Save, Undo/Redo, Reset, and Cancel work with the independent object positions.',
         'Feed the pet with a blue food bowl instead of hearts. The puppy becomes happy after feeding, grows with correct answers, and looks sad when hungry.',
         'Use FONT in the activity to preview and save font family, title/question/answer/label sizes, boldness, and text color. Cancel or restore defaults anytime.',
         'Answer with A, B, or C for the left, middle, or right choice. Press Enter for the next question or retry. Shortcuts also work when focus is on the launcher.',

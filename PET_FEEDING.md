@@ -1,4 +1,4 @@
-# Pakainin ang mga Alaga — v1.5.86
+# Pakainin ang mga Alaga — v1.5.87
 
 Choose **Pakainin ang mga Alaga** from the game-mode menu. Nina, the girl in
 yellow from the user's story, is a selectable full-body character seen from
@@ -49,3 +49,18 @@ Answer feedback: the selected answer letter and text turn **green** when correct
 and **red** when incorrect. The correct option is also shown in green after a
 missed answer. These feedback colors remain fully visible while choices are
 locked, and return to normal for the next question or retry.
+
+
+Independent editing: open **LAYOUT**, then choose **Scene background**,
+**Character**, **Pet**, **Food bowl**, or **Question box background**. These
+objects move and resize separately. Resizing a text object or one answer button
+keeps the other objects in place. Use the corner/edge handles or exact X/Y and
+width/height fields; Undo/Redo, Reset object, Cancel, and Save are available.
+**Select a group of objects** is an explicit option for editing a whole group;
+it is off by default. **Select small parts inside an object** exposes details.
+
+Existing layout keys are retained. An older saved question-panel size is read
+as the new question-box background size. The original stored data is not
+rewritten until the teacher chooses Save. The runtime uses
+`src/layout-editor-1587.js`; `src/layout-editor.js` remains the historical v1.5.80
+source used by the older build scripts.

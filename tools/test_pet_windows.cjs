@@ -28,12 +28,18 @@ const {_electron:electron}=require('./windows/node_modules/playwright');
   await frame.locator('#petFontDialog').waitFor({state:'hidden'});
   await frame.locator('#petQuestion').click();await page.keyboard.press('Enter');
   assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().phase),'question','Enter advances in the real Windows app');
+  const questionBefore=await frame.locator('#petQuestionArea').boundingBox(),backgroundBefore=await frame.locator('#petArena').boundingBox();
+  await page.locator('#avleLauncher1580').click();await frame.locator('.avle-toolbar select').selectOption('#petArena');
+  const backgroundHeight=frame.locator('[data-field=h]');await backgroundHeight.fill(String(Math.round(backgroundBefore.height+30)));await backgroundHeight.press('Tab');
+  assert.ok(Math.abs((await frame.locator('#petQuestionArea').boundingBox()).y-questionBefore.y)<2,'Resizing the background does not move the question panel in the Windows app');
+  await frame.locator('[data-action=save]').click();
   await page.evaluate(()=>mathAPangDesktop.saveNow());
   const saved=JSON.parse(fs.readFileSync(path.join(folder,'Data/ARALVERSE_Data.json'),'utf8'));
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avQuestionEditorV1')&&value.includes('Native feeding question')),'Imported questions reach the real desktop save file');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avPetFeedingFontsV1')&&JSON.parse(value).question===42),'Font preferences reach the real desktop save file');
+  assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avManualLayouts1580')&&value.includes('#petArena')),'Independent object layouts reach the real desktop save file');
   await running.close();running=null;
-  console.log('PASS: real Windows EXE opens the illustrated pet mode, feeds/grows with a letter key, advances with Enter, and saves imported questions and fonts through the native bridge.');
+  console.log('PASS: real Windows EXE opens, feeds/grows with a letter key, advances with Enter, resizes the background independently, and saves questions, fonts, and layouts through the native bridge.');
  }finally{
   if(running)await running.close().catch(()=>{});
   // Windows may retain a short-lived handle after Electron has exited.
