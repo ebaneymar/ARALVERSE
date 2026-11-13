@@ -1,11 +1,11 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.87",
+  "version": "1.5.88",
   "published": "2026-11-13",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.87.zip?sha256=11abda223e01a0d9d4e85e19e908b609505c3b1dae90944b50726097848aa063",
-  "sha256": "11abda223e01a0d9d4e85e19e908b609505c3b1dae90944b50726097848aa063",
-  "size": 61083139,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.88.zip?sha256=e90bb49e9dc8f36d292ad79a263fe9ef374e979d021f53da2b083d686bc9e01d",
+  "sha256": "e90bb49e9dc8f36d292ad79a263fe9ef374e979d021f53da2b083d686bc9e01d",
+  "size": 61083204,
   "notes": [
     "Move and resize one object without pushing nearby objects. The scene background, character, pet, food bowl, and question-box background are separate editable layers.",
     "Resizing text or a button keeps its original space in the layout. Save, Undo/Redo, Reset, and Cancel work with the independent object positions.",
