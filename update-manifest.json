@@ -1,12 +1,14 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.89",
+  "version": "1.5.90",
   "published": "2026-11-13",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.89.zip?sha256=3d75b3dcdbbe70065f66e63f204d30d00dff450a13941469a680dab8864f907a",
-  "sha256": "3d75b3dcdbbe70065f66e63f204d30d00dff450a13941469a680dab8864f907a",
-  "size": 61083431,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.90.zip?sha256=2850c7acf2fd2663e62954412de725140aa271a8d86ddac8cff5d3bca38e1750",
+  "sha256": "2850c7acf2fd2663e62954412de725140aa271a8d86ddac8cff5d3bca38e1750",
+  "size": 61084727,
   "notes": [
+    "After activation, the floating Activated - this device badge is hidden. Activation status and device details remain available in Settings.",
+    "LAYOUT adds Pick object to clear the editor panel, hover outlines with object names, larger resize handles, and Alt-click to select an object underneath. Clicking no longer moves objects accidentally.",
     "Removed the idle answer instruction, keyboard-hint line, and feeding/score/attempt footer from Pakainin ang mga Alaga.",
     "Use Hide object / Show object in LAYOUT, or Delete while selecting an object, to hide it and restore it later. Hidden objects stay in the object list; Undo and saved layouts include their visibility.",
     "Move and resize one object without pushing nearby objects. The scene background, character, pet, food bowl, and question-box background are separate editable layers.",
