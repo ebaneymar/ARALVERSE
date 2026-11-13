@@ -297,10 +297,23 @@
         if(e.target.closest('button'))return;e.preventDefault();const r=this.toolbar.getBoundingClientRect();
         this.drag={toolbar:true,pointer:e.pointerId,x:e.clientX,y:e.clientY,left:r.left,top:r.top};this.toolbar.setPointerCapture(e.pointerId);
       });
-      this.toolbar.addEventListener('pointermove',e=>{if(!this.drag?.toolbar)return;const g=this.drag;this.toolbar.style.setProperty('left',clamp(g.left+e.clientX-g.x,0,Math.max(0,this.win.innerWidth-this.toolbar.offsetWidth))+'px','important');this.toolbar.style.setProperty('top',clamp(g.top+e.clientY-g.y,0,Math.max(0,this.win.innerHeight-this.toolbar.offsetHeight))+'px','important')});
+      this.toolbar.addEventListener('pointermove',e=>{if(!this.drag?.toolbar)return;const g=this.drag;this.toolbar.style.setProperty('left',clamp(g.left+e.clientX-g.x,0,Math.max(0,this.win.innerWidth-this.toolbar.offsetWidth))+'px','important');this.toolbar.style.setProperty('top',clamp(g.top+e.clientY-g.y,0,Math.max(0,this.win.innerHeight-this.bottomInset()-this.toolbar.offsetHeight))+'px','important')});
       const stop=()=>{if(this.drag?.toolbar)this.drag=null};this.toolbar.addEventListener('pointerup',stop);this.toolbar.addEventListener('pointercancel',stop);
+      this.positionToolbar();
     }
-    positionToolbar(){if(!this.toolbar)return;const r=this.toolbar.getBoundingClientRect();this.toolbar.style.setProperty('left',clamp(r.left,0,Math.max(0,this.win.innerWidth-r.width))+'px','important');this.toolbar.style.setProperty('top',clamp(r.top,0,Math.max(0,this.win.innerHeight-r.height))+'px','important')}
+    bottomInset(){
+      // The desktop status badge belongs to the launcher above this iframe;
+      // the editor cannot cover it with a higher z-index inside the game.
+      try{
+        const frame=this.win.frameElement,badge=this.win.parent.document.getElementById('avActivationBadge1581');
+        if(frame&&badge&&badge.getClientRects().length){
+          const f=frame.getBoundingClientRect(),b=badge.getBoundingClientRect();
+          if(f.height&&b.bottom>f.top&&b.top<f.bottom&&b.right>f.left&&b.left<f.right)return Math.max(8,(f.bottom-b.top)*this.win.innerHeight/f.height+8);
+        }
+      }catch(_){}
+      return 8;
+    }
+    positionToolbar(){if(!this.toolbar)return;const bottom=this.bottomInset();this.toolbar.style.setProperty('max-height',Math.max(60,this.win.innerHeight-bottom-8)+'px','important');const r=this.toolbar.getBoundingClientRect();this.toolbar.style.setProperty('left',clamp(r.left,0,Math.max(0,this.win.innerWidth-r.width))+'px','important');this.toolbar.style.setProperty('top',clamp(r.top,0,Math.max(0,this.win.innerHeight-bottom-r.height))+'px','important')}
     showControls(show){
       const content=this.toolbar.querySelector('.avle-content');content.hidden=!show;content.style.setProperty('display',show?'grid':'none','important');
       const button=this.toolbar.querySelector('[data-action=minimize]');button.textContent=show?'−':'+';button.setAttribute('aria-label',show?'Collapse layout editor':'Expand layout editor');
@@ -315,7 +328,7 @@
       const r=this.selection.getBoundingClientRect(),panel=this.toolbar.getBoundingClientRect();
       const overlap=p=>Math.max(0,Math.min(p.x+panel.width,r.right+14)-Math.max(p.x,r.left-14))*Math.max(0,Math.min(p.y+panel.height,r.bottom+14)-Math.max(p.y,r.top-14));
       const current={x:panel.left,y:panel.top};let best=current;
-      for(const x of [8,Math.max(8,this.win.innerWidth-panel.width-8)])for(const y of [8,Math.max(8,this.win.innerHeight-panel.height-8)]){const point={x,y};if(overlap(point)<overlap(best))best=point}
+      for(const x of [8,Math.max(8,this.win.innerWidth-panel.width-8)])for(const y of [8,Math.max(8,this.win.innerHeight-panel.height-this.bottomInset())]){const point={x,y};if(overlap(point)<overlap(best))best=point}
       this.toolbar.style.setProperty('left',best.x+'px','important');this.toolbar.style.setProperty('top',best.y+'px','important');this.positionToolbar();
     }
     refreshList(){

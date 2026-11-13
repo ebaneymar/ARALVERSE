@@ -55,6 +55,12 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
   assert.equal(await frame.evaluate(()=>JSON.stringify(AVLayoutEditor1580.layout)),beforePicking,'Selecting never creates an edit');
   const clearPanel=await frame.locator('.avle-toolbar').boundingBox();
   assert.ok(clearPanel.x+clearPanel.width<thought.x||clearPanel.x>thought.x+thought.width||clearPanel.y+clearPanel.height<thought.y||clearPanel.y>thought.y+thought.height,'The reopened panel avoids the selected object');
+  await page.setViewportSize({width:1366,height:720});
+  await frame.locator('[data-action=save]').scrollIntoViewIfNeeded();
+  await frame.locator('[data-action=save]').click({trial:true});
+  const shortPanel=await frame.locator('.avle-toolbar').boundingBox(),badge=await page.locator('#avActivationBadge1581').boundingBox();
+  assert.ok(shortPanel.y+shortPanel.height<badge.y,'The panel stays clear of the launcher badge on a shorter screen');
+  await page.setViewportSize({width:1366,height:900});
   await page.mouse.move(thoughtPoint.x,thoughtPoint.y);await page.mouse.down();await page.mouse.move(thoughtPoint.x+3,thoughtPoint.y+2);await page.mouse.up();
   assert.equal(await frame.evaluate(()=>JSON.stringify(AVLayoutEditor1580.layout)),beforePicking,'A small hand movement while clicking does not move the object');
   assert.equal(await frame.evaluate(()=>AVLayoutEditor1580.undoStack.length),0,'Selection and tiny hand movements do not fill Undo');
