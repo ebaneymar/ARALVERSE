@@ -39,6 +39,36 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
   async function unchanged(before,label){const after=await rects(Object.keys(before));for(const selector of Object.keys(before))for(const key of ['x','y','width','height'])near(after[selector][key],before[selector][key],`${label}: ${selector} ${key}`)}
   async function edit(selector,field,value){await frame.locator('.avle-toolbar select').selectOption(selector);const input=frame.locator('[data-field='+field+']');await input.fill(String(value));await input.press('Tab');await page.waitForTimeout(50)}
   await page.locator('#avleLauncher1580').click();await frame.waitForSelector('.avle-toolbar');
+  // Pick a right-side object that the expanded editor used to cover.
+  const beforePicking=await frame.evaluate(()=>JSON.stringify(AVLayoutEditor1580.layout));
+  await frame.locator('[data-action=pick]').click();
+  assert.equal(await frame.locator('.avle-content').isVisible(),false,'Picking clears the editor panel from the scene');
+  assert.equal(await frame.locator('.avle-outline').isVisible(),false,'Previous resize handles cannot block picking another object');
+  const thought=await frame.locator('#petThought').boundingBox(),thoughtPoint={x:thought.x+thought.width/2,y:thought.y+thought.height/2};
+  await page.mouse.move(thoughtPoint.x,thoughtPoint.y);
+  assert.equal(await frame.locator('.avle-hover span').textContent(),'Pet speech bubble','Hover names the object before selecting it');
+  if(process.env.ARALVERSE_SELECTION_SCREENSHOT)await page.screenshot({path:process.env.ARALVERSE_SELECTION_SCREENSHOT});
+  await page.mouse.click(thoughtPoint.x,thoughtPoint.y);
+  assert.equal(await frame.locator('.avle-toolbar select').inputValue(),'#petThought','The covered object can be clicked in pick mode');
+  assert.equal(await frame.locator('.avle-content').isVisible(),true,'Controls return after picking');
+  if(process.env.ARALVERSE_SELECTION_SCREENSHOT)await page.screenshot({path:process.env.ARALVERSE_SELECTION_SCREENSHOT.replace('.png','-selected.png')});
+  assert.equal(await frame.evaluate(()=>JSON.stringify(AVLayoutEditor1580.layout)),beforePicking,'Selecting never creates an edit');
+  const clearPanel=await frame.locator('.avle-toolbar').boundingBox();
+  assert.ok(clearPanel.x+clearPanel.width<thought.x||clearPanel.x>thought.x+thought.width||clearPanel.y+clearPanel.height<thought.y||clearPanel.y>thought.y+thought.height,'The reopened panel avoids the selected object');
+  await page.mouse.move(thoughtPoint.x,thoughtPoint.y);await page.mouse.down();await page.mouse.move(thoughtPoint.x+3,thoughtPoint.y+2);await page.mouse.up();
+  assert.equal(await frame.evaluate(()=>JSON.stringify(AVLayoutEditor1580.layout)),beforePicking,'A small hand movement while clicking does not move the object');
+  assert.equal(await frame.evaluate(()=>AVLayoutEditor1580.undoStack.length),0,'Selection and tiny hand movements do not fill Undo');
+  assert.ok((await frame.locator('.avle-handle[data-dir=se]').boundingBox()).width>=20,'Resize handles have a larger click target');
+  const firstChoice=await frame.locator('#petAnswers button').nth(0).boundingBox(),secondChoice=await frame.locator('#petAnswers button').nth(1).boundingBox();
+  await page.mouse.click((firstChoice.x+firstChoice.width+secondChoice.x)/2,firstChoice.y+firstChoice.height/2);
+  assert.equal(await frame.locator('.avle-toolbar select').inputValue(),'#petQuestionBackdrop','An unselected group does not block the question background');
+  await frame.evaluate(()=>{const r=document.querySelector('#petFoodBowl').getBoundingClientRect(),overlay=document.createElement('div');overlay.dataset.avLayoutContainer='Transparent wrapper';Object.assign(overlay.style,{position:'fixed',left:r.x+'px',top:r.y+'px',width:r.width+'px',height:r.height+'px',zIndex:'2000000'});document.body.append(overlay)});
+  const bowlForPicking=await frame.locator('#petFoodBowl').boundingBox(),bowlPickPoint={x:bowlForPicking.x+bowlForPicking.width*.25,y:bowlForPicking.y+bowlForPicking.height*.5};
+  await page.mouse.click(bowlPickPoint.x,bowlPickPoint.y);
+  assert.equal(await frame.locator('.avle-toolbar select').inputValue(),'#petFoodBowl','Picking reaches an object under a transparent group wrapper');
+  await page.keyboard.down('Alt');await page.mouse.click(bowlPickPoint.x,bowlPickPoint.y);await page.keyboard.up('Alt');
+  assert.equal(await frame.locator('.avle-toolbar select').inputValue(),'#petArena','Alt-click selects the background beneath an overlapping object');
+  await frame.evaluate(()=>document.querySelector('[data-av-layout-container="Transparent wrapper"]').remove());
   // Keep the movable palette away from the scene's right resize handles.
   const palette=await frame.locator('.avle-toolbar').boundingBox(),paletteHeader=await frame.locator('.avle-toolbar header').boundingBox();
   await page.mouse.move(paletteHeader.x+100,paletteHeader.y+18);await page.mouse.down();
@@ -125,6 +155,6 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
   await edit('#blueSide','h',Math.round(blueBox.height+45));await unchanged(redBefore,'Other battle player stays in place');
   await frame.locator('[data-action=cancel]').click();
   assert.deepEqual(errors,[]);
-  console.log('PASS: independent background/panel/button edits; Hide/Show and Delete with Undo/Redo and save/restart/restore; Reset, Cancel, legacy layouts, classroom data, and other battle players.');
+  console.log('PASS: clear-panel picking, hover names, click-without-moving, larger handles, transparent wrappers and overlapping objects; independent edits; Hide/Show, Undo/Redo, save/restart/restore, legacy layouts and other battle players.');
  }finally{await browser?.close();await new Promise(resolve=>server.close(resolve))}
 })().catch(error=>{console.error(error);process.exitCode=1});

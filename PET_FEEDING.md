@@ -1,4 +1,4 @@
-# Pakainin ang mga Alaga — v1.5.89
+# Pakainin ang mga Alaga — v1.5.90
 
 Choose **Pakainin ang mga Alaga** from the game-mode menu. Nina, the girl in
 yellow from the user's story, is a selectable full-body character seen from
@@ -75,3 +75,12 @@ To remove an object from view, select it in **LAYOUT** and choose **Hide object*
 “hidden” beside their name. Select one and choose **Show object** to bring it
 back. Hide/Show supports Undo, Cancel, Reset, and Save; saved visibility survives
 restarting. Hiding one object keeps the other objects in place.
+
+
+Easier selection: choose **Pick object** in the LAYOUT header to collapse the
+controls while selecting on the scene. Hovering outlines and names the target.
+Click the object; the controls reopen away from it. A click or tiny hand
+movement does not move it. Drag at least 5 pixels to begin a move or resize.
+The handles are larger. **Alt + click** cycles through overlapping objects;
+the named object list and Select parent remain available. Transparent group
+wrappers no longer block the objects underneath.

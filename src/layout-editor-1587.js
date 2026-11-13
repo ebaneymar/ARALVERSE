@@ -1,4 +1,4 @@
-/* ARALVERSE 1.5.87 — independent object editing; existing layout keys/API retained. */
+/* ARALVERSE 1.5.90 — easier object selection; existing layout keys/API retained. */
 (() => {
   'use strict';
   const STORAGE_KEY = 'avManualLayouts1580';
@@ -11,7 +11,7 @@
     html body .avle-ui,html body .avle-ui *{box-sizing:border-box!important;font-family:'Segoe UI',Arial,sans-serif!important;letter-spacing:normal!important;text-shadow:none!important;animation:none!important;}
     html body .avle-toolbar{position:fixed!important;z-index:2147483647!important;width:310px!important;max-width:calc(100vw - 16px)!important;max-height:calc(100vh - 16px)!important;overflow:auto!important;margin:0!important;padding:0!important;background:#f5fafc!important;border:2px solid #2e91a2!important;border-radius:16px!important;color:#163b4f!important;box-shadow:0 12px 42px #001d4166!important;text-align:left!important;font-size:14px!important;line-height:1.35!important;}
     html body .avle-toolbar header{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;background:#123f55!important;color:white!important;padding:12px 14px!important;cursor:move!important;touch-action:none!important;}
-    html body .avle-toolbar header strong{font-size:16px!important;color:white!important;}
+    html body .avle-toolbar header strong{flex:1!important;font-size:16px!important;color:white!important;}
     html body .avle-toolbar .avle-content{padding:12px!important;display:grid!important;gap:10px!important;}
     html body .avle-toolbar p{margin:0!important;font-size:13px!important;color:#4e6876!important;line-height:1.4!important;}
     html body .avle-toolbar label{display:block!important;font-size:12px!important;font-weight:700!important;color:#254b5f!important;}
@@ -29,16 +29,19 @@
     html body .avle-status{min-height:34px!important;padding:8px!important;background:#e4f3f4!important;border-radius:8px!important;font-size:12px!important;color:#235666!important;}
     html body .avle-status[data-error=true]{color:#9a2431!important;background:#ffedf0!important;}
     html body .avle-outline{position:fixed!important;z-index:2147483646!important;pointer-events:none!important;box-sizing:border-box!important;border:2px solid #0ab3cb!important;background:#17bad014!important;margin:0!important;padding:0!important;transform:none!important;translate:none!important;box-shadow:0 0 0 1px #fff!important;}
-    html body .avle-outline[hidden]{display:none!important;}
-    html body .avle-handle{position:absolute!important;display:block!important;width:14px!important;height:14px!important;min-width:14px!important;min-height:14px!important;padding:0!important;margin:0!important;background:#fff!important;border:2px solid #008da9!important;border-radius:3px!important;pointer-events:auto!important;touch-action:none!important;box-shadow:0 1px 5px #001b4933!important;}
-    html body .avle-handle[data-dir=nw]{left:-8px!important;top:-8px!important;cursor:nwse-resize!important;}
-    html body .avle-handle[data-dir=n]{left:calc(50% - 7px)!important;top:-8px!important;cursor:ns-resize!important;}
-    html body .avle-handle[data-dir=ne]{right:-8px!important;top:-8px!important;cursor:nesw-resize!important;}
-    html body .avle-handle[data-dir=e]{right:-8px!important;top:calc(50% - 7px)!important;cursor:ew-resize!important;}
-    html body .avle-handle[data-dir=se]{right:-8px!important;bottom:-8px!important;cursor:nwse-resize!important;}
-    html body .avle-handle[data-dir=s]{left:calc(50% - 7px)!important;bottom:-8px!important;cursor:ns-resize!important;}
-    html body .avle-handle[data-dir=sw]{left:-8px!important;bottom:-8px!important;cursor:nesw-resize!important;}
-    html body .avle-handle[data-dir=w]{left:-8px!important;top:calc(50% - 7px)!important;cursor:ew-resize!important;}
+    html body .avle-outline[hidden],html body .avle-hover[hidden]{display:none!important;}
+    html body .avle-hover{position:fixed!important;z-index:2147483645!important;pointer-events:none!important;border:2px dashed #07889b!important;background:#17bad00a!important;margin:0!important;padding:0!important;}
+    html body .avle-hover span{position:absolute!important;left:-2px!important;bottom:calc(100% + 4px)!important;max-width:260px!important;padding:4px 8px!important;border-radius:5px!important;background:#075a68!important;color:white!important;font-size:13px!important;line-height:1.3!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+    html body .avle-hover[data-below=true] span{bottom:auto!important;top:calc(100% + 4px)!important;}
+    html body .avle-handle{position:absolute!important;display:block!important;width:20px!important;height:20px!important;min-width:20px!important;min-height:20px!important;padding:0!important;margin:0!important;background:#fff!important;border:2px solid #008da9!important;border-radius:4px!important;pointer-events:auto!important;touch-action:none!important;box-shadow:0 1px 5px #001b4933!important;}
+    html body .avle-handle[data-dir=nw]{left:-11px!important;top:-11px!important;cursor:nwse-resize!important;}
+    html body .avle-handle[data-dir=n]{left:calc(50% - 10px)!important;top:-11px!important;cursor:ns-resize!important;}
+    html body .avle-handle[data-dir=ne]{right:-11px!important;top:-11px!important;cursor:nesw-resize!important;}
+    html body .avle-handle[data-dir=e]{right:-11px!important;top:calc(50% - 10px)!important;cursor:ew-resize!important;}
+    html body .avle-handle[data-dir=se]{right:-11px!important;bottom:-11px!important;cursor:nwse-resize!important;}
+    html body .avle-handle[data-dir=s]{left:calc(50% - 10px)!important;bottom:-11px!important;cursor:ns-resize!important;}
+    html body .avle-handle[data-dir=sw]{left:-11px!important;bottom:-11px!important;cursor:nesw-resize!important;}
+    html body .avle-handle[data-dir=w]{left:-11px!important;top:calc(50% - 10px)!important;cursor:ew-resize!important;}
     html body.avle-editing1580,html body.avle-editing1580 *{animation-play-state:paused!important;transition:none!important;}
     html body.avle-editing1580 :is(#pause,#pauseOverlay,.pause-overlay){visibility:hidden!important;pointer-events:none!important;}
     html body.avle-editing1580 :is(button,img,input,select,.side,.combatant,.guardian-card,.qa,.question-area,.question-box,.active-student){cursor:move!important;}
@@ -102,9 +105,9 @@
       this.observer=new this.win.MutationObserver(()=>this.schedule());
       this.observer.observe(doc.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden']});
       this.win.addEventListener('resize',()=>{if(this.active){this.positionToolbar();this.updateOutline()}this.schedule()});
-      this.win.addEventListener('scroll',()=>this.updateOutline(),true);
+      this.win.addEventListener('scroll',()=>{this.updateOutline();this.updateHover(null)},true);
       this.win.addEventListener('pagehide',()=>{this.finish(false)});
-      doc.addEventListener('fullscreenchange',()=>{if(this.active){(doc.fullscreenElement||doc.body).append(this.toolbar,this.outline);this.positionToolbar()}this.addEntries()});
+      doc.addEventListener('fullscreenchange',()=>{if(this.active){(doc.fullscreenElement||doc.body).append(this.toolbar,this.outline,this.hover);this.positionToolbar()}this.addEntries()});
       this.schedule();
     }
     currentScreen(){
@@ -135,6 +138,25 @@
       return r.width>=8&&r.height>=8&&s.display!=='none'&&(restoreHidden||(s.visibility!=='hidden'&&s.opacity!=='0'))&&!!el.getClientRects().length;
     }
     candidates(){return [...this.doc.querySelectorAll(CANDIDATES)].filter(el=>this.visible(el,true))}
+    targetsAt(x,y){
+      const hits=[];
+      for(const el of this.doc.elementsFromPoint(x,y)){
+        if(el.closest('.avle-ui'))continue;
+        let target=el.closest(CANDIDATES);
+        if(!this.toolbar.querySelector('[data-detail]').checked)target=el.closest('[data-av-layout-object]')||el.closest(CARDS)||target;
+        if(target&&this.visible(target)&&!hits.includes(target))hits.push(target);
+      }
+      // A surrounding panel must not intercept an object beneath a transparent
+      // wrapper. Parent/group selection remains available in the editor.
+      return hits.filter(el=>!hits.some(other=>other!==el&&el.contains(other)));
+    }
+    updateHover(el){
+      if(!this.active||!this.hover)return;
+      if(!el||!this.visible(el)){this.hover.hidden=true;return}
+      const r=el.getBoundingClientRect();this.hover.hidden=false;this.hover.dataset.below=String(r.top<30);
+      for(const[p,v]of Object.entries({left:r.left,top:r.top,width:r.width,height:r.height}))this.hover.style.setProperty(p,v+'px','important');
+      this.hover.firstChild.textContent=this.name(el);
+    }
     selector(el){
       const esc=this.win.CSS.escape;
       if(el.id&&this.doc.querySelectorAll('#'+esc(el.id)).length===1)return '#'+esc(el.id);
@@ -250,10 +272,11 @@
     mount(){
       const d=this.doc;
       this.toolbar=d.createElement('aside');this.toolbar.className='avle-ui avle-toolbar';this.toolbar.setAttribute('aria-label','Game layout editor');
-      this.toolbar.innerHTML=`<header><strong>✥ Edit layout</strong><button type="button" data-action="minimize" aria-label="Collapse layout editor">−</button></header><div class="avle-content"><p>Move or resize one object without pushing nearby objects. Changes apply to this screen.</p><label>Selected object<select aria-label="Selected object"></select></label><label class="avle-check"><input type="checkbox" data-detail> Select small parts inside an object</label><label class="avle-check"><input type="checkbox" data-groups> Select a group of objects</label><div class="avle-grid"><label>Left (X)<input type="number" data-field="x" step="1" aria-label="Left position"></label><label>Top (Y)<input type="number" data-field="y" step="1" aria-label="Top position"></label><label>Width<input type="number" data-field="w" min="16" step="1" aria-label="Object width"></label><label>Height<input type="number" data-field="h" min="16" step="1" aria-label="Object height"></label></div><p>Values are in pixels. Arrow keys move; Shift + arrows move 10 pixels. Delete hides the selected object.</p><label class="avle-check"><input type="checkbox" data-wide> Use full width · reduce side gaps</label><div class="avle-actions"><button type="button" data-action="hide">Hide object</button><button type="button" data-action="parent">Select parent</button><button type="button" data-action="reset">Reset object</button><button type="button" data-action="undo">Undo</button><button type="button" data-action="redo">Redo</button><button type="button" data-action="resetAll">Reset this screen</button></div><div class="avle-status" role="status" aria-live="polite"></div><div class="avle-actions"><button type="button" data-action="save">Save layout</button><button type="button" data-action="cancel">Cancel</button></div></div>`;
+      this.toolbar.innerHTML=`<header title="Drag this header to move the editor"><strong>✥ Edit layout</strong><button type="button" data-action="pick" aria-pressed="false" title="Clear the panel, then click an object on the scene">Pick object</button><button type="button" data-action="minimize" aria-label="Collapse layout editor">−</button></header><div class="avle-content"><p>Click an object, then drag or resize it. Pick object clears this panel. Alt + click selects an object underneath.</p><label>Selected object<select aria-label="Selected object"></select></label><label class="avle-check"><input type="checkbox" data-detail> Select small parts inside an object</label><label class="avle-check"><input type="checkbox" data-groups> Select a group of objects</label><div class="avle-grid"><label>Left (X)<input type="number" data-field="x" step="1" aria-label="Left position"></label><label>Top (Y)<input type="number" data-field="y" step="1" aria-label="Top position"></label><label>Width<input type="number" data-field="w" min="16" step="1" aria-label="Object width"></label><label>Height<input type="number" data-field="h" min="16" step="1" aria-label="Object height"></label></div><p>Values are in pixels. Arrow keys move; Shift + arrows move 10 pixels. Delete hides the selected object.</p><label class="avle-check"><input type="checkbox" data-wide> Use full width · reduce side gaps</label><div class="avle-actions"><button type="button" data-action="hide">Hide object</button><button type="button" data-action="parent">Select parent</button><button type="button" data-action="reset">Reset object</button><button type="button" data-action="undo">Undo</button><button type="button" data-action="redo">Redo</button><button type="button" data-action="resetAll">Reset this screen</button></div><div class="avle-status" role="status" aria-live="polite"></div><div class="avle-actions"><button type="button" data-action="save">Save layout</button><button type="button" data-action="cancel">Cancel</button></div></div>`;
       this.outline=d.createElement('div');this.outline.className='avle-ui avle-outline';this.outline.hidden=true;
+      this.hover=d.createElement('div');this.hover.className='avle-ui avle-hover';this.hover.hidden=true;this.hover.append(d.createElement('span'));this.hover.setAttribute('aria-hidden','true');
       for(const dir of ['nw','n','ne','e','se','s','sw','w']){const h=d.createElement('button');h.type='button';h.className='avle-handle';h.dataset.dir=dir;h.setAttribute('aria-label','Resize '+dir);this.outline.append(h)}
-      (d.fullscreenElement||d.body).append(this.toolbar,this.outline);
+      (d.fullscreenElement||d.body).append(this.toolbar,this.outline,this.hover);
       this.toolbar.style.setProperty('left',Math.max(8,this.win.innerWidth-326)+'px','important');this.toolbar.style.setProperty('top','16px','important');
       this.toolbar.querySelector('select').onchange=e=>{try{this.select(d.querySelector(e.target.value))}catch(_){}};
       for(const input of this.toolbar.querySelectorAll('[data-detail],[data-groups]'))input.onchange=()=>{
@@ -278,6 +301,23 @@
       const stop=()=>{if(this.drag?.toolbar)this.drag=null};this.toolbar.addEventListener('pointerup',stop);this.toolbar.addEventListener('pointercancel',stop);
     }
     positionToolbar(){if(!this.toolbar)return;const r=this.toolbar.getBoundingClientRect();this.toolbar.style.setProperty('left',clamp(r.left,0,Math.max(0,this.win.innerWidth-r.width))+'px','important');this.toolbar.style.setProperty('top',clamp(r.top,0,Math.max(0,this.win.innerHeight-r.height))+'px','important')}
+    showControls(show){
+      const content=this.toolbar.querySelector('.avle-content');content.hidden=!show;content.style.setProperty('display',show?'grid':'none','important');
+      const button=this.toolbar.querySelector('[data-action=minimize]');button.textContent=show?'−':'+';button.setAttribute('aria-label',show?'Collapse layout editor':'Expand layout editor');
+      this.positionToolbar();
+    }
+    pick(on){
+      this.picking=on;this.toolbar.querySelector('header strong').textContent=on?'Click an object':'✥ Edit layout';
+      this.toolbar.querySelector('[data-action=pick]').setAttribute('aria-pressed',String(on));this.showControls(!on);
+      this.updateOutline();
+      if(on){this.updateHover(null);return}
+      if(!this.selection||!this.visible(this.selection))return;
+      const r=this.selection.getBoundingClientRect(),panel=this.toolbar.getBoundingClientRect();
+      const overlap=p=>Math.max(0,Math.min(p.x+panel.width,r.right+14)-Math.max(p.x,r.left-14))*Math.max(0,Math.min(p.y+panel.height,r.bottom+14)-Math.max(p.y,r.top-14));
+      const current={x:panel.left,y:panel.top};let best=current;
+      for(const x of [8,Math.max(8,this.win.innerWidth-panel.width-8)])for(const y of [8,Math.max(8,this.win.innerHeight-panel.height-8)]){const point={x,y};if(overlap(point)<overlap(best))best=point}
+      this.toolbar.style.setProperty('left',best.x+'px','important');this.toolbar.style.setProperty('top',best.y+'px','important');this.positionToolbar();
+    }
     refreshList(){
       if(!this.toolbar)return;
       const list=this.candidates(),signature=list.map(x=>this.selector(x)).join('|');
@@ -294,6 +334,7 @@
       const hide=this.toolbar.querySelector('[data-action=hide]');hide.textContent=hidden?'Show object':'Hide object';hide.disabled=!available;
       for(const field of this.toolbar.querySelectorAll('[data-field]'))field.disabled=!available||hidden;
       this.toolbar.querySelector('[data-action=undo]').disabled=!this.undoStack?.length;this.toolbar.querySelector('[data-action=redo]').disabled=!this.redoStack?.length;
+      if(this.picking&&!this.drag){this.outline.hidden=true;return}
       if(!this.selection?.isConnected||!this.visible(this.selection)){this.outline.hidden=true;return}
       const r=this.selection.getBoundingClientRect();this.outline.hidden=false;
       for(const[p,v]of Object.entries({left:r.left,top:r.top,width:r.width,height:r.height}))this.outline.style.setProperty(p,v+'px','important');
@@ -321,7 +362,7 @@
     onCapture(e){
       if(!this.active)return;
       const toolbar=e.target.closest?.('.avle-toolbar'),handle=e.target.closest?.('.avle-handle');
-      if(toolbar)return;
+      if(toolbar){this.updateHover(null);return}
       if((e.type==='pointermove'||e.type==='pointerup'||e.type==='pointercancel')&&this.drag?.toolbar)return;
       if(e.type==='keydown'||e.type==='keyup'){
         e.stopImmediatePropagation();
@@ -339,8 +380,9 @@
       if(e.type==='pointermove'&&this.drag&&!this.drag.toolbar){
         e.preventDefault();e.stopImmediatePropagation();this.move(e);return;
       }
+      if(e.type==='pointermove'&&!this.drag){this.updateHover(handle?null:this.targetsAt(e.clientX,e.clientY)[0]);return}
       if(e.type==='pointerup'||e.type==='pointercancel'){
-        if(this.drag&&!this.drag.toolbar){e.preventDefault();e.stopImmediatePropagation();try{this.doc.documentElement.releasePointerCapture(e.pointerId)}catch(_){}this.drag=null;this.refreshList();this.updateOutline()}return;
+        if(this.drag&&!this.drag.toolbar){e.preventDefault();e.stopImmediatePropagation();try{this.doc.documentElement.releasePointerCapture(e.pointerId)}catch(_){}this.drag=null;this.refreshList();this.updateOutline();if(this.picking)this.pick(false)}return;
       }
       if(e.type!=='pointerdown'){if(['click','dblclick','contextmenu','dragstart'].includes(e.type)){e.preventDefault();e.stopImmediatePropagation()}return}
       if(e.button!==0)return;
@@ -348,17 +390,18 @@
       let target;
       if(handle)target=this.selection;
       else{
-        target=e.target.closest?.(CANDIDATES);
-        if(!this.toolbar.querySelector('[data-detail]').checked){const object=e.target.closest?.('[data-av-layout-object]'),card=e.target.closest?.(CARDS);if(object)target=object;else if(card)target=card}
+        const hits=this.targetsAt(e.clientX,e.clientY);target=hits[e.altKey?(hits.indexOf(this.selection)+1)%hits.length:0];
       }
       if(!target||!this.visible(target))return;
-      this.select(target);this.checkpoint();const r=target.getBoundingClientRect();
-      this.drag={pointer:e.pointerId,x:e.clientX,y:e.clientY,rect:r,initial:copy(this.entry()),dir:handle?.dataset.dir||'',moved:false};
+      this.updateHover(null);this.select(target);const r=target.getBoundingClientRect();
+      this.drag={pointer:e.pointerId,x:e.clientX,y:e.clientY,rect:r,initial:copy(this.layout.items[this.selector(target)]||{dx:0,dy:0}),dir:handle?.dataset.dir||'',moved:false};
       this.doc.activeElement?.blur?.();this.doc.documentElement.setPointerCapture(e.pointerId);
     }
     move(e){
       const g=this.drag;if(e.pointerId!==g.pointer)return;
-      let dx=e.clientX-g.x,dy=e.clientY-g.y;if(e.shiftKey){dx=Math.round(dx/10)*10;dy=Math.round(dy/10)*10}
+      let dx=e.clientX-g.x,dy=e.clientY-g.y;
+      if(!g.moved){if(Math.hypot(dx,dy)<5)return;this.checkpoint();g.moved=true}
+      if(e.shiftKey){dx=Math.round(dx/10)*10;dy=Math.round(dy/10)*10}
       const item=this.entry(),vw=this.win.innerWidth,vh=this.win.innerHeight,r=g.rect;
       if(!g.dir){
         dx=clamp(dx,-r.left,Math.max(0,vw-r.width)-r.left);
@@ -377,7 +420,8 @@
     action(action){
       if(action==='save')return this.finish(true);
       if(action==='cancel')return this.finish(false);
-      if(action==='minimize'){const content=this.toolbar.querySelector('.avle-content');content.hidden=!content.hidden;content.style.setProperty('display',content.hidden?'none':'grid','important');this.toolbar.querySelector('[data-action=minimize]').textContent=content.hidden?'+':'−';this.positionToolbar();return}
+      if(action==='pick'){this.pick(!this.picking);return}
+      if(action==='minimize'){if(this.picking)this.pick(false);else this.showControls(this.toolbar.querySelector('.avle-content').hidden);return}
       if(action==='parent'){const p=this.selection?.parentElement?.closest(CANDIDATES);if(p){if(p.hasAttribute('data-av-layout-container')){this.toolbar.querySelector('[data-groups]').checked=true;this.listSignature=''}this.select(p)}return}
       if(action==='hide'&&this.selection&&this.visible(this.selection,true)){this.checkpoint();const item=this.entry();if(item.hidden)delete item.hidden;else item.hidden=true}
       if(action==='undo'&&this.undoStack.length){this.redoStack.push(copy(this.layout));this.layout=this.undoStack.pop()}
@@ -399,9 +443,9 @@
       }else this.layout=copy(this.before);
       this.active=false;
       if(this.drag&&!this.drag.toolbar)try{this.doc.documentElement.releasePointerCapture(this.drag.pointer)}catch(_){}
-      this.drag=null;this.doc.body.classList.remove('avle-editing1580');
+      this.drag=null;this.picking=false;this.doc.body.classList.remove('avle-editing1580');
       for(const type of ['pointerdown','pointermove','pointerup','pointercancel','click','dblclick','contextmenu','keydown','keyup','dragstart'])this.doc.removeEventListener(type,this.capture,true);
-      this.toolbar?.remove();this.outline?.remove();this.toolbar=null;this.outline=null;this.selection=null;this.listSignature='';
+      this.toolbar?.remove();this.outline?.remove();this.hover?.remove();this.toolbar=null;this.outline=null;this.hover=null;this.selection=null;this.listSignature='';
       this.apply();this.release?.();this.release=null;this.restoreFocus?.focus?.({preventScroll:true});return true;
     }
   }
