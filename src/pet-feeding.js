@@ -42,7 +42,6 @@
     $('petEnergyMeter').setAttribute('aria-valuenow', String(energy));
     $('petHungerMeter').setAttribute('aria-valuenow', String(hunger));
     $('petGrowth').style.setProperty('--pet-scale', String(.58 + feeds * .1));
-    $('petSummary').textContent = `Pagpapakain: ${feeds} / 5 · Tamang sagot: ${correct} · Pagsubok: ${attempts}`;
   }
   function controls() {
     document.body.dataset.phase = phase;
@@ -110,7 +109,7 @@
       }
       phase = 'question'; feedbackCorrect = false;
       $('petNext').hidden = true; $('petRest').hidden = true; $('petComplete').hidden = true; $('petQuestionArea').hidden = false;
-      $('petFeedback').textContent = 'Piliin ang tamang sagot. May oras kang mag-isip.';
+      $('petFeedback').textContent = '';
       $('petThought').textContent = 'Gutom pa!';
       $('petAnimalActor').classList.remove('happy', 'growing', 'rumble'); $('petHeroActor').classList.remove('feeding'); $('petFoodToken').classList.remove('toss');
       $('petFoodBowl').classList.remove('delivered');

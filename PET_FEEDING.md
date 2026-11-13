@@ -1,4 +1,4 @@
-# Pakainin ang mga Alaga — v1.5.88
+# Pakainin ang mga Alaga — v1.5.89
 
 Choose **Pakainin ang mga Alaga** from the game-mode menu. Nina, the girl in
 yellow from the user's story, is a selectable full-body character seen from
@@ -64,3 +64,14 @@ as the new question-box background size. The original stored data is not
 rewritten until the teacher chooses Save. The runtime uses
 `src/layout-editor-1587.js`; `src/layout-editor.js` remains the historical v1.5.80
 source used by the older build scripts.
+
+
+The idle instruction, visible keyboard-hint line, and feeding/score/attempt
+footer have been removed. Answer feedback appears only when there is a result
+or an issue to resolve. A/B/C and Enter still work.
+
+To remove an object from view, select it in **LAYOUT** and choose **Hide object**
+(or press Delete on the scene). Hidden objects remain in the object list with
+“hidden” beside their name. Select one and choose **Show object** to bring it
+back. Hide/Show supports Undo, Cancel, Reset, and Save; saved visibility survives
+restarting. Hiding one object keeps the other objects in place.

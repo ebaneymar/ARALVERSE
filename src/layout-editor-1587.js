@@ -66,7 +66,7 @@
     'h1', 'h2', 'h3', '.boss-title', '.boss-points', '.turn-title', 'canvas', 'svg', 'div[id]', 'span[id]'
   ].join(',');
   const CARDS = '#blueSide,#redSide,.combatant,.guardian-card,.active-student,.player-card,.t-player-card,.team-hud,.pilot-chip,.teamBox';
-  const PROPERTIES = ['translate','width','height','min-width','max-width','min-height','max-height','box-sizing','flex-basis','flex-shrink','overflow','margin-top','margin-right','margin-bottom','margin-left'];
+  const PROPERTIES = ['translate','width','height','min-width','max-width','min-height','max-height','box-sizing','flex-basis','flex-shrink','overflow','margin-top','margin-right','margin-bottom','margin-left','visibility','pointer-events'];
   const LIVE_FILLS = '#petEnergyFill,#petHungerFill,#blueHp,#redHp,#hpFill,#buddyHpBar,#enemyHpBar,#timerBar,.hp,.hp-bar,.hp-fill,.timerBar,.timer-bar';
   const NAMES = {
     'fullscreen-wrapper':'Game area', blueSide:'Blue player card', redSide:'Red player card',
@@ -83,11 +83,13 @@
   function loadAll(){try{const v=JSON.parse(storage.getItem(STORAGE_KEY)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{}}catch(_){return {}}}
   function sanitize(value){
     const out={fullWidth:value?.fullWidth===true,items:{}};
+    if(value?.version===2)out.version=2;
     for(const [selector,v]of Object.entries(value?.items||{}).slice(0,500)){
       if(!selector||selector.length>1200||!v||typeof v!=='object')continue;
       const item={dx:clamp(finite(v.dx),-3,3),dy:clamp(finite(v.dy),-10,10)};
       if(Number.isFinite(v.w))item.w=clamp(v.w,.008,2);
       if(Number.isFinite(v.h))item.h=clamp(v.h,.008,10);
+      if(v.hidden===true)item.hidden=true;
       out.items[selector]=item;
     }
     return out;
@@ -114,23 +116,25 @@
       const layout=sanitize(loadAll()[this.key()]);
       // Older pet layouts selected the panel containing both text and buttons.
       // Reuse its saved dimensions for the new, independently editable backdrop.
-      if(this.mode==='petFeeding'&&this.doc.getElementById('petQuestionBackdrop')&&layout.items['#petQuestionArea']){
+      if(layout.version!==2&&this.mode==='petFeeding'&&this.doc.getElementById('petQuestionBackdrop')&&layout.items['#petQuestionArea']){
         layout.items['#petQuestionBackdrop']||=layout.items['#petQuestionArea'];
         delete layout.items['#petQuestionArea'];
       }
       return layout;
     }
-    visible(el){
+    isHidden(el){return !!el&&this.layout.items[this.selector(el)]?.hidden===true}
+    visible(el,allowHidden=false){
       if(!el||!el.isConnected||el.closest('.avle-ui,.avle-settings-row,.avle-frame-entry,dialog,[role=dialog],#pause,#pauseOverlay'))return false;
-      if(el.hasAttribute('data-av-layout-container')&&!this.toolbar?.querySelector('[data-groups]')?.checked)return false;
+      const restoreHidden=allowHidden&&this.isHidden(el);
+      if(el.hasAttribute('data-av-layout-container')&&!this.toolbar?.querySelector('[data-groups]')?.checked&&!restoreHidden)return false;
       const object=el.closest('[data-av-layout-object]');
-      if(object&&object!==el&&!this.toolbar?.querySelector('[data-detail]')?.checked)return false;
+      if(object&&object!==el&&!this.toolbar?.querySelector('[data-detail]')?.checked&&!restoreHidden)return false;
       // Resize a bar's shell; its live fill must keep representing HP or time.
       if(el.matches(LIVE_FILLS))return false;
       const r=el.getBoundingClientRect(),s=this.win.getComputedStyle(el);
-      return r.width>=8&&r.height>=8&&s.display!=='none'&&s.visibility!=='hidden'&&s.opacity!=='0'&&!!el.getClientRects().length;
+      return r.width>=8&&r.height>=8&&s.display!=='none'&&(restoreHidden||(s.visibility!=='hidden'&&s.opacity!=='0'))&&!!el.getClientRects().length;
     }
-    candidates(){return [...this.doc.querySelectorAll(CANDIDATES)].filter(el=>this.visible(el))}
+    candidates(){return [...this.doc.querySelectorAll(CANDIDATES)].filter(el=>this.visible(el,true))}
     selector(el){
       const esc=this.win.CSS.escape;
       if(el.id&&this.doc.querySelectorAll('#'+esc(el.id)).length===1)return '#'+esc(el.id);
@@ -192,6 +196,7 @@
             el.style.setProperty('margin-bottom',(margins.bottom-(el.offsetHeight-originalHeight))+'px','important');
           }
         }
+        if(item.hidden){el.style.setProperty('visibility','hidden','important');el.style.setProperty('pointer-events','none','important')}
         for(let parent=el.parentElement;parent&&parent!==this.doc.body;parent=parent.parentElement){
           if(!this.overflowBase.has(parent))this.overflowBase.set(parent,{overflow:[parent.style.getPropertyValue('overflow'),parent.style.getPropertyPriority('overflow')]});
           parent.style.setProperty('overflow','visible','important');
@@ -245,7 +250,7 @@
     mount(){
       const d=this.doc;
       this.toolbar=d.createElement('aside');this.toolbar.className='avle-ui avle-toolbar';this.toolbar.setAttribute('aria-label','Game layout editor');
-      this.toolbar.innerHTML=`<header><strong>✥ Edit layout</strong><button type="button" data-action="minimize" aria-label="Collapse layout editor">−</button></header><div class="avle-content"><p>Move or resize one object without pushing nearby objects. Changes apply to this screen.</p><label>Selected object<select aria-label="Selected object"></select></label><label class="avle-check"><input type="checkbox" data-detail> Select small parts inside an object</label><label class="avle-check"><input type="checkbox" data-groups> Select a group of objects</label><div class="avle-grid"><label>Left (X)<input type="number" data-field="x" step="1" aria-label="Left position"></label><label>Top (Y)<input type="number" data-field="y" step="1" aria-label="Top position"></label><label>Width<input type="number" data-field="w" min="16" step="1" aria-label="Object width"></label><label>Height<input type="number" data-field="h" min="16" step="1" aria-label="Object height"></label></div><p>Values are in pixels. Arrow keys move; Shift + arrows move 10 pixels.</p><label class="avle-check"><input type="checkbox" data-wide> Use full width · reduce side gaps</label><div class="avle-actions"><button type="button" data-action="parent">Select parent</button><button type="button" data-action="reset">Reset object</button><button type="button" data-action="undo">Undo</button><button type="button" data-action="redo">Redo</button><button type="button" data-action="resetAll">Reset this screen</button></div><div class="avle-status" role="status" aria-live="polite"></div><div class="avle-actions"><button type="button" data-action="save">Save layout</button><button type="button" data-action="cancel">Cancel</button></div></div>`;
+      this.toolbar.innerHTML=`<header><strong>✥ Edit layout</strong><button type="button" data-action="minimize" aria-label="Collapse layout editor">−</button></header><div class="avle-content"><p>Move or resize one object without pushing nearby objects. Changes apply to this screen.</p><label>Selected object<select aria-label="Selected object"></select></label><label class="avle-check"><input type="checkbox" data-detail> Select small parts inside an object</label><label class="avle-check"><input type="checkbox" data-groups> Select a group of objects</label><div class="avle-grid"><label>Left (X)<input type="number" data-field="x" step="1" aria-label="Left position"></label><label>Top (Y)<input type="number" data-field="y" step="1" aria-label="Top position"></label><label>Width<input type="number" data-field="w" min="16" step="1" aria-label="Object width"></label><label>Height<input type="number" data-field="h" min="16" step="1" aria-label="Object height"></label></div><p>Values are in pixels. Arrow keys move; Shift + arrows move 10 pixels. Delete hides the selected object.</p><label class="avle-check"><input type="checkbox" data-wide> Use full width · reduce side gaps</label><div class="avle-actions"><button type="button" data-action="hide">Hide object</button><button type="button" data-action="parent">Select parent</button><button type="button" data-action="reset">Reset object</button><button type="button" data-action="undo">Undo</button><button type="button" data-action="redo">Redo</button><button type="button" data-action="resetAll">Reset this screen</button></div><div class="avle-status" role="status" aria-live="polite"></div><div class="avle-actions"><button type="button" data-action="save">Save layout</button><button type="button" data-action="cancel">Cancel</button></div></div>`;
       this.outline=d.createElement('div');this.outline.className='avle-ui avle-outline';this.outline.hidden=true;
       for(const dir of ['nw','n','ne','e','se','s','sw','w']){const h=d.createElement('button');h.type='button';h.className='avle-handle';h.dataset.dir=dir;h.setAttribute('aria-label','Resize '+dir);this.outline.append(h)}
       (d.fullscreenElement||d.body).append(this.toolbar,this.outline);
@@ -278,19 +283,22 @@
       const list=this.candidates(),signature=list.map(x=>this.selector(x)).join('|');
       if(signature===this.listSignature)return;this.listSignature=signature;
       const select=this.toolbar.querySelector('select'),value=this.selection?this.selector(this.selection):select.value;select.replaceChildren();
-      for(const el of list){const option=this.doc.createElement('option');option.value=this.selector(el);option.textContent=this.name(el);select.append(option)}
+      for(const el of list){const option=this.doc.createElement('option');option.value=this.selector(el);option.textContent=this.name(el)+(this.isHidden(el)?' · hidden':'');select.append(option)}
       if([...select.options].some(x=>x.value===value))select.value=value;
     }
-    select(el){if(!el||!this.visible(el))return;this.selection=el;this.refreshList();this.toolbar.querySelector('select').value=this.selector(el);this.updateOutline();this.status(this.name(el)+' selected. Drag it or use the controls.')}
+    select(el){if(!el||!this.visible(el,true))return;this.selection=el;this.refreshList();this.toolbar.querySelector('select').value=this.selector(el);this.updateOutline();this.status(this.name(el)+(this.isHidden(el)?' is hidden. Choose Show object to restore it.':' selected. Drag it or use the controls.'))}
     status(message,error=false){const node=this.toolbar?.querySelector('.avle-status');if(node){node.textContent=message;node.dataset.error=String(error)}}
     updateOutline(){
       if(!this.active||!this.outline)return;
+      const hidden=this.isHidden(this.selection),available=this.visible(this.selection,true);
+      const hide=this.toolbar.querySelector('[data-action=hide]');hide.textContent=hidden?'Show object':'Hide object';hide.disabled=!available;
+      for(const field of this.toolbar.querySelectorAll('[data-field]'))field.disabled=!available||hidden;
+      this.toolbar.querySelector('[data-action=undo]').disabled=!this.undoStack?.length;this.toolbar.querySelector('[data-action=redo]').disabled=!this.redoStack?.length;
       if(!this.selection?.isConnected||!this.visible(this.selection)){this.outline.hidden=true;return}
       const r=this.selection.getBoundingClientRect();this.outline.hidden=false;
       for(const[p,v]of Object.entries({left:r.left,top:r.top,width:r.width,height:r.height}))this.outline.style.setProperty(p,v+'px','important');
       const values={x:r.left+this.win.scrollX,y:r.top+this.win.scrollY,w:r.width,h:r.height};
       for(const field of this.toolbar.querySelectorAll('[data-field]'))if(this.doc.activeElement!==field)field.value=Math.round(values[field.dataset.field]);
-      this.toolbar.querySelector('[data-action=undo]').disabled=!this.undoStack?.length;this.toolbar.querySelector('[data-action=redo]').disabled=!this.redoStack?.length;
     }
     checkpoint(){this.undoStack.push(copy(this.layout));if(this.undoStack.length>80)this.undoStack.shift();this.redoStack=[]}
     entry(){const selector=this.selector(this.selection);return this.layout.items[selector]||(this.layout.items[selector]={dx:0,dy:0})}
@@ -320,7 +328,8 @@
         if(e.type==='keyup')return;
         if(e.key==='Escape'){e.preventDefault();this.finish(false);return}
         if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();this.action(e.shiftKey?'redo':'undo');return}
-        if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)&&this.selection){
+        if((e.key==='Delete'||e.key==='Backspace')&&this.selection){e.preventDefault();if(!e.repeat&&!this.isHidden(this.selection))this.action('hide');return}
+        if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)&&this.selection&&this.visible(this.selection)){
           e.preventDefault();const h=handle?.dataset.dir;
           if(h){const r=this.selection.getBoundingClientRect();const step=e.shiftKey?10:1;this.numeric(e.key==='ArrowLeft'||e.key==='ArrowRight'?'w':'h',(e.key==='ArrowLeft'||e.key==='ArrowRight'?r.width:r.height)+(['ArrowRight','ArrowDown'].includes(e.key)?step:-step))}
           else{this.checkpoint();const item=this.entry(),step=e.shiftKey?10:1;item.dx+=({'ArrowLeft':-step,'ArrowRight':step}[e.key]||0)/this.win.innerWidth;item.dy+=({'ArrowUp':-step,'ArrowDown':step}[e.key]||0)/this.win.innerHeight;this.apply()}
@@ -370,16 +379,22 @@
       if(action==='cancel')return this.finish(false);
       if(action==='minimize'){const content=this.toolbar.querySelector('.avle-content');content.hidden=!content.hidden;content.style.setProperty('display',content.hidden?'none':'grid','important');this.toolbar.querySelector('[data-action=minimize]').textContent=content.hidden?'+':'−';this.positionToolbar();return}
       if(action==='parent'){const p=this.selection?.parentElement?.closest(CANDIDATES);if(p){if(p.hasAttribute('data-av-layout-container')){this.toolbar.querySelector('[data-groups]').checked=true;this.listSignature=''}this.select(p)}return}
+      if(action==='hide'&&this.selection&&this.visible(this.selection,true)){this.checkpoint();const item=this.entry();if(item.hidden)delete item.hidden;else item.hidden=true}
       if(action==='undo'&&this.undoStack.length){this.redoStack.push(copy(this.layout));this.layout=this.undoStack.pop()}
       if(action==='redo'&&this.redoStack.length){this.undoStack.push(copy(this.layout));this.layout=this.redoStack.pop()}
       if(action==='reset'&&this.selection){this.checkpoint();delete this.layout.items[this.selector(this.selection)]}
       if(action==='resetAll'){this.checkpoint();this.layout={fullWidth:false,items:{}}}
-      this.toolbar.querySelector('[data-wide]').checked=this.layout.fullWidth;this.apply();this.status('Preview updated. Save layout to keep it.');
+      this.toolbar.querySelector('[data-wide]').checked=this.layout.fullWidth;this.listSignature='';this.apply();this.refreshList();
+      if(!this.visible(this.selection,true)){
+        const next=this.candidates().find(el=>el.id==='petArena'&&this.visible(el))||this.candidates().find(el=>this.visible(el));
+        if(next)this.select(next);else{this.selection=null;this.updateOutline()}
+      }
+      this.status(action==='hide'?(this.isHidden(this.selection)?'Object hidden. Select it in the list and choose Show object to restore it.':'Object shown. Save layout to keep it.'):'Preview updated. Save layout to keep it.');
     }
     finish(save){
       if(!this.active)return true;
       if(save){
-        try{const data=loadAll();data[this.key()]=sanitize(this.layout);const text=JSON.stringify(data);storage.setItem(STORAGE_KEY,text);if(storage.getItem(STORAGE_KEY)!==text)throw Error('Storage unavailable')}
+        try{const data=loadAll();this.layout.version=2;data[this.key()]=sanitize(this.layout);const text=JSON.stringify(data);storage.setItem(STORAGE_KEY,text);if(storage.getItem(STORAGE_KEY)!==text)throw Error('Storage unavailable')}
         catch(_){this.status('Could not save. Your preview is still open. Try again or Cancel.',true);return false}
       }else this.layout=copy(this.before);
       this.active=false;

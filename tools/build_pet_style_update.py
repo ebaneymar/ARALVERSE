@@ -1,4 +1,4 @@
-"""Build v1.5.88 from the exact published v1.5.82 package."""
+"""Build v1.5.89 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import zipfile
 
-VERSION = '1.5.88'
+VERSION = '1.5.89'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -68,7 +68,7 @@ def build(base, root, output):
     # Other game modes remain byte-identical to the published base.
     for name in other_modes:
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
-    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.88\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
+    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.89\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
     output.mkdir(parents=True, exist_ok=True)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
@@ -80,6 +80,8 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
+        'Removed the idle answer instruction, keyboard-hint line, and feeding/score/attempt footer from Pakainin ang mga Alaga.',
+        'Use Hide object / Show object in LAYOUT, or Delete while selecting an object, to hide it and restore it later. Hidden objects stay in the object list; Undo and saved layouts include their visibility.',
         'Move and resize one object without pushing nearby objects. The scene background, character, pet, food bowl, and question-box background are separate editable layers.',
         'Resizing text or a button keeps its original space in the layout. Save, Undo/Redo, Reset, and Cancel work with the independent object positions.',
         'Feed the pet with a blue food bowl instead of hearts. The puppy becomes happy after feeding, grows with correct answers, and looks sad when hungry.',

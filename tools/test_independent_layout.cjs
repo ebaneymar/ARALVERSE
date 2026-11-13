@@ -34,11 +34,15 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
    return frame;
   }
   let frame=await launch();
-  const watched=['#petQuestionArea','#petQuestion','#petHeroActor','#petAnimalActor','#petFoodBowl','#petThought','#petEnergyMeter','#petHungerMeter','#petSummary'];
+  const watched=['#petQuestionArea','#petQuestion','#petHeroActor','#petAnimalActor','#petFoodBowl','#petThought','#petEnergyMeter','#petHungerMeter'];
   async function rects(selectors=watched){return frame.evaluate(selectors=>Object.fromEntries(selectors.map(selector=>{const r=document.querySelector(selector).getBoundingClientRect();return[selector,{x:r.x,y:r.y,width:r.width,height:r.height}]})),selectors)}
   async function unchanged(before,label){const after=await rects(Object.keys(before));for(const selector of Object.keys(before))for(const key of ['x','y','width','height'])near(after[selector][key],before[selector][key],`${label}: ${selector} ${key}`)}
   async function edit(selector,field,value){await frame.locator('.avle-toolbar select').selectOption(selector);const input=frame.locator('[data-field='+field+']');await input.fill(String(value));await input.press('Tab');await page.waitForTimeout(50)}
   await page.locator('#avleLauncher1580').click();await frame.waitForSelector('.avle-toolbar');
+  // Keep the movable palette away from the scene's right resize handles.
+  const palette=await frame.locator('.avle-toolbar').boundingBox(),paletteHeader=await frame.locator('.avle-toolbar header').boundingBox();
+  await page.mouse.move(paletteHeader.x+100,paletteHeader.y+18);await page.mouse.down();
+  await page.mouse.move(paletteHeader.x+100+20-palette.x,paletteHeader.y+18,{steps:8});await page.mouse.up();
   assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().paused),true);
   assert.equal(await frame.locator('.avle-toolbar select option[value="#petArena"]').textContent(),'Scene background');
   assert.equal(await frame.locator('.avle-toolbar select option[value="#petSceneCanvas"]').count(),0,'The group is not selected accidentally');
@@ -46,6 +50,18 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
   await frame.locator('[data-groups]').uncheck();
   assert.equal(await frame.locator('.avle-toolbar select').inputValue(),'#petArena','Turning group editing off returns to a single object');
   const initial=await rects(),bg=await frame.locator('#petArena').boundingBox();
+  await frame.locator('.avle-toolbar select').selectOption('#petFoodBowl');await frame.locator('[data-action=hide]').click();
+  assert.equal(await frame.locator('#petFoodBowl').isVisible(),false,'Hide removes only the selected object from view');
+  assert.equal(await frame.locator('[data-action=hide]').textContent(),'Show object');
+  assert.match(await frame.locator('.avle-toolbar select option[value="#petFoodBowl"]').textContent(),/hidden/,'A hidden object stays in the selector for restoring');
+  await unchanged(initial,'Hiding one object preserves positions');
+  await frame.locator('[data-action=undo]').click();assert.equal(await frame.locator('#petFoodBowl').isVisible(),true);
+  await frame.locator('[data-action=redo]').click();assert.equal(await frame.locator('#petFoodBowl').isVisible(),false);
+  await frame.locator('[data-action=hide]').click();assert.equal(await frame.locator('#petFoodBowl').isVisible(),true,'Show restores the object');
+  const bowlPoint=await frame.locator('#petFoodBowl').boundingBox();
+  await page.mouse.click(bowlPoint.x+bowlPoint.width*.5,bowlPoint.y+bowlPoint.height*.5);await page.keyboard.press('Delete');
+  assert.equal(await frame.locator('#petFoodBowl').isVisible(),false,'Delete hides the selected scene object');
+  await frame.locator('[data-action=undo]').click();assert.equal(await frame.locator('#petFoodBowl').isVisible(),true,'Undo restores a Delete-hidden object');
   await edit('#petArena','h',Math.round(bg.height+90));await unchanged(initial,'Background height');
   await edit('#petArena','w',Math.round(bg.width-130));await unchanged(initial,'Background width');
   await edit('#petArena','x',Math.round(bg.x+25));await edit('#petArena','y',Math.round(bg.y+18));await unchanged(initial,'Background move');
@@ -62,27 +78,39 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
   await unchanged(initial,'Dragging only the background');
   await frame.locator('[data-action=reset]').click();await unchanged(initial,'Reset just the background');
   await frame.locator('[data-action=undo]').click();await unchanged(initial,'Undo background reset');
-  const questionParts=await rects(['#petQuestion','#petAnswers','#petFeedback','#petSummary','#petArena','#petHeroActor','#petFoodBowl']);
+  const questionParts=await rects(['#petQuestion','#petAnswers','#petFeedback','#petArena','#petHeroActor','#petFoodBowl']);
   const panel=await frame.locator('#petQuestionBackdrop').boundingBox();
   await edit('#petQuestionBackdrop','h',Math.round(panel.height+65));
   await edit('#petQuestionBackdrop','w',Math.round(panel.width-80));await unchanged(questionParts,'Question backdrop resize');
-  const choices=await rects(['#petAnswers button:nth-of-type(2)','#petAnswers button:nth-of-type(3)','#petFeedback','#petSummary','#petArena']);
+  const choices=await rects(['#petAnswers button:nth-of-type(2)','#petAnswers button:nth-of-type(3)','#petFeedback','#petQuestionArea','#petArena']);
   const a=await frame.locator('#petAnswers button').first().boundingBox();
   await edit('#petAnswers > button:nth-of-type(1)','h',Math.round(a.height+48));await unchanged(choices,'Answer height');
   await edit('#petAnswers > button:nth-of-type(1)','w',Math.round(a.width+45));await unchanged(choices,'Answer width');
-  const questionBelow=await rects(['#petAnswers','#petFeedback','#petSummary']);
+  const questionBelow=await rects(['#petAnswers','#petFeedback','#petQuestionArea']);
   await edit('#petQuestion','w',350);await unchanged(questionBelow,'Narrow question wraps without pushing answers');
   await frame.locator('[data-action=reset]').click();await unchanged(questionBelow,'Reset only the question');
   const savedBg=await frame.locator('#petArena').boundingBox();
+  await frame.locator('.avle-toolbar select').selectOption('#petFoodBowl');await frame.locator('[data-action=hide]').click();
   await frame.locator('[data-action=save]').click();assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().paused),false);
   const saved=await page.evaluate(()=>ARAL_STORAGE.getItem('avManualLayouts1580'));assert.ok(saved.includes('#petQuestionBackdrop'));
   await page.locator('#avleLauncher1580').click();await edit('#petArena','h',300);await frame.locator('[data-action=cancel]').click();
   near((await frame.locator('#petArena').boundingBox()).height,savedBg.height,'Cancel restores the saved background size');
   await page.reload();await page.waitForFunction(()=>window.AVActivation1581?.getStatus().canPlay);frame=await launch();
   near((await frame.locator('#petArena').boundingBox()).height,savedBg.height,'Independent sizes persist after restart');
+  assert.equal(await frame.locator('#petFoodBowl').isVisible(),false,'Hidden state persists after restart');
   const qAfterRestart=await rects(['#petQuestionArea','#petHeroActor','#petFoodBowl']);
   await page.locator('#avleLauncher1580').click();await edit('#petArena','h',Math.round(savedBg.height-40));await unchanged(qAfterRestart,'Edit after restart');
   await frame.locator('[data-action=cancel]').click();
+  await page.locator('#avleLauncher1580').click();await frame.locator('.avle-toolbar select').selectOption('#petFoodBowl');
+  await frame.locator('[data-action=hide]').click();await frame.locator('[data-action=save]').click();
+  assert.equal(await frame.locator('#petFoodBowl').isVisible(),true,'A saved hidden object can be selected and shown again');
+  await page.locator('#avleLauncher1580').click();await frame.locator('[data-groups]').check();
+  await frame.locator('.avle-toolbar select').selectOption('#petQuestionArea');await frame.locator('[data-action=hide]').click();await frame.locator('[data-action=save]').click();
+  await page.reload();await page.waitForFunction(()=>window.AVActivation1581?.getStatus().canPlay);frame=await launch();
+  assert.equal(await frame.locator('#petQuestionArea').isVisible(),false,'A deliberately hidden group stays hidden after restart');
+  await page.locator('#avleLauncher1580').click();await frame.locator('.avle-toolbar select').selectOption('#petQuestionArea');
+  await frame.locator('[data-action=hide]').click();await frame.locator('[data-action=save]').click();
+  assert.equal(await frame.locator('#petQuestion').isVisible(),true,'A hidden group is restorable without enabling group editing');
   assert.equal(await page.evaluate(()=>ARAL_STORAGE.getItem('independent-classroom-sentinel')),'keep my classroom');
   // A legacy question-panel entry becomes a background entry without rewriting the saved data.
   await page.evaluate(()=>ARAL_STORAGE.setItem('avManualLayouts1580',JSON.stringify({'petFeeding:petGame':{fullWidth:false,items:{'#petQuestionArea':{dx:.01,dy:0,w:.8,h:.3}}}})));
@@ -97,6 +125,6 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
   await edit('#blueSide','h',Math.round(blueBox.height+45));await unchanged(redBefore,'Other battle player stays in place');
   await frame.locator('[data-action=cancel]').click();
   assert.deepEqual(errors,[]);
-  console.log('PASS: background move/resize leaves characters, meters, and question panel fixed; panel background and answer/text sizes are independent; Undo/Redo, Reset, Cancel, Save/restart, legacy layouts, classroom data, and other battle players are preserved.');
+  console.log('PASS: independent background/panel/button edits; Hide/Show and Delete with Undo/Redo and save/restart/restore; Reset, Cancel, legacy layouts, classroom data, and other battle players.');
  }finally{await browser?.close();await new Promise(resolve=>server.close(resolve))}
 })().catch(error=>{console.error(error);process.exitCode=1});
