@@ -84,3 +84,7 @@ movement does not move it. Drag at least 5 pixels to begin a move or resize.
 The handles are larger. **Alt + click** cycles through overlapping objects;
 the named object list and Select parent remain available. Transparent group
 wrappers no longer block the objects underneath.
+
+Activated devices no longer show the floating **Activated · this device**
+badge. Activation status, device code and details remain available in Settings.
+Trial and activation-required notices are retained.

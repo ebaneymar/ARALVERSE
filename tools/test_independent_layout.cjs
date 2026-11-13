@@ -18,6 +18,7 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
   await page.addInitScript(()=>{if(window.top!==window)return;window.mathAPangDesktop={isDesktop:true,saveNow:async()=>({ok:true}),activation:{status:async()=>({state:'trial',canPlay:true,activated:false,remainingDays:7,deviceCode:'AV-00000000-00000000-00000000-00000000',trialEndsAt:Date.now()+604800000}),activate:async()=>({ok:false}),copyDeviceCode:async()=>({ok:true})},updater:{info:async()=>({version:'1.5.87',configured:false,config:{autoCheck:false}}),onProgress:()=>()=>{}},openDataFolder:async()=>({ok:true}),exit(){}}});
   await page.goto('http://127.0.0.1:'+server.address().port+'/game.html');
   await page.waitForFunction(()=>window.AVActivation1581?.getStatus().canPlay);
+  assert.equal(await page.locator('#avActivationBadge1581').isVisible(),true,'The trial notice remains available before activation');
   await page.evaluate(()=>{
    ARAL_STORAGE.setItem('independent-classroom-sentinel','keep my classroom');
    ARAL_STORAGE.setItem('mqCurriculumSelectionV190',JSON.stringify({term:'2',subject:'math',topic:'m2_subtraction'}));
@@ -160,6 +161,13 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
   await page.locator('#avleLauncher1580').click();const redBefore=await rects(['#redSide']);const blueBox=await frame.locator('#blueSide').boundingBox();
   await edit('#blueSide','h',Math.round(blueBox.height+45));await unchanged(redBefore,'Other battle player stays in place');
   await frame.locator('[data-action=cancel]').click();
+  await page.evaluate(async()=>{const current=AVActivation1581.getStatus();mathAPangDesktop.activation.status=async()=>({...current,state:'activated',activated:true,canPlay:true});await AVActivation1581.refresh()});
+  assert.equal(await page.locator('#avActivationBadge1581').isVisible(),false,'Activated devices have no floating activation badge');
+  assert.match(await page.locator('#avActivationSettings1581 [data-av-activation-status]').textContent(),/Activated/,'Activation status remains in Settings');
+  await page.evaluate(()=>AVActivation1581.open());
+  assert.equal(await page.locator('#avActState1581').textContent(),'ARALVERSE is activated','Device activation details remain accessible');
+  await page.locator('#avActClose1581').click();await page.evaluate(()=>AVActivation1581.refresh());
+  assert.equal(await page.locator('#avActivationBadge1581').isVisible(),false,'Closing or refreshing activation does not bring back the badge');
   assert.deepEqual(errors,[]);
   console.log('PASS: clear-panel picking, hover names, click-without-moving, larger handles, transparent wrappers and overlapping objects; independent edits; Hide/Show, Undo/Redo, save/restart/restore, legacy layouts and other battle players.');
  }finally{await browser?.close();await new Promise(resolve=>server.close(resolve))}

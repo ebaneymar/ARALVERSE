@@ -65,6 +65,13 @@ def build(base, root, output):
     files['app/assets/layout-editor-1580.js'] = (root / 'src/layout-editor-1587.js').read_bytes()
     for name in ['app/preload.js','app/assets/license-engine.cjs','app/assets/license-public-key.json','app/assets/activation-ui-1581.js','app/assets/single-player-questions-1582.js']:
         assert files[name] == original[name], 'Preserve existing data/licensing/tools: ' + name
+    # Keep device validation intact; hide only the floating activated badge.
+    activation_ui = files['app/assets/activation-ui-1581.js'].decode('utf-8')
+    activation_ui = once(activation_ui, ' function paint(){', ''' function paint(){
+  const badge=$('avActivationBadge1581');
+  if(badge){badge.hidden=status.activated;if(status.activated)badge.style.setProperty('display','none','important');else badge.style.removeProperty('display')}
+''')
+    files['app/assets/activation-ui-1581.js'] = activation_ui.encode('utf-8')
     # Other game modes remain byte-identical to the published base.
     for name in other_modes:
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
@@ -80,6 +87,7 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
+        'After activation, the floating Activated - this device badge is hidden. Activation status and device details remain available in Settings.',
         'LAYOUT adds Pick object to clear the editor panel, hover outlines with object names, larger resize handles, and Alt-click to select an object underneath. Clicking no longer moves objects accidentally.',
         'Removed the idle answer instruction, keyboard-hint line, and feeding/score/attempt footer from Pakainin ang mga Alaga.',
         'Use Hide object / Show object in LAYOUT, or Delete while selecting an object, to hide it and restore it later. Hidden objects stay in the object list; Undo and saved layouts include their visibility.',
