@@ -251,7 +251,15 @@
       (d.fullscreenElement||d.body).append(this.toolbar,this.outline);
       this.toolbar.style.setProperty('left',Math.max(8,this.win.innerWidth-326)+'px','important');this.toolbar.style.setProperty('top','16px','important');
       this.toolbar.querySelector('select').onchange=e=>{try{this.select(d.querySelector(e.target.value))}catch(_){}};
-      for(const input of this.toolbar.querySelectorAll('[data-detail],[data-groups]'))input.onchange=()=>{this.listSignature='';this.refreshList();this.updateOutline()};
+      for(const input of this.toolbar.querySelectorAll('[data-detail],[data-groups]'))input.onchange=()=>{
+        this.listSignature='';
+        if(!this.visible(this.selection)){
+          const object=this.selection?.closest('[data-av-layout-object]');this.selection=null;
+          this.refreshList();const next=this.visible(object)?object:this.candidates().find(el=>el.id==='petArena')||this.candidates()[0];
+          if(next)this.select(next);
+        }else this.refreshList();
+        this.updateOutline();
+      };
       this.toolbar.querySelector('[data-wide]').checked=this.layout.fullWidth;
       this.toolbar.querySelector('[data-wide]').onchange=e=>{this.checkpoint();this.layout.fullWidth=e.target.checked;this.apply();this.status('Preview updated. Save layout to keep it.')};
       this.toolbar.addEventListener('click',e=>{const action=e.target.closest('[data-action]')?.dataset.action;if(action)this.action(action)});
@@ -293,7 +301,7 @@
       if(Math.abs(dx)>.2||Math.abs(dy)>.2){item.dx+=dx/this.win.innerWidth;item.dy+=dy/this.win.innerHeight;this.apply()}
     }
     numeric(field,value){
-      if(!this.selection||!Number.isFinite(value))return;this.checkpoint();const r=this.selection.getBoundingClientRect(),item=this.entry();
+      if(!this.selection||!this.visible(this.selection)||!Number.isFinite(value))return;this.checkpoint();const r=this.selection.getBoundingClientRect(),item=this.entry();
       if(field==='x')item.dx+=(value-r.left-this.win.scrollX)/this.win.innerWidth;
       if(field==='y')item.dy+=(value-r.top-this.win.scrollY)/this.win.innerHeight;
       if(field==='w')item.w=clamp(value,16,this.win.innerWidth*2)/this.win.innerWidth;

@@ -1,4 +1,4 @@
-"""Build v1.5.87 from the exact published v1.5.82 package."""
+"""Build v1.5.88 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import zipfile
 
-VERSION = '1.5.87'
+VERSION = '1.5.88'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -68,7 +68,7 @@ def build(base, root, output):
     # Other game modes remain byte-identical to the published base.
     for name in other_modes:
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
-    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.87\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
+    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.88\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
     output.mkdir(parents=True, exist_ok=True)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:

@@ -42,6 +42,9 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
   assert.equal(await frame.evaluate(()=>AVPetFeeding1582.getState().paused),true);
   assert.equal(await frame.locator('.avle-toolbar select option[value="#petArena"]').textContent(),'Scene background');
   assert.equal(await frame.locator('.avle-toolbar select option[value="#petSceneCanvas"]').count(),0,'The group is not selected accidentally');
+  await frame.locator('[data-groups]').check();await frame.locator('.avle-toolbar select').selectOption('#petSceneCanvas');
+  await frame.locator('[data-groups]').uncheck();
+  assert.equal(await frame.locator('.avle-toolbar select').inputValue(),'#petArena','Turning group editing off returns to a single object');
   const initial=await rects(),bg=await frame.locator('#petArena').boundingBox();
   await edit('#petArena','h',Math.round(bg.height+90));await unchanged(initial,'Background height');
   await edit('#petArena','w',Math.round(bg.width-130));await unchanged(initial,'Background width');

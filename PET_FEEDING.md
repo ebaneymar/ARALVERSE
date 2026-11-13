@@ -1,4 +1,4 @@
-# Pakainin ang mga Alaga — v1.5.87
+# Pakainin ang mga Alaga — v1.5.88
 
 Choose **Pakainin ang mga Alaga** from the game-mode menu. Nina, the girl in
 yellow from the user's story, is a selectable full-body character seen from
