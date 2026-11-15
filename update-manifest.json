@@ -1,12 +1,13 @@
 {
   "app": "ARALVERSE",
-  "version": "1.5.91",
+  "version": "1.5.92",
   "published": "2026-11-15",
   "packageType": "app",
-  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.91.zip?sha256=35d553536ca55e4991b9aaea9a665a74bebb11fde29d45cd22a09d369018de50",
-  "sha256": "35d553536ca55e4991b9aaea9a665a74bebb11fde29d45cd22a09d369018de50",
-  "size": 61086852,
+  "downloadUrl": "https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/ARALVERSE_Update_1.5.92.zip?sha256=bc15919b7404f2de1417a826048de5012f16106c2f7bf5571f34df0ccfe21869",
+  "sha256": "bc15919b7404f2de1417a826048de5012f16106c2f7bf5571f34df0ccfe21869",
+  "size": 61089093,
   "notes": [
+    "Imported / added questions now play in saved list order. Use Up / Down in Question Editor to reorder them. Excel / CSV imports keep their row order, and new single-player activities start at the first question.",
     "Question Editor now has Select all, Delete selected and Delete all for imported / teacher-added questions in the selected lesson. Search selection covers all matches, including later pages. Built-ins and other lessons are retained.",
     "After activation, the floating Activated - this device badge is hidden. Activation status and device details remain available in Settings.",
     "LAYOUT adds Pick object to clear the editor panel, hover outlines with object names, larger resize handles, and Alt-click to select an object underneath. Clicking no longer moves objects accidentally.",
