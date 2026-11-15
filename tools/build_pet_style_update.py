@@ -1,4 +1,4 @@
-"""Build v1.5.90 from the exact published v1.5.82 package."""
+"""Build v1.5.91 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import zipfile
 
-VERSION = '1.5.90'
+VERSION = '1.5.91'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -51,6 +51,10 @@ def build(base, root, output):
 #modeMenu #petFeedingMode1582 .av-pet-art1585 img{position:absolute!important;inset:0 0 0 auto!important;display:block!important;width:210%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:right center!important;pointer-events:none!important}
 </style>'''
     game = once(game, '</head>', menu_style + '\n</head>')
+    editor = re.search(r'<script id="av-question-editor-v1551">([\s\S]*?)</script>', game)
+    assert editor, 'The shared Question Editor was not found.'
+    editor_source = once(editor.group(1), 'api.open=openEditor;', (root / 'src/question-editor-bulk-1591.js').read_text() + '\napi.open=openEditor;')
+    game = game[:editor.start(1)] + editor_source + game[editor.end(1):]
     other_modes = ['PVE_SOURCE','PVP_SOURCE','TOURNAMENT_SOURCE','TEAM_TOURNAMENT_SOURCE','BOSS_SOURCE','PROGRESS_SOURCE']
     preserved_ranges = [packed_source(game,name)[1:] for name in other_modes]
     game = re.sub(r'1\.5\.82', lambda match: match.group() if any(start <= match.start() < end for start,end in preserved_ranges) else VERSION, game)
@@ -75,7 +79,7 @@ def build(base, root, output):
     # Other game modes remain byte-identical to the published base.
     for name in other_modes:
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
-    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.90\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
+    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.91\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
     output.mkdir(parents=True, exist_ok=True)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
@@ -87,6 +91,7 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
+        'Question Editor now has Select all, Delete selected and Delete all for imported / teacher-added questions in the selected lesson. Search selection covers all matches, including later pages. Built-ins and other lessons are retained.',
         'After activation, the floating Activated - this device badge is hidden. Activation status and device details remain available in Settings.',
         'LAYOUT adds Pick object to clear the editor panel, hover outlines with object names, larger resize handles, and Alt-click to select an object underneath. Clicking no longer moves objects accidentally.',
         'Removed the idle answer instruction, keyboard-hint line, and feeding/score/attempt footer from Pakainin ang mga Alaga.',
