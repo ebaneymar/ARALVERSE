@@ -118,6 +118,7 @@
   }
   function start() {
     if (!questions.ready()) { $('petSetupStatus').textContent = 'Mag-import muna ng mga tanong, o piliin ang Built-in Questions.'; return; }
+    questions.begin?.();
     cancelAction(); pauses.clear(); energy = 100; hunger = 100; feeds = 0; attempts = 0; correct = 0; question = null;
     $('petSetupStatus').textContent = ''; savePreferences();
     $('petSetup').classList.remove('active'); $('petGame').classList.add('active');

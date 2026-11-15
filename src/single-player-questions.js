@@ -51,6 +51,7 @@
     if (!api) { if (source() === 'edited') throw Error('Open this game from ARALVERSE to import questions.'); return original(); }
     return api.nextQuestion(original, window, { source: source() });
   }
+  function begin() { editor()?.resetQuestionOrder?.(window); }
   function open(importFile = false) {
     const api = editor();
     if (!api) { message('Open this game from ARALVERSE to manage questions.'); return; }
@@ -93,7 +94,7 @@
     parentWindow.removeEventListener('avquestionschanged1582', changed);
     parentWindow.removeEventListener('avquestionsimported1582', imported);
   }, { once: true });
-  const api = { source, setSource, selection, count, ready, next, bind, open, refresh: notify,
+  const api = { source, setSource, selection, count, ready, next, begin, bind, open, refresh: notify,
     onChange(fn) { listeners.add(fn); return () => listeners.delete(fn); },
     isActiveEdited() {
       return source() === 'edited' && (mode === 'petFeeding'
@@ -107,7 +108,7 @@
   window.MQCurriculum.generate = () => next(originalGenerate);
   for (const name of ['chooseBuddy', 'startBattle']) {
     const original = window[name];
-    if (typeof original === 'function') window[name] = function () { if (ready()) return original.apply(this, arguments); };
+    if (typeof original === 'function') window[name] = function () { if (ready()) { if (name === 'startBattle') begin(); return original.apply(this, arguments); } };
   }
   let pausedByEditor = false, refreshQuestion = false;
   window.AVQECanOpen1582 = () => !document.getElementById('game')?.classList.contains('active') || !locked;

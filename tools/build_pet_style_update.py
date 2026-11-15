@@ -1,4 +1,4 @@
-"""Build v1.5.91 from the exact published v1.5.82 package."""
+"""Build v1.5.92 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import zipfile
 
-VERSION = '1.5.91'
+VERSION = '1.5.92'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -53,7 +53,7 @@ def build(base, root, output):
     game = once(game, '</head>', menu_style + '\n</head>')
     editor = re.search(r'<script id="av-question-editor-v1551">([\s\S]*?)</script>', game)
     assert editor, 'The shared Question Editor was not found.'
-    editor_source = once(editor.group(1), 'api.open=openEditor;', (root / 'src/question-editor-bulk-1591.js').read_text() + '\napi.open=openEditor;')
+    editor_source = once(editor.group(1), 'api.open=openEditor;', (root / 'src/question-editor-bulk-1591.js').read_text() + '\n' + (root / 'src/question-editor-order-1592.js').read_text() + '\napi.open=openEditor;')
     game = game[:editor.start(1)] + editor_source + game[editor.end(1):]
     other_modes = ['PVE_SOURCE','PVP_SOURCE','TOURNAMENT_SOURCE','TEAM_TOURNAMENT_SOURCE','BOSS_SOURCE','PROGRESS_SOURCE']
     preserved_ranges = [packed_source(game,name)[1:] for name in other_modes]
@@ -62,12 +62,12 @@ def build(base, root, output):
     files['app/main.js'] = once(files['app/main.js'].decode(), '"1.5.82"', json.dumps(VERSION)).encode()
     package = json.loads(files['app/package.json']); package['version'] = VERSION
     files['app/package.json'] = (json.dumps(package, indent=2) + '\n').encode()
-    for source, destination in [('pet-feeding.js','pet-feeding-1583.js'),('pet-feeding.css','pet-feeding-1583.css'),('pet-fonts.js','pet-fonts-1583.js')]:
+    for source, destination in [('pet-feeding.js','pet-feeding-1583.js'),('pet-feeding.css','pet-feeding-1583.css'),('pet-fonts.js','pet-fonts-1583.js'),('single-player-questions.js','single-player-questions-1582.js')]:
         files['app/assets/' + destination] = (root / 'src' / source).read_bytes()
     for name in ['pet-garden-1583.webp','pet-food-1583.webp','puppy-emotions-1583.webp','pet-mode-card-1583.webp']:
         files['app/assets/' + name] = (root / 'src/assets' / name).read_bytes()
     files['app/assets/layout-editor-1580.js'] = (root / 'src/layout-editor-1587.js').read_bytes()
-    for name in ['app/preload.js','app/assets/license-engine.cjs','app/assets/license-public-key.json','app/assets/activation-ui-1581.js','app/assets/single-player-questions-1582.js']:
+    for name in ['app/preload.js','app/assets/license-engine.cjs','app/assets/license-public-key.json','app/assets/activation-ui-1581.js']:
         assert files[name] == original[name], 'Preserve existing data/licensing/tools: ' + name
     # Keep device validation intact; hide only the floating activated badge.
     activation_ui = files['app/assets/activation-ui-1581.js'].decode('utf-8')
@@ -79,7 +79,7 @@ def build(base, root, output):
     # Other game modes remain byte-identical to the published base.
     for name in other_modes:
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
-    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.91\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
+    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.92\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
     output.mkdir(parents=True, exist_ok=True)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
@@ -91,6 +91,7 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
+        'Imported / added questions now play in saved list order. Use Up / Down in Question Editor to reorder them. Excel / CSV imports keep their row order, and new single-player activities start at the first question.',
         'Question Editor now has Select all, Delete selected and Delete all for imported / teacher-added questions in the selected lesson. Search selection covers all matches, including later pages. Built-ins and other lessons are retained.',
         'After activation, the floating Activated - this device badge is hidden. Activation status and device details remain available in Settings.',
         'LAYOUT adds Pick object to clear the editor panel, hover outlines with object names, larger resize handles, and Alt-click to select an object underneath. Clicking no longer moves objects accidentally.',

@@ -45,15 +45,24 @@ const {_electron:electron}=require('./windows/node_modules/playwright');
    return api.deleteQuestions(lesson,ids);
   });
   assert.equal(batch.deleted,2,'A batch deletes imported questions through the Windows storage bridge');
+  await page.evaluate(()=>{
+   const api=AVQuestionEditor1551,lesson=api.currentSelection();
+   api.importQuestions(lesson,[1,2].map(i=>({rowNumber:i+1,fields:{prompt:'Native ordered question '+i,choices:['5','4','6'],correct:0,context:''}})));
+   const last=api.allRows(lesson).find(row=>row.data.prompt==='Native ordered question 2');
+   api.moveQuestion(lesson,last.id,-1);api.moveQuestion(lesson,last.id,-1);
+  });
+  await frame.locator('#petHome').click();await frame.locator('#petStart').click();
+  assert.equal(await frame.locator('#petQuestion').textContent(),'Native ordered question 2','A new Windows activity starts from the saved first question');
   await page.evaluate(()=>mathAPangDesktop.saveNow());
   const saved=JSON.parse(fs.readFileSync(path.join(folder,'Data/ARALVERSE_Data.json'),'utf8'));
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avQuestionEditorV1')&&value.includes('Native feeding question')),'Imported questions reach the real desktop save file');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avQuestionEditorV1')&&!value.includes('Native bulk deletion')),'Batch deletion reaches the real desktop save file while retaining the activity question');
+  assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avQuestionEditorV1')&&JSON.parse(value).lessons['2|math|m2_subtraction'].manual[0].data.prompt==='Native ordered question 2'),'Question order reaches the real desktop save file');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avPetFeedingFontsV1')&&JSON.parse(value).question===42),'Font preferences reach the real desktop save file');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avManualLayouts1580')&&value.includes('#petArena')),'Independent object layouts reach the real desktop save file');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avManualLayouts1580')&&JSON.parse(value)['petFeeding:petGame']?.items['#petFoodBowl']?.hidden===true),'Hidden object state reaches the real desktop save file');
   await running.close();running=null;
-  console.log('PASS: real Windows EXE opens, feeds/grows with letter keys, advances with Enter, picks/hides/resizes objects, and persists batch question deletion, fonts and layouts through the native bridge.');
+  console.log('PASS: real Windows EXE opens, feeds/grows, advances with Enter, picks/hides/resizes objects, starts in saved question order, and persists reordered questions, batch deletion, fonts and layouts.');
  }finally{
   if(running)await running.close().catch(()=>{});
   // Windows may retain a short-lived handle after Electron has exited.
