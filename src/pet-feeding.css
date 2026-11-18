@@ -52,11 +52,12 @@ body.avle-editing1580 #petPauseBanner{display:none!important}
 .finish-ground,.finish-bowl,.finish-splash{display:none;position:absolute;background:center/contain no-repeat;pointer-events:none}
 .pet-scene[data-celebration] .pet-sheet{animation:none}
 .pet-scene[data-celebration] .pet-growth::after{display:none}
-.pet-scene[data-celebration=puppy] .food-bowl img{opacity:0}
-.pet-scene[data-celebration=puppy] .finish-bowl{display:block;left:27%;top:47%;width:35%;height:23%;background-image:url('pet-empty-bowl-1593.webp')}
+.pet-scene[data-celebration] .food-bowl img{opacity:0}
+.pet-scene:is([data-celebration=owl],[data-celebration=carabao]) .food-bowl::after{content:'';position:absolute;inset:0;background:center/contain no-repeat url('pet-empty-bowl-1593.webp')}
+.pet-scene[data-celebration=puppy] .finish-bowl{display:block;left:27%;top:43%;width:35%;height:23%;background-image:url('pet-empty-bowl-1593.webp')}
 .pet-scene[data-celebration=puppy] .pet-performance{animation:pet-bring-bowl 1.8s ease-in-out both}
 .pet-scene[data-celebration=owl] .pet-performance{animation:pet-fly-to-branch 1.35s ease-in-out both}
-.pet-scene[data-celebration=owl] .finish-ground{display:block;left:calc(24% + var(--finish-x));bottom:calc(-8% - var(--finish-y));width:68%;height:22%;background-image:url('pet-branch-1593.webp')}
+.pet-scene[data-celebration=owl] .finish-ground{display:block;left:calc(16% + var(--finish-x));bottom:calc(8% - var(--finish-y));width:68%;height:22%;background-image:url('pet-branch-1593.webp')}
 .pet-scene[data-celebration=carabao] .finish-ground{display:block;left:5%;bottom:-3%;width:90%;height:18%;background-image:url('pet-puddle-1593.webp')}
 .pet-scene[data-celebration=carabao] .pet-performance{animation:pet-mud-hop 1.2s ease-in-out both}
 .pet-scene[data-celebration=carabao] .finish-splash{display:block;left:-7%;bottom:0;width:114%;height:40%;background-image:url('pet-splash-1593.webp');animation:pet-mud-splash 1.2s ease-out both}
