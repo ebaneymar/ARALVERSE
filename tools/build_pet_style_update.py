@@ -1,4 +1,4 @@
-"""Build v1.5.92 from the exact published v1.5.82 package."""
+"""Build v1.5.93 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -7,8 +7,9 @@ import json
 from pathlib import Path
 import re
 import zipfile
+from classroom_questions import add_editor_hints, add_import_hints
 
-VERSION = '1.5.92'
+VERSION = '1.5.93'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -50,10 +51,17 @@ def build(base, root, output):
 #modeMenu #petFeedingMode1582 .av-pet-art1585{background-image:none!important;overflow:hidden!important}
 #modeMenu #petFeedingMode1582 .av-pet-art1585 img{position:absolute!important;inset:0 0 0 auto!important;display:block!important;width:210%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:right center!important;pointer-events:none!important}
 </style>'''
+    head = re.search(r'<head\b[^>]*>', game)
+    assert head and head.start() < game.index('<body')
+    game = game[:head.end()] + '<link rel="stylesheet" href="assets/classroom-projector-1593.css">' + game[head.end():]
     game = once(game, '</head>', menu_style + '\n</head>')
+    game = once(game, '</body>', '<script src="assets/classroom-projector-1593.js"></script>\n</body>')
+    importer = re.search(r'<script id="av-question-import-v1554">([\s\S]*?)</script>', game)
+    assert importer, 'The shared Excel and CSV importer was not found.'
+    game = game[:importer.start(1)] + add_import_hints(importer.group(1), once) + game[importer.end(1):]
     editor = re.search(r'<script id="av-question-editor-v1551">([\s\S]*?)</script>', game)
     assert editor, 'The shared Question Editor was not found.'
-    editor_source = once(editor.group(1), 'api.open=openEditor;', (root / 'src/question-editor-bulk-1591.js').read_text() + '\n' + (root / 'src/question-editor-order-1592.js').read_text() + '\napi.open=openEditor;')
+    editor_source = once(add_editor_hints(editor.group(1), once), 'api.open=openEditor;', (root / 'src/question-editor-bulk-1591.js').read_text() + '\n' + (root / 'src/question-editor-order-1592.js').read_text() + '\napi.open=openEditor;')
     game = game[:editor.start(1)] + editor_source + game[editor.end(1):]
     other_modes = ['PVE_SOURCE','PVP_SOURCE','TOURNAMENT_SOURCE','TEAM_TOURNAMENT_SOURCE','BOSS_SOURCE','PROGRESS_SOURCE']
     preserved_ranges = [packed_source(game,name)[1:] for name in other_modes]
@@ -66,6 +74,11 @@ def build(base, root, output):
         files['app/assets/' + destination] = (root / 'src' / source).read_bytes()
     for name in ['pet-garden-1583.webp','pet-food-1583.webp','puppy-emotions-1583.webp','pet-mode-card-1583.webp']:
         files['app/assets/' + name] = (root / 'src/assets' / name).read_bytes()
+    for prop in ['empty-bowl', 'branch', 'puddle', 'splash']:
+        name = f'pet-{prop}-1593.webp'
+        files['app/assets/' + name] = (root / 'src/assets' / name).read_bytes()
+    for extension in ['css', 'js']:
+        files[f'app/assets/classroom-projector-1593.{extension}'] = (root / f'src/classroom-projector.{extension}').read_bytes()
     files['app/assets/layout-editor-1580.js'] = (root / 'src/layout-editor-1587.js').read_bytes()
     for name in ['app/preload.js','app/assets/license-engine.cjs','app/assets/license-public-key.json','app/assets/activation-ui-1581.js']:
         assert files[name] == original[name], 'Preserve existing data/licensing/tools: ' + name
@@ -79,7 +92,7 @@ def build(base, root, output):
     # Other game modes remain byte-identical to the published base.
     for name in other_modes:
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
-    files['UPLOAD_INSTRUCTIONS.txt'] = b'ARALVERSE 1.5.92\nPublish this ZIP together with its exact update-manifest.json.\nPakainin ang mga Alaga uses the standard game-mode card size. Existing scene, font controls, and keyboard shortcuts are retained.\n'
+    files['UPLOAD_INSTRUCTIONS.txt'] = f'ARALVERSE {VERSION}\nPublish this ZIP together with its exact update-manifest.json.\n'.encode()
     output.mkdir(parents=True, exist_ok=True)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
@@ -91,6 +104,9 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
+        'Pang-projector enlarges questions and answers across game modes. Gamit ng guro opens the classroom controls. Correct and incorrect choices show a check or cross.',
+        'In Pakainin ang mga Alaga, enable Pahiwatig muna for a clue on the first miss. Enter optional clues in the Excel/CSV Pahiwatig column or in Question Editor.',
+        'Each pet celebrates its fifth feeding. Use Balikan natin after Busog na to revisit a question that needed a clue and reveal the answer for discussion.',
         'Imported / added questions now play in saved list order. Use Up / Down in Question Editor to reorder them. Excel / CSV imports keep their row order, and new single-player activities start at the first question.',
         'Question Editor now has Select all, Delete selected and Delete all for imported / teacher-added questions in the selected lesson. Search selection covers all matches, including later pages. Built-ins and other lessons are retained.',
         'After activation, the floating Activated - this device badge is hidden. Activation status and device details remain available in Settings.',

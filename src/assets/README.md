@@ -36,3 +36,11 @@ in the bottom row are happy and well-fed. Keep each whole animal inside its
 512-by-512 cell with transparent margins, consistent identity, scale, and
 baseline, facing slightly left. Match the warm outlined 2D Nina story style.
 No aggression, sharp teeth, scene, props, ground, text, borders, or extra animals.
+
+### Classroom celebration artwork (v1.5.93)
+
+The four transparent WebP props accompany the existing pet sprites. The built-in image generator produced one square sprite sheet with the following prompt. The packaged images are cropped to the individual prop with a transparent edge.
+
+> Make a 2-by-2 transparent picture-book game sprite sheet for a Filipino schoolyard. Top left, an empty royal-blue bowl with a white paw and a gold rim. Top right, a short horizontal brown branch with green leaves at the right tip. Bottom left, a shallow cocoa-brown mud puddle. Bottom right, two outward arcs of muddy droplets. Use warm dark outlines and sunny upper-left light. Keep each object centered and separate, with no text or scenery.
+
+The packaged files are `pet-empty-bowl-1593.webp`, `pet-branch-1593.webp`, `pet-puddle-1593.webp`, and `pet-splash-1593.webp`.

@@ -14,11 +14,13 @@
   let pet = pets[saved.pet] ? saved.pet : 'puppy', heroId = saved.heroId || 'nina', sound = saved.sound !== false;
   let phase = 'setup', energy = 100, hunger = 100, feeds = 0, attempts = 0, correct = 0, question = null;
   let feedbackCorrect = false, refreshOnClose = false, pending = null, imageToken = 0, audio = null;
+  let misses = 0, visibleChoices = [];
+  const reviews = new Map();
   const pauses = new Set();
   const hero = () => [nina, ...custom].find(x => x.id === heroId) || nina;
   function savePreferences() {
     try {
-      store.setItem(PREFS, JSON.stringify({ pet, heroId, sound, activity: $('petActivityName').value.slice(0,70) }));
+      store.setItem(PREFS, JSON.stringify({ pet, heroId, sound, hints: $('petHints').checked, activity: $('petActivityName').value.slice(0,70) }));
       window.parent.mathAPangDesktop?.saveNow?.().catch(() => {});
     } catch (_) { $('petSetupStatus').textContent = 'Hindi na-save ang pagpili. Maaari mo pa ring ituloy ang gawain.'; }
   }
@@ -92,24 +94,65 @@
     $('petAnimalActor').dataset.mood = happy ? 'happy' : 'hungry';
     $('petAnimalSprite').setAttribute('aria-label', (happy ? 'Masayang ' : 'Gutom na ') + pets[pet].name.toLowerCase());
   }
+  function celebrate() {
+    $('petSceneCanvas').dataset.celebration = pet;
+    const actor = $('petAnimalActor'), bounds = actor.getBoundingClientRect();
+    const yard = $('petSceneCanvas').getBoundingClientRect(), player = $('petHeroActor').getBoundingClientRect();
+    const center = bounds.left + bounds.width / 2, playerCenter = player.left + player.width / 2;
+    const gap = Math.min(Math.abs(playerCenter - center), (player.width + bounds.width) * .27);
+    const approach = playerCenter - center - Math.sign(playerCenter - center) * gap;
+    actor.style.setProperty('--finish-x', (pet === 'owl' ? -Math.min(yard.width * .10, 120) : approach) + 'px');
+    actor.style.setProperty('--finish-y', -Math.min(yard.height * .16, Math.max(12, bounds.top - yard.top)) + 'px');
+    const descriptions = {
+      puppy: 'Dinala ng tuta ang mangkok pabalik kay ' + hero().name + '.',
+      owl: 'Lumipad ang kuwago at dumapo sa sanga.',
+      carabao: 'Masayang nagtampisaw ang kalabaw sa putikan.'
+    };
+    return descriptions[pet];
+  }
+  function clue() {
+    return question.hint || 'Basahin muli ang tanong. Ihambing ang mga pagpipilian bago sumagot.';
+  }
+  function rememberQuestion() {
+    const key = JSON.stringify([question.avQEId, question.prompt, question.display, question.answer]);
+    if (!reviews.has(key)) reviews.set(key, { prompt: question.prompt, display: question.display, choices: [...visibleChoices], answer: String(question.answer) });
+  }
+  function displayReview() {
+    const item = [...reviews.values()][$('petReviewSelect').selectedIndex];
+    if (!item) return;
+    $('petReviewPrompt').textContent = item.prompt;
+    $('petReviewVisual').innerHTML = item.display || '';
+    $('petReviewChoices').replaceChildren(...item.choices.map(choice => {
+      const entry = document.createElement('li'); entry.textContent = choice; return entry;
+    }));
+    $('petReviewAnswer').textContent = 'Tamang sagot: ' + item.answer;
+    $('petReviewAnswer').hidden = true;
+    $('petReviewReveal').setAttribute('aria-expanded', 'false');
+    $('petReviewReveal').textContent = 'IPAKITA ANG SAGOT';
+  }
   function showQuestion(fresh = true) {
     if (!questions.ready()) { $('petFeedback').textContent = 'Mag-import muna ng mga tanong para sa napiling aralin, o gumamit ng Built-in Questions.'; $('petAnswers').replaceChildren(); phase = 'blocked'; controls(); return; }
     try {
-      if (fresh || !question) question = questions.next(() => window.MQCurriculum.generate());
+      if (fresh || !question) { question = questions.next(() => window.MQCurriculum.generate()); misses = 0; }
       const answer = String(question.answer), choices = [...new Set((question.choices || []).map(String))];
       if (!choices.includes(answer) || choices.length < 2) throw Error('Kailangang may tamang sagot at hindi bababa sa dalawang pagpipilian.');
-      const visible = [answer, ...choices.filter(x => x !== answer).slice(0,2)];
-      for (let i = visible.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [visible[i], visible[j]] = [visible[j], visible[i]]; }
+      if (fresh || !visibleChoices.length || !$('petHints').checked) {
+        visibleChoices = [answer, ...choices.filter(x => x !== answer).slice(0,2)];
+        for (let i = visibleChoices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [visibleChoices[i], visibleChoices[j]] = [visibleChoices[j], visibleChoices[i]];
+        }
+      }
       $('petQuestion').textContent = question.prompt;
       $('petQuestionVisual').innerHTML = question.display || '';
       $('petAnswers').replaceChildren();
-      for (let i = 0; i < visible.length; i++) {
-        const button = document.createElement('button'); button.type = 'button'; button.className = 'answer'; button.dataset.choice = visible[i];
-        button.textContent = `${'ABC'[i]}. ${visible[i]}`; button.onclick = () => answerQuestion(button, visible[i]); $('petAnswers').append(button);
+      for (const [i, choice] of visibleChoices.entries()) {
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'answer'; button.dataset.choice = choice;
+        button.textContent = `${'ABC'[i]}. ${choice}`; button.onclick = () => answerQuestion(button, choice); $('petAnswers').append(button);
       }
       phase = 'question'; feedbackCorrect = false;
       $('petNext').hidden = true; $('petRest').hidden = true; $('petComplete').hidden = true; $('petQuestionArea').hidden = false;
-      $('petFeedback').textContent = '';
+      $('petFeedback').textContent = !fresh && misses === 1 && $('petHints').checked ? 'Pahiwatig: ' + clue() : '';
       $('petThought').textContent = 'Gutom pa!';
       $('petAnimalActor').classList.remove('happy', 'growing', 'rumble'); $('petHeroActor').classList.remove('feeding'); $('petFoodToken').classList.remove('toss');
       $('petFoodBowl').classList.remove('delivered');
@@ -120,6 +163,8 @@
     if (!questions.ready()) { $('petSetupStatus').textContent = 'Mag-import muna ng mga tanong, o piliin ang Built-in Questions.'; return; }
     questions.begin?.();
     cancelAction(); pauses.clear(); energy = 100; hunger = 100; feeds = 0; attempts = 0; correct = 0; question = null;
+    reviews.clear(); visibleChoices = []; delete $('petSceneCanvas').dataset.celebration;
+    $('petReview').hidden = true;
     $('petSetupStatus').textContent = ''; savePreferences();
     $('petSetup').classList.remove('active'); $('petGame').classList.add('active');
     $('petActivityLabel').textContent = $('petActivityName').value.trim() || 'Ating Gawain';
@@ -141,7 +186,8 @@
         $('petAnimalActor').classList.remove('rumble'); $('petAnimalActor').classList.add('happy', 'growing'); $('petHeroActor').classList.remove('feeding');
         if (!hunger) {
           phase = 'complete'; $('petThought').textContent = 'Busog na!'; $('petQuestionArea').hidden = true; $('petComplete').hidden = false;
-          $('petCompleteText').textContent = `Salamat sa pag-aalaga! Lumaki at nabusog ang ${pets[pet].name.toLowerCase()}. ${correct} tamang sagot sa ${attempts} pagsubok.`; cue('complete');
+          $('petCompleteText').textContent = `${celebrate()} ${correct} tamang sagot sa ${attempts} pagsubok.`;
+          $('petReview').hidden = !reviews.size; cue('complete');
         } else {
           phase = 'feedback'; $('petThought').textContent = 'Ang sarap!';
           $('petFeedback').textContent = 'Magaling! Mas lumaki ang alaga. ' + (question.explanation || '');
@@ -151,10 +197,13 @@
       });
     } else {
       energy = Math.max(0, energy - 10); phase = energy ? 'feedback' : 'rest'; feedbackCorrect = false;
+      misses++;
+      const hintFirst = $('petHints').checked && misses === 1;
       button.classList.add('incorrect');
-      for (const option of $('petAnswers').querySelectorAll('button')) if (option.dataset.choice === String(question.answer)) option.classList.add('correct');
+      if (hintFirst) rememberQuestion();
+      else for (const option of $('petAnswers').querySelectorAll('button')) if (option.dataset.choice === String(question.answer)) option.classList.add('correct');
       $('petThought').textContent = 'Gutom pa!'; $('petAnimalActor').classList.add('rumble'); cue('rumble');
-      $('petFeedback').textContent = `Ang tamang sagot ay ${question.answer}. ${question.explanation || ''} ${energy ? 'Subukan nating muli.' : 'Pahinga muna ang tauhan. Maaari tayong magpatuloy pagkatapos.'}`;
+      $('petFeedback').textContent = hintFirst ? 'Pahiwatig: ' + clue() : `Ang tamang sagot ay ${question.answer}. ${question.explanation || ''} ${energy ? 'Subukan nating muli.' : 'Pahinga muna ang tauhan. Maaari tayong magpatuloy pagkatapos.'}`;
       $('petNext').textContent = 'SUBUKAN MULI · ENTER'; $('petNext').hidden = !energy; $('petRest').hidden = !!energy;
       meters(); controls();
     }
@@ -166,6 +215,22 @@
   $('petHeroSelect').onchange = () => { heroId = $('petHeroSelect').value; updateHeroes(); savePreferences(); };
   $('petActivityName').value = typeof saved.activity === 'string' ? saved.activity.slice(0,70) : '';
   $('petActivityName').onchange = savePreferences;
+  $('petHints').checked = saved.hints === true;
+  $('petHints').onchange = savePreferences;
+  $('petReview').onclick = () => {
+    if (phase !== 'complete' || !reviews.size || pauses.size) return;
+    $('petReviewSelect').replaceChildren(...[...reviews.values()].map((item, i) => new Option((i + 1) + '. ' + item.prompt, String(i))));
+    $('petReviewPicker').hidden = reviews.size < 2;
+    displayReview(); $('petReviewDialog').showModal();
+  };
+  $('petReviewSelect').onchange = displayReview;
+  $('petReviewReveal').onclick = () => {
+    const reveal = $('petReviewAnswer').hidden;
+    $('petReviewAnswer').hidden = !reveal;
+    $('petReviewReveal').setAttribute('aria-expanded', String(reveal));
+    $('petReviewReveal').textContent = reveal ? 'ITAGO ANG SAGOT' : 'IPAKITA ANG SAGOT';
+  };
+  $('petReviewClose').onclick = () => $('petReviewDialog').close();
   $('petStart').onclick = start; $('petAgain').onclick = start; $('petHome').onclick = back;
   $('petNext').onclick = () => { if (!pauses.size && phase === 'feedback') showQuestion(feedbackCorrect); };
   $('petRest').onclick = () => { if (!pauses.size && phase === 'rest') { energy = 100; meters(); showQuestion(false); } };

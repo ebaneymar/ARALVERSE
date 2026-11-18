@@ -1,0 +1,65 @@
+/* Place projector overrides before legacy theme layers so their important rules take effect while teaching. */
+@layer av-classroom-projector1593 {
+.av-projector-controls{display:flex;gap:6px;align-items:center;flex:0 0 auto}
+.av-projector-controls[hidden],.av-projector-controls [hidden]{display:none!important}
+html body #gameShell .launcher-bar .av-projector-controls button[aria-pressed=true],
+html body #gameShell .launcher-bar .av-projector-controls button[aria-expanded=true]{background:#fbe9a5!important;color:#173e40!important;border-color:#e9bf51!important}
+html.av-projector:not(.av-projector-tools-open) body #gameShell .launcher-bar>:not(#modeLabel):not(.av-projector-controls){display:none!important}
+html.av-projector body #gameShell .launcher-bar{justify-content:space-between!important;flex-wrap:wrap!important}
+html.av-projector body #gameShell .launcher-actions{flex-wrap:wrap}
+html[data-av-projector-frame] .av-projector-controls{position:fixed;right:8px;top:5px;z-index:10000;background:#174b4c;border-radius:10px;padding:3px}
+html[data-av-projector-frame] .av-projector-controls button{border:1px solid #85bdb3;background:#ecfaf3;color:#194a42;border-radius:8px;padding:5px 10px;font:700 15px sans-serif}
+html[data-av-projector-frame] .av-projector-controls button[aria-pressed=true]{background:#ffe89b}
+html.av-projector:not(.av-projector-tools-open) body #petGame .game-tools,
+html.av-projector:not(.av-projector-tools-open) body :is(#game,#battle,#battleScreen) :is(#sfx,#pauseBtn,#fullBtn,#mqRestartMatchBtn,#soundButton,#pauseButton,#fullscreenButton,#guardianPauseBtn1579,#guardianSoundToggle){display:none!important}
+
+/* Feedback symbols do not modify the button's answer text or key bindings. */
+html[data-av-projector-frame] body :is(#petAnswers,#answers)>button:is(.correct,.good,.ok)::before{content:"✓ " / "Tama. ";font-weight:900}
+html[data-av-projector-frame] body :is(#petAnswers,#answers)>button:is(.incorrect,.wrong,.bad,.no)::before{content:"✕ " / "Mali. ";font-weight:900}
+html.av-projector[data-av-projector-frame]{--projected-question:clamp(32px,4.2vw,68px);--projected-choice:clamp(24px,2.8vw,48px)}
+html.av-projector body #petGame .pet-scene{height:clamp(135px,23vh,245px)!important}
+html.av-projector body #petGame #petAnimalActor{width:min(29%,24vh)!important}
+html.av-projector body #petGame #petFoodBowl{width:min(13%,13vh)!important}
+html.av-projector body #petGame .thought{font-size:clamp(15px,1.5vw,24px)!important;padding:5px 14px!important}
+html.av-projector body #petGame #petQuestionArea{margin-top:2px!important;padding:clamp(12px,1.2vw,24px)!important}
+html.av-projector body #petGame :is(#petQuestion,#petQuestionVisual){font-size:max(var(--pet-question-size),var(--projected-question))!important}
+html.av-projector body #petGame #petAnswers>button{font-size:max(var(--pet-answer-size),var(--projected-choice))!important;min-height:clamp(66px,10vh,105px)!important}
+html.av-projector body #petGame #petFeedback{font-size:clamp(20px,1.7vw,29px)!important}
+html.av-projector body #petReviewDialog{width:min(980px,96vw)!important;max-height:90dvh!important}
+html.av-projector body #petReviewDialog :is(#petReviewPrompt,#petReviewVisual){font-size:var(--projected-question)!important}
+html.av-projector body #petReviewDialog :is(#petReviewChoices,#petReviewAnswer){font-size:var(--projected-choice)!important}
+
+/* Give the live question first place in the legacy battle layouts. */
+html.av-projector[data-av-projector-frame] body :is(#game,#battle) #fullscreen-wrapper,
+html.av-projector[data-av-projector-frame] body #game #main-game-area{display:flex!important;flex-direction:column!important;height:auto!important;max-height:none!important;overflow:visible!important}
+html.av-projector[data-av-projector-frame] body :is(#game,#battle).active{overflow:auto!important}
+html.av-projector[data-av-projector-frame] body :is(#game,#battle) #top-stats-bar{order:-2!important}
+html.av-projector[data-av-projector-frame] body :is(#game,#battle) #fullscreen-wrapper :is(.qa,.question-area){order:-1!important;display:flex!important;flex-direction:column!important;flex:none!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;gap:10px!important;padding:clamp(12px,2vw,28px)!important}
+html.av-projector[data-av-projector-frame] body :is(#game,#battle) :is(#fullscreen-wrapper,.question-box) :is(#question,#questionPrompt),
+html.av-projector[data-av-projector-frame] body #battleScreen #questionBox #questionText{font-size:var(--projected-question)!important;line-height:1.18!important;height:auto!important;max-height:none!important;overflow-wrap:anywhere!important}
+html.av-projector[data-av-projector-frame] body :is(#game,#battle) :is(#fullscreen-wrapper,.question-box) :is(#equation,#display){font-size:clamp(26px,3.3vw,54px)!important;line-height:1.2!important;max-height:none!important}
+html.av-projector[data-av-projector-frame] body :is(#game,#battle) :is(#fullscreen-wrapper,.question-box) #answers:not(.mq-action-mode):not(.mq-player-select-mode)>button,
+html.av-projector[data-av-projector-frame] body #battleScreen #questionBox #answerInput{font-size:var(--projected-choice)!important;min-height:62px!important;line-height:1.2!important;white-space:normal!important;overflow-wrap:anywhere!important}
+html.av-projector[data-av-projector-frame] body #battle .boss-stage{grid-template-columns:minmax(95px,1fr) minmax(0,5fr) minmax(95px,1fr)!important}
+html.av-projector[data-av-projector-frame] body #battleScreen.active{grid-template-rows:auto auto minmax(140px,1fr)!important;overflow:auto!important}
+html.av-projector[data-av-projector-frame] body #battleScreen .qa-panel{grid-row:2!important;max-height:none!important}
+html.av-projector[data-av-projector-frame] body #battleScreen .arena{grid-row:3!important}
+@media(max-width:720px){
+  html body #gameShell .launcher-bar:has(.av-projector-controls:not([hidden])){flex-wrap:wrap!important}
+  html body #gameShell .launcher-actions{flex-wrap:wrap}
+  html.av-projector[data-av-projector-frame] body #battle .boss-stage{grid-template-columns:1fr!important}
+  html.av-projector[data-av-projector-frame] body #battle .boss-stage>div:has(.question-box){grid-row:1!important}
+}
+html.av-projector:not(.av-projector-tools-open) body #petGame .game-head h1{display:none!important}
+html.av-projector body #petGame .meters{margin:5px 8px!important}
+html.av-projector body #petGame #petQuestionVisual{font-size:max(var(--pet-question-size),clamp(26px,3vw,46px))!important}
+@media(max-height:800px){
+  html.av-projector body #petGame .pet-scene{height:clamp(108px,19vh,145px)!important}
+  html.av-projector body #petGame #petAnimalActor{width:min(28%,20vh)!important}
+  html.av-projector body #petGame #petAnswers{margin-top:10px}
+  html.av-projector body #petGame .round-actions{margin-top:5px}
+}
+html.av-projector body #petGame #petSceneCanvas[data-celebration]{height:clamp(205px,42vh,430px)!important}
+html.av-projector body #petGame #petSceneCanvas[data-celebration] #petAnimalActor{width:min(31%,36vh)!important}
+html.av-projector body #petGame #petSceneCanvas[data-celebration] #petFoodBowl{width:min(15%,18vh)!important}
+}

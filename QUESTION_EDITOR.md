@@ -26,3 +26,9 @@ Deleting uses one question-bank save for the batch. Cancelling, a failed save,
 or removing the last imported question pool during a running activity leaves
 the question bank unchanged. Finish the activity or choose built-in questions
 before clearing its last imported set. Deletions are saved across restarts.
+
+## Optional clues in v1.5.93
+
+Download the current Excel template to find **Pahiwatig** in column G, or add a column with that header to an existing Excel or CSV file. Use up to 600 characters for a clue. The import preview shows it before saving. To add or change a clue on a saved question, choose **EDIT** and fill in **PAHIWATIG (optional)**.
+
+Enable **Pahiwatig muna** in Pakainin ang mga Alaga to use these clues on the first missed attempt. Existing files with the original required columns still import in worksheet order.

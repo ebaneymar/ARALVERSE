@@ -88,3 +88,11 @@ wrappers no longer block the objects underneath.
 Activated devices no longer show the floating **Activated · this device**
 badge. Activation status, device code and details remain available in Settings.
 Trial and activation-required notices are retained.
+
+## Classroom play in v1.5.93
+
+On the feeding setup screen, turn on **Pahiwatig muna**. The first missed answer shows the teacher's clue and marks the chosen answer with ✕. Press **Enter** to retry the same question with the choices in the same places. A second miss reveals the correct answer with ✓. A question without a custom clue uses a short prompt to reread and compare the choices.
+
+After the fifth feeding the puppy carries its empty bowl to the character, the owl flies to a branch, or the carabao splashes in a puddle. When a clue was used, **Balikan natin** opens the questions that needed one. Pick a question, let a pupil explain, and choose **Ipakita ang sagot** to reveal the answer. Review leaves the round's score intact.
+
+Choose **Pang-projector** on the game toolbar for a larger question and response area. **Gamit ng guro** opens the original controls. Press **Pang-projector** again to return to your regular layout. The preference carries over to Classic Adventure, Multiplayer, both Tournaments and Class Boss. The Guardian Team Tournament retains its typed answer and explanation controls.

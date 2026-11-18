@@ -47,12 +47,29 @@ const {_electron:electron}=require('./windows/node_modules/playwright');
   assert.equal(batch.deleted,2,'A batch deletes imported questions through the Windows storage bridge');
   await page.evaluate(()=>{
    const api=AVQuestionEditor1551,lesson=api.currentSelection();
-   api.importQuestions(lesson,[1,2].map(i=>({rowNumber:i+1,fields:{prompt:'Native ordered question '+i,choices:['5','4','6'],correct:0,context:''}})));
+   api.importQuestions(lesson,[1,2].map(i=>({rowNumber:i+1,fields:{prompt:'Native ordered question '+i,choices:['5','4','6'],correct:0,context:'',hint:'Bumilang nang paatras.'}})));
    const last=api.allRows(lesson).find(row=>row.data.prompt==='Native ordered question 2');
    api.moveQuestion(lesson,last.id,-1);api.moveQuestion(lesson,last.id,-1);
   });
-  await frame.locator('#petHome').click();await frame.locator('#petStart').click();
+  await frame.locator('#petHome').click();await frame.locator('#petHints').check();await frame.locator('#petStart').click();
   assert.equal(await frame.locator('#petQuestion').textContent(),'Native ordered question 2','A new Windows activity starts from the saved first question');
+  await page.locator('[data-projector-toggle]').click();
+  assert.equal(await frame.locator('#petFonts').isVisible(),false);
+  await frame.locator('#petAnswers [data-choice="4"]').click();
+  assert.equal(await frame.locator('#petFeedback').textContent(),'Pahiwatig: Bumilang nang paatras.');
+  assert.equal(await frame.locator('#petAnswers .correct').count(),0);
+  await frame.locator('#petNext').click();
+  for(let feed=1;feed<=5;feed++){
+    await frame.locator('#petAnswers [data-choice="5"]').click();
+    await frame.waitForFunction(count=>AVPetFeeding1582.getState().feeds===count,feed);
+    if(feed<5)await frame.locator('#petNext').click();
+  }
+  assert.equal(await frame.locator('#petSceneCanvas').getAttribute('data-celebration'),'puppy');
+  await frame.locator('#petReview').click();
+  assert.equal(await frame.locator('#petReviewPrompt').textContent(),'Native ordered question 2');
+  assert.equal(await frame.locator('#petReviewAnswer').isVisible(),false);
+  await frame.locator('#petReviewReveal').click();assert.ok(await frame.locator('#petReviewAnswer').isVisible());
+  await frame.locator('#petReviewClose').click();
   await page.evaluate(()=>mathAPangDesktop.saveNow());
   const saved=JSON.parse(fs.readFileSync(path.join(folder,'Data/ARALVERSE_Data.json'),'utf8'));
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avQuestionEditorV1')&&value.includes('Native feeding question')),'Imported questions reach the real desktop save file');
@@ -61,8 +78,10 @@ const {_electron:electron}=require('./windows/node_modules/playwright');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avPetFeedingFontsV1')&&JSON.parse(value).question===42),'Font preferences reach the real desktop save file');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avManualLayouts1580')&&value.includes('#petArena')),'Independent object layouts reach the real desktop save file');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avManualLayouts1580')&&JSON.parse(value)['petFeeding:petGame']?.items['#petFoodBowl']?.hidden===true),'Hidden object state reaches the real desktop save file');
+  assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avClassroomProjector1593')&&value==='on'));
+  assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avPetFeedingPreferencesV1')&&JSON.parse(value).hints===true));
   await running.close();running=null;
-  console.log('PASS: real Windows EXE opens, feeds/grows, advances with Enter, picks/hides/resizes objects, starts in saved question order, and persists reordered questions, batch deletion, fonts and layouts.');
+  console.log('PASS: real Windows EXE opens, feeds/grows, uses saved question order, layouts, fonts and bulk deletion, shows projector and clues, celebrates, reviews and persists teacher preferences.');
  }finally{
   if(running)await running.close().catch(()=>{});
   // Windows may retain a short-lived handle after Electron has exited.
