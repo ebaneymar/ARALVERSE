@@ -1,4 +1,4 @@
-name: Build and publish tournament players and pet food 1.5.94
+name: Build and publish the schoolyard Tournament 1.5.95
 
 on:
   push:
@@ -36,7 +36,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: aralverse-pet-feeding-1-5-94
+  group: aralverse-pet-feeding-1-5-95
   cancel-in-progress: true
 
 jobs:
@@ -98,10 +98,10 @@ jobs:
           ARALVERSE_LICENSE_FIXTURE=trial node tools/test_layout_update.cjs .build/pet-preview/app
       - uses: actions/upload-artifact@v4
         with:
-          name: pet-update-1.5.94
+          name: pet-update-1.5.95
           compression-level: 0
           path: |
-            .build/pet-release/ARALVERSE_Update_1.5.94.zip
+            .build/pet-release/ARALVERSE_Update_1.5.95.zip
             .build/pet-release/update-manifest.json
       - uses: actions/upload-artifact@v4
         if: always()
@@ -127,7 +127,7 @@ jobs:
           node-version: '24'
       - uses: actions/download-artifact@v4
         with:
-          name: pet-update-1.5.94
+          name: pet-update-1.5.95
           path: .build/pet-release
       - name: Stage the verified update and build Windows downloads
         run: |
@@ -141,11 +141,11 @@ jobs:
           node tools/test_pet_windows.cjs .build/pet-windows
       - uses: actions/upload-artifact@v4
         with:
-          name: pet-windows-1.5.94
+          name: pet-windows-1.5.95
           compression-level: 0
           path: |
-            .build/pet-windows/dist/ARALVERSE_Setup_1.5.94_x64.exe
-            .build/pet-windows/dist/ARALVERSE_Windows_1.5.94_x64.zip
+            .build/pet-windows/dist/ARALVERSE_Setup_1.5.95_x64.exe
+            .build/pet-windows/dist/ARALVERSE_Windows_1.5.95_x64.zip
             .build/pet-windows/dist/SHA256SUMS.txt
             .build/pet-windows/dist/WINDOWS_README.txt
   publish:
@@ -161,11 +161,11 @@ jobs:
             /update-manifest.json
       - uses: actions/download-artifact@v4
         with:
-          name: pet-update-1.5.94
+          name: pet-update-1.5.95
           path: .build/release
       - uses: actions/download-artifact@v4
         with:
-          name: pet-windows-1.5.94
+          name: pet-windows-1.5.95
           path: .build/release
       - name: Publish verified update and matching manifest
         run: |
@@ -174,27 +174,27 @@ jobs:
           python3 - <<'PY'
           import hashlib,json,os,pathlib,shutil,subprocess
           root=pathlib.Path('.build/release');new=json.loads((root/'update-manifest.json').read_text());old=json.loads(pathlib.Path('update-manifest.json').read_text())
-          assert old['version']=='1.5.93' or (old['version']==new['version'] and old['sha256']==new['sha256']), 'Review a newer published update before replacing it.'
-          if old['version']=='1.5.93':
+          assert old['version']=='1.5.94' or (old['version']==new['version'] and old['sha256']==new['sha256']), 'Review a newer published update before replacing it.'
+          if old['version']=='1.5.94':
               assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==os.environ['GITHUB_SHA'], 'Source changed during verification. Build from the current source before publishing.'
-          package=root/'ARALVERSE_Update_1.5.94.zip';assert hashlib.sha256(package.read_bytes()).hexdigest()==new['sha256'] and package.stat().st_size==new['size']
+          package=root/'ARALVERSE_Update_1.5.95.zip';assert hashlib.sha256(package.read_bytes()).hexdigest()==new['sha256'] and package.stat().st_size==new['size']
           shutil.copyfile(package,package.name);shutil.copyfile(root/'update-manifest.json','update-manifest.json')
-          names=['ARALVERSE_Setup_1.5.94_x64.exe','ARALVERSE_Windows_1.5.94_x64.zip','ARALVERSE_Update_1.5.94.zip','update-manifest.json','WINDOWS_README.txt']
+          names=['ARALVERSE_Setup_1.5.95_x64.exe','ARALVERSE_Windows_1.5.95_x64.zip','ARALVERSE_Update_1.5.95.zip','update-manifest.json','WINDOWS_README.txt']
           (root/'SHA256SUMS.txt').write_text(''.join(hashlib.sha256((root/n).read_bytes()).hexdigest()+'  '+n+'\n' for n in names))
           (root/'RELEASE_NOTES.md').write_text('\n\n'.join(new['notes'][:3]) + '\n\nExisting players can use Check for Updates in ARALVERSE. For a new Windows x64 laptop, use the Setup EXE or extract the portable ZIP.\n')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add --sparse -- ARALVERSE_Update_1.5.94.zip update-manifest.json
-          if ! git diff --cached --quiet; then git commit -m 'Publish ARALVERSE v1.5.94 with roster faces and species-specific pet food'; git push origin HEAD:main; fi
+          git add --sparse -- ARALVERSE_Update_1.5.95.zip update-manifest.json
+          if ! git diff --cached --quiet; then git commit -m 'Publish ARALVERSE v1.5.95 with live schoolyard panels and uniform fits'; git push origin HEAD:main; fi
       - name: Publish complete Windows downloads
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          files=(.build/release/ARALVERSE_Setup_1.5.94_x64.exe .build/release/ARALVERSE_Windows_1.5.94_x64.zip .build/release/ARALVERSE_Update_1.5.94.zip .build/release/update-manifest.json .build/release/SHA256SUMS.txt .build/release/WINDOWS_README.txt)
-          if gh release view v1.5.94 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload v1.5.94 "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
+          files=(.build/release/ARALVERSE_Setup_1.5.95_x64.exe .build/release/ARALVERSE_Windows_1.5.95_x64.zip .build/release/ARALVERSE_Update_1.5.95.zip .build/release/update-manifest.json .build/release/SHA256SUMS.txt .build/release/WINDOWS_README.txt)
+          if gh release view v1.5.95 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload v1.5.95 "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
           else
-            gh release create v1.5.94 "${files[@]}" --repo "$GITHUB_REPOSITORY" --target "$(git rev-parse HEAD)" --title 'ARALVERSE 1.5.94 - Tournament Players and Pet Food' --notes-file .build/release/RELEASE_NOTES.md --draft
+            gh release create v1.5.95 "${files[@]}" --repo "$GITHUB_REPOSITORY" --target "$(git rev-parse HEAD)" --title 'ARALVERSE 1.5.95 - Schoolyard Tournament' --notes-file .build/release/RELEASE_NOTES.md --draft
           fi
-          gh release edit v1.5.94 --repo "$GITHUB_REPOSITORY" --draft=false --latest --notes-file .build/release/RELEASE_NOTES.md
+          gh release edit v1.5.95 --repo "$GITHUB_REPOSITORY" --draft=false --latest --notes-file .build/release/RELEASE_NOTES.md

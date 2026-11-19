@@ -44,6 +44,9 @@ def package_tournament(files, root):
         files[prefix + 'tournament-landmarks-1594.js'] = assignment('AVTournamentWeights1594', models)
     art = {look: 'data:image/webp;base64,' + b64((root / f'src/assets/tournament-{look}-1594.webp').read_bytes())
            for look in ('teal', 'yellow')}
+    art['skirt'] = 'data:image/webp;base64,' + b64((root / 'src/assets/tournament-skirt-1595.webp').read_bytes())
+    yard = 'tournament-schoolyard-1595.webp'
+    files[prefix + yard] = (root / 'src/assets' / yard).read_bytes()
     files[prefix + 'tournament-art-1594.js'] = assignment('AVTournamentArt1594', art)
     for source in ('tournament-portraits.js', 'tournament-players.js', 'tournament-players.css'):
         stem, extension = source.rsplit('.', 1)

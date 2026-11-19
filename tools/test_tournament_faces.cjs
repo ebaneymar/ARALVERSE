@@ -19,13 +19,32 @@ async function verifyTournament(page) {
   },fixture);
   await f.locator('#tournamentSetup.active').waitFor();
   const card=id=>f.locator('.t-player-card[data-student-id="'+id+'"]');
+  const female=card('test-1').getByRole('button',{name:/Babae/});
+  const male=card('test-2').getByRole('button',{name:/Lalaki/});
+  assert.equal(await female.getAttribute('aria-pressed'),'false');
+  await female.click();await male.focus();await male.press('Enter');
+  await f.waitForFunction(()=>JSON.parse(ARAL_STORAGE.getItem('avTournamentAppearance1594:test-1'))?.gender==='female'&&JSON.parse(ARAL_STORAGE.getItem('avTournamentAppearance1594:test-2'))?.gender==='male');
+  await f.evaluate(()=>renderTournamentRoster());
+  assert.equal(await female.getAttribute('aria-pressed'),'true');assert.equal(await male.getAttribute('aria-pressed'),'true');
   await card('test-1').getByRole('button',{name:/Iayos ang mukha/}).click();
+  assert.equal(await f.locator('#avFaceLook').inputValue(),'skirt');
   await f.locator('#avFacePreview[data-face-state=ready]').waitFor({timeout:25000});
   assert.equal(await f.locator('#avFaceZoom').isVisible(),true);
   if(process.env.ARALVERSE_TOURNAMENT_SHOTS)await page.screenshot({path:process.env.ARALVERSE_TOURNAMENT_SHOTS+'-fit.png'});
-  await f.locator('#avFaceLook').selectOption('teal');await f.locator('#avFaceSave').click();
+  await f.locator('#avFaceLook').selectOption('skirt');
+  await f.locator('#avFacePreview[data-face-state=ready]').waitFor();
+  const skirtPreview=await f.locator('#avFacePreview').getAttribute('src');
+  await f.locator('#avPlacement summary').click();
+  await f.locator('#avHeadSize').fill('106');
+  await f.waitForFunction(old=>document.getElementById('avFacePreview').dataset.faceState==='ready'&&document.getElementById('avFacePreview').src!==old,skirtPreview);
+  await f.locator('#avFaceSave').click();
   await card('test-2').getByRole('button',{name:/Iayos ang mukha/}).click();
   await f.locator('#avFacePreview[data-face-state=missing]').waitFor();
+  assert.equal(await f.locator('#avFaceLook').inputValue(),'white');
+  await f.locator('#avFaceGender').getByRole('button',{name:/Babae/}).click();assert.equal(await f.locator('#avFaceLook').inputValue(),'skirt');
+  await f.locator('#avFaceCancel').click();
+  assert.equal(await male.getAttribute('aria-pressed'),'true');
+  await card('test-2').getByRole('button',{name:/Iayos ang mukha/}).click();
   await f.locator('#avPackPanel summary').click();
   await f.locator('#avPackFile').setInputFiles({name:'class-photos.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({format:'ARALVERSE_CLASS_PHOTOS',version:1,photos:[{label:'Test photo',image:second}]}))});
   await f.locator('#avPackGrid button').click();await f.locator('#avFacePreview[data-face-state=ready]').waitFor();
@@ -38,6 +57,8 @@ async function verifyTournament(page) {
   await f.locator('#avFacePreview[data-face-state=ready]').waitFor();await f.locator('#avFaceSave').click();
   await f.locator('#avFaceDialog1594').waitFor({state:'hidden'});
   const stored=await f.evaluate(()=>({a:roster[0].image,b:roster[1].image,fit:JSON.parse(ARAL_STORAGE.getItem('avTournamentAppearance1594:test-2'))}));
+  const firstFit=await f.evaluate(()=>JSON.parse(ARAL_STORAGE.getItem('avTournamentAppearance1594:test-1')));
+  assert.equal(firstFit.look,'skirt');assert.equal(firstFit.placement.size,106);
   assert.equal(stored.a,fixture);assert.equal(stored.b,second);assert.equal(stored.fit.pins.length,5);assert.equal(stored.fit.look,'yellow');
   for(const id of ['test-1','test-2']){await card(id).focus();await card(id).press('Enter');}
   await f.locator('#tShuffleBracket').uncheck();await f.locator('#tStartTournament').click();
@@ -53,11 +74,29 @@ async function verifyTournament(page) {
     assert.match(await f.locator('#'+side+'HpText').textContent(),/100/);
   }
   assert.ok(await f.locator('#answers button').first().isVisible());
+  assert.equal(await f.locator('#blueName').getAttribute('data-gender'),'female');
+  assert.equal(await f.locator('#redName').getAttribute('data-gender'),'male');
+  const banner=f.locator('#mqGrandFinalBanner');
+  await banner.waitFor({state:'visible'});
+  assert.equal(await banner.evaluate(el=>el.closest('#arena')?.id),'arena');
+  const actions=await f.locator('#top-stats-bar').boundingBox(),finals=await banner.boundingBox();
+  assert.ok(finals.y>=actions.y+actions.height,'Finals information clears the match controls');
+  for(const side of ['blue','red']){
+    const name=await f.locator('#'+side+'Name').boundingBox();
+    const hp=await f.getByRole('meter',{name:new RegExp(side==='blue'?'Manlalaro A':'Manlalaro B')}).boundingBox();
+    const actor=await f.locator('#'+side+'Photo').boundingBox(),question=await f.locator('#question').boundingBox();
+    const letters=await f.locator('#'+side+'Name .mq-v163-player-name').boundingBox();
+    assert.ok(letters.y>=name.y-1&&letters.y+letters.height<=name.y+name.height+1,'Player name fits fully inside the gold plate');
+    assert.ok(hp.x>=name.x+name.width-1&&Math.abs(hp.y+hp.height/2-name.y-name.height/2)<4,'HP is on the same nameplate');
+    assert.ok(hp.y+hp.height<=actor.y+2&&actor.y+actor.height<question.y,'Nameplate, full-body player and question follow the schoolyard layout');
+    assert.equal(await f.locator('#'+side+'Stats1567 span').count(),4);
+  }
   if(process.env.ARALVERSE_TOURNAMENT_SHOTS)await page.screenshot({path:process.env.ARALVERSE_TOURNAMENT_SHOTS+'-battle.png'});
   const original=await f.locator('#redPhoto').getAttribute('src');
   await f.evaluate(()=>{const a=blue[0];blue=[red[0]];red=[a];blue[0].hp=65;update();});
   await f.locator('#redPhoto[data-player-id="test-1"][data-face-state=ready]').waitFor();
-  assert.notEqual(await f.locator('#redPhoto').getAttribute('src'),original);assert.match(await f.locator('#blueHpText').textContent(),/65/);
+  assert.equal(await f.locator('#blueName').getAttribute('data-gender'),'male');
+  assert.notEqual(await f.locator('#redPhoto').getAttribute('src'),original);assert.match(await f.locator('#blueHpText').textContent(),/65/);assert.equal(await f.getByRole('meter',{name:/Manlalaro B/}).getAttribute('aria-valuenow'),'65');
   await f.evaluate(()=>{blue=[{id:'empty',name:'Bagong manlalaro',image:'',hp:100}];update();});
   await f.locator('#bluePhoto[data-face-state=missing]').waitFor();assert.ok(await f.locator('#blueFaceNote1594').isVisible());
   return f;
@@ -77,7 +116,7 @@ if(require.main===module)(async()=>{
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage'],...(process.env.ARALVERSE_BROWSER?{executablePath:process.env.ARALVERSE_BROWSER}:{})});
     const page=await browser.newPage({viewport:{width:1366,height:768}});page.setDefaultTimeout(12000);
     const errors=[];page.on('pageerror',e=>errors.push(e.message));
-    await page.addInitScript(()=>{if(window===window.top)window.mathAPangDesktop={isDesktop:true,saveNow:async()=>({ok:true}),activation:{status:async()=>({state:'trial',canPlay:true,activated:false,remainingDays:7})},updater:{info:async()=>({version:'1.5.94',configured:false,config:{autoCheck:false}}),onProgress:()=>()=>{}}};});
+    await page.addInitScript(()=>{if(window===window.top)window.mathAPangDesktop={isDesktop:true,saveNow:async()=>({ok:true}),activation:{status:async()=>({state:'trial',canPlay:true,activated:false,remainingDays:7})},updater:{info:async()=>({version:'1.5.95',configured:false,config:{autoCheck:false}}),onProgress:()=>()=>{}}};});
     await page.goto('http://127.0.0.1:'+server.address().port+'/game.html');await page.waitForFunction(()=>window.AVActivation1581?.getStatus().canPlay);
     await page.evaluate(()=>ARAL_STORAGE.setItem('mqCurriculumSelectionV190',JSON.stringify({term:'2',subject:'math',topic:'m2_subtraction'})));
     await verifyTournament(page);assert.deepEqual(errors,[]);

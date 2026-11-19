@@ -1,51 +1,208 @@
+/* The existing match IDs remain live and independently selectable in Layout. */
 @layer av-tournament-players1594 {
-  #battle #arena {
-    background:linear-gradient(0deg,#21452c2e,transparent 45%)!important;
-    border:0!important;border-radius:18px!important;
+  #battle.active {
+    padding:0!important; width:100%!important; height:100dvh!important;
+    color:#102e4c!important; background:#284c38!important;
+    overflow-x:hidden!important; overflow-y:auto!important;
   }
+  #battle #fullscreen-wrapper {
+    display:grid!important; grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:minmax(265px,1fr) max-content!important; align-content:stretch!important;
+    width:100%!important; max-width:none!important; height:100%!important; min-height:100%!important;
+    margin:0!important; padding:0!important; gap:0!important; border:0!important; border-radius:0!important;
+    background:#a4ce86!important; box-shadow:none!important;
+  }
+  #battle #arena {
+    grid-area:1 / 1!important; position:relative!important; width:100%!important; height:100%!important;
+    min-height:0!important; padding:0!important; margin:0!important; border:0!important; border-radius:0!important;
+    background:#8acb9d url('tournament-schoolyard-1595.webp') center 56% / cover no-repeat!important;
+    box-shadow:none!important; isolation:isolate!important; overflow:visible!important;
+    --ground:5%; --performer-top:calc(clamp(33px,5.6vh,53px) + clamp(38px,5.7vh,58px) + clamp(8px,1.3vh,17px));
+  }
+  #battle #arena::after {content:none!important}
   #battle #arena .fighters {
-    padding:8px clamp(7px,4vw,64px)!important;gap:clamp(24px,9vw,160px)!important;
+    position:absolute!important; inset:0!important; width:100%!important; height:100%!important;
+    padding:0!important; margin:0!important; display:block!important; pointer-events:none;
   }
   #battle #arena :is(#blueSide,#redSide) {
-    background:none!important;border:0!important;box-shadow:none!important;padding:0!important;
-    width:100%!important;max-width:295px!important;gap:3px!important;
+    --team:#1555a7; --team-dark:#0a347c; --team-gloss:#318ade; --wash:#e5f4ff;
+    --panel-width:min(71%,600px); --panel-left:3.5%; --panel-top:clamp(33px,5.6vh,53px);
+    --panel-height:clamp(38px,5.7vh,58px);
+    position:absolute!important; inset:0 auto 0 0!important; margin:0!important; padding:0!important;
+    width:50%!important; max-width:none!important; height:100%!important; min-height:0!important;
+    display:block!important; border:0!important; border-radius:0!important; background:none!important;
+    box-shadow:none!important; overflow:visible!important; pointer-events:none;
   }
-  #battle #arena :is(#blueSide,#redSide)::before,
-  #battle #arena :is(#blueSide,#redSide)::after {content:none!important}
+  #battle #arena #redSide {
+    inset:0 0 0 auto!important; --team:#c52e29; --team-dark:#8e231e; --team-gloss:#f45742; --wash:#ffebe1;
+    --panel-left:calc(96.5% - var(--panel-width));
+  }
+  #battle #arena .side::before {
+    content:""!important; position:absolute!important; z-index:2!important; inset:auto!important;
+    left:var(--panel-left)!important; top:var(--panel-top)!important; width:var(--panel-width)!important;
+    height:var(--panel-height)!important; border-radius:999px!important; box-sizing:border-box!important;
+    background:linear-gradient(#fff5cc 0%,#fffef4 21%,#fff 51%,#ffedb8 100%)!important;
+    border:2px solid #b76e10!important; box-shadow:inset 0 0 0 2px #ffe28a,0 2px #8c531c,0 3px 6px #42432566!important;
+    opacity:1!important; transform:none!important; pointer-events:none;
+  }
+  #battle #arena .side::after {
+    content:""!important; position:absolute!important; inset:auto!important;
+    bottom:calc(var(--ground) - 1%)!important; left:50%!important; width:clamp(40px,17%,155px)!important;
+    height:clamp(6px,1.9vh,20px)!important; border:0!important; border-radius:50%!important;
+    transform:translateX(-50%)!important; background:radial-gradient(ellipse,#4e472c85,transparent 72%)!important;
+    opacity:1!important; pointer-events:none; z-index:0!important;
+  }
+  #battle #arena .av-team-label1567 {
+    position:absolute!important; left:calc(var(--panel-left) + 5%)!important; top:auto!important;
+    bottom:calc(100% - var(--panel-top) - 4px)!important; z-index:1!important;
+    padding:3px clamp(13px,2vw,39px) 5px!important; border-radius:15px 15px 1px 1px!important;
+    border:2px solid #ffda64!important; color:white!important;
+    background:linear-gradient(var(--team-gloss),var(--team) 58%,var(--team-dark))!important;
+    font:bold italic calc(clamp(12px,1.33vw,23px) * var(--av-t-menu1557,1))/1.15 'Segoe UI',Arial,sans-serif!important;
+    text-shadow:0 1px 2px #0c294e!important; letter-spacing:.025em!important; white-space:nowrap!important;
+    pointer-events:auto;
+  }
+  #battle #arena #redSide .av-team-label1567 {left:auto!important;right:8.5%!important}
+  #battle #arena :is(#blueName,#redName) {
+    container-type:inline-size; --rank-size:clamp(17px,2.15vw,36px); --badge-space:0px;
+    position:absolute!important; z-index:3!important; inset:auto!important;
+    top:var(--panel-top)!important; left:calc(var(--panel-left) + 1%)!important;
+    height:var(--panel-height)!important; width:calc(var(--panel-width) * .48 - 1%)!important;
+    display:flex!important; align-items:center!important; justify-content:center!important; flex-direction:row!important;
+    padding:2px 1%!important; margin:0!important; background:none!important; border:0!important; border-radius:0!important;
+    box-shadow:none!important; color:#102d50!important; font:900 calc(clamp(16px,2.0vw,34px) * var(--av-t-name1557,1))/1.05 'Segoe UI',Arial,sans-serif!important;
+    text-shadow:none!important; text-align:center!important; text-transform:uppercase!important;
+    overflow:hidden!important; pointer-events:auto;
+  }
+  #battle #arena .name .mq-v163-rank-line {display:none!important}
+  #battle #arena .name[data-gender] {--badge-space:calc(1.25 * clamp(10px,.85vw,14px) + 3px)}
+  #battle #arena :is(#blueName,#redName) .mq-v163-name-line {
+    display:flex!important;align-items:center!important;gap:5px!important;flex-wrap:nowrap!important;
+    font-size:min(1em,max(min(15px,1em),calc((100cqi - var(--rank-size) - var(--badge-space) - 8px) / var(--av-name-em,8))))!important;
+    line-height:1.02!important;
+  }
+  #battle #arena .name .mq-v163-rank-icon {flex:none!important;width:var(--rank-size)!important;height:var(--rank-size)!important;object-fit:contain!important}
+  #battle #arena .name .mq-v163-player-name {display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden!important;overflow-wrap:anywhere!important}
+  #battle #arena .side>.hpShell {
+    position:absolute!important; z-index:3!important; inset:auto!important;
+    top:calc(var(--panel-top) + var(--panel-height) * .17)!important;
+    left:calc(var(--panel-left) + var(--panel-width) * .49)!important;
+    width:calc(var(--panel-width) * .49)!important; height:calc(var(--panel-height) * .66)!important;
+    min-height:0!important; max-height:none!important; max-width:none!important; margin:0!important; padding:0!important;
+    border:2px solid #bca34e!important; border-radius:999px!important;
+    box-shadow:inset 0 2px 4px #92633f55,0 1px #fff8d0!important;
+    background:linear-gradient(#ffdfd8,#ffcacc)!important; overflow:hidden!important; pointer-events:auto;
+  }
+  #battle #arena .side .hp {
+    height:100%!important; border-radius:999px!important; background:linear-gradient(#67ff59 0%,#20df39 40%,#08ae28 91%)!important;
+    box-shadow:inset 0 1px 1px #f0ffa2!important; transition:width .32s ease!important;
+  }
+  #battle #arena :is(#blueHpText,#redHpText) {
+    position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important;
+    width:100%!important; height:100%!important; padding:0 2px!important; margin:0!important; white-space:nowrap!important;
+    color:#082725!important; background:none!important; border:0!important;
+    font:800 calc(clamp(12px,1.2vw,21px) * var(--av-t-menu1557,1))/1 'Segoe UI',Arial,sans-serif!important;
+    font-variant-numeric:tabular-nums!important; text-shadow:0 1px 2px #f4ffc4a6!important;
+  }
   #battle #arena :is(#bluePhoto,#redPhoto) {
-    display:block!important;width:clamp(96px,13vw,180px)!important;height:clamp(156px,29vh,290px)!important;
-    min-width:0!important;min-height:0!important;max-width:100%!important;max-height:none!important;
-    background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;
-    object-fit:contain!important;object-position:center bottom!important;order:1!important;flex:none!important;
-    filter:drop-shadow(0 2px 2px #25473366)!important;
+    position:absolute!important; inset:auto!important; z-index:1!important; bottom:var(--ground)!important;
+    left:17%!important; width:66%!important; height:calc(100% - var(--performer-top) - var(--ground))!important;
+    max-width:none!important; max-height:none!important; min-height:0!important; min-width:0!important;
+    padding:0!important; margin:0!important; background:none!important; border:0!important; border-radius:0!important;
+    box-shadow:none!important; object-fit:contain!important; object-position:center bottom!important;
+    filter:drop-shadow(1px 2px 1px #433f3230)!important; pointer-events:auto;
   }
   #battle #arena :is(#bluePhoto,#redPhoto):not([data-face-state=ready]),
   #avFaceDialog1594 #avFacePreview:not([data-face-state=ready]) {
     filter:brightness(0) saturate(100%) invert(32%) sepia(18%) saturate(720%) hue-rotate(120deg) drop-shadow(0 1px 1px #fff)!important;
   }
-  #battle #arena .av-team-label1567 {
-    border-radius:20px!important;padding:3px 12px!important;background:#f4fcffff!important;color:#145176!important;
+  #battle #arena .av-battle-stats1567 {
+    position:absolute!important; top:47%!important; left:3.5%!important; z-index:3!important;
+    width:32%!important; max-width:32%!important; min-height:30px!important; margin:0!important;
+    display:flex!important; flex-wrap:nowrap!important; justify-content:space-evenly!important; gap:clamp(2px,.45vw,8px)!important;
+    padding:clamp(4px,.6vw,10px) clamp(5px,.8vw,13px)!important; border-radius:999px!important;
+    color:var(--team-dark)!important; background:linear-gradient(white,var(--wash))!important; border:2px solid var(--team)!important;
+    box-shadow:inset 0 0 0 2px #fff9,0 2px 2px var(--team-dark)!important; pointer-events:auto;
   }
-  #battle #arena #redSide .av-team-label1567 {color:#983e3d!important}
-  #battle #arena :is(#blueName,#redName) {
-    width:max-content!important;max-width:100%!important;padding:2px 12px!important;background:#fffff5f5!important;
-    border:1px solid #417d8b!important;border-radius:11px!important;color:#133d48!important;box-shadow:0 1px 3px #23452233!important;
+  #battle #arena #redStats1567 {left:auto!important;right:3.5%!important}
+  #battle #arena .av-battle-stats1567 span {
+    display:inline-flex!important; flex:0 1 auto!important; gap:2px!important; align-items:center!important;
+    padding:0!important; border:0!important; background:none!important; color:inherit!important;
+    font:800 clamp(12px,1.12vw,20px)/1 'Segoe UI',Arial,sans-serif!important;
   }
-  #battle #arena #redName {border-color:#bc635c!important}
-  #battle #arena .side>.hpShell {max-width:235px!important}
-  #battle #arena .av-face-note {order:5!important;color:#193d35!important;background:#fffdeaef!important;border-radius:7px!important;padding:1px 7px!important;font:600 12px/1.3 'Segoe UI',sans-serif!important}
+  #battle #arena .av-battle-stats1567 svg {width:clamp(12px,1.45vw,25px)!important;height:auto!important}
+  #battle #arena .av-battle-vs1567 {
+    top:54%!important; left:50%!important; width:clamp(50px,13vw,196px)!important; height:48%!important;
+    transform:translate(-50%,-50%)!important; filter:drop-shadow(0 2px 1px #8d521c) drop-shadow(0 0 5px #ffdf72)!important;
+  }
+  #battle #arena .av-battle-vs1567 text {font-family:'Segoe UI',Arial,sans-serif!important;font-style:italic;font-weight:1000}
+  #battle #arena .av-face-note {position:absolute!important;left:50%!important;bottom:1%!important;transform:translateX(-50%)!important;color:#173e39!important;background:#fff9e7!important;border-radius:6px!important;padding:2px 6px!important;font:600 12px/1.2 'Segoe UI',Arial,sans-serif!important;white-space:nowrap!important}
   #battle #arena .av-face-note[hidden] {display:none!important}
-  #tournamentRoster button.av-face-fit {position:relative!important;z-index:8!important;min-height:30px!important;margin:3px auto 0!important;padding:4px 10px!important;border:1px solid #86b5aa!important;border-radius:9px!important;background:#f1fbf6!important;color:#245548!important;font:700 13px/1.25 'Segoe UI',sans-serif!important}
-  @media(min-width:850px) and (max-height:800px) {
-    #battle.active {padding-block:5px!important}
-    #battle #fullscreen-wrapper {gap:5px!important}
-    #battle .av-match-heading1567 {flex-direction:row!important;justify-content:center!important;flex-wrap:wrap!important;gap:8px!important}
-    #battle :is(.av-match-info1567,#mqGrandFinalBanner) {width:auto!important;min-width:30%!important;padding:4px 16px!important}
-    #battle #arena .fighters {padding-block:4px!important}
-    #battle #arena :is(#blueSide,#redSide) {gap:2px!important}
+  #battle #arena .side>.bench {position:absolute!important;inset:auto 0 0!important;z-index:4!important;pointer-events:auto}
+  #battle #top-stats-bar {
+    position:absolute!important; inset:5px 0 auto!important; z-index:5!important; width:fit-content!important; max-width:60%!important;
+    margin:0 auto!important; padding:0!important; border:0!important; background:none!important; box-shadow:none!important;
+    pointer-events:none;
   }
-  @media(max-height:620px) {#battle #arena :is(#bluePhoto,#redPhoto){height:clamp(125px,23vh,167px)!important}}
-  @media(max-width:650px) {#battle #arena .fighters{gap:28px!important}#battle #arena .av-battle-vs1567{width:35px!important}}
+  #battle #top-stats-bar>.actions {gap:clamp(3px,.4vw,7px)!important; pointer-events:auto}
+  #battle #top-stats-bar .actions button {
+    font:700 clamp(10px,.91vw,16px)/1.15 'Segoe UI',Arial,sans-serif!important; min-height:29px!important;
+    border:1px solid #c8ebf0!important; border-radius:8px!important; background:linear-gradient(#26667f,#093b56)!important;
+    color:white!important; padding:4px clamp(5px,.55vw,11px)!important; box-shadow:0 2px 3px #17374780!important;
+  }
+  #battle .av-match-heading1567 {
+    position:absolute!important; z-index:3!important; grid-area:1/1!important; inset:auto 0 2%!important;
+    width:fit-content!important; max-width:37%!important; margin:0 auto!important;
+    display:flex!important; flex-direction:column!important; align-items:center!important; gap:2px!important; pointer-events:none;
+  }
+  #battle .av-match-info1567,#battle #mqGrandFinalBanner {
+    min-width:0!important; width:auto!important; max-width:100%!important; padding:2px 8px!important;
+    border:1px solid #e5bc64!important; border-radius:7px!important; background:#1c4153ef!important; margin:0!important; box-shadow:none!important;
+  }
+  #battle .av-match-info1567 strong,#battle #mqGrandFinalBanner .mq-gf-title {font:800 clamp(10px,.86vw,14px)/1.15 'Segoe UI',Arial,sans-serif!important}
+  #battle .av-match-info1567 small,#battle #mqGrandFinalBanner .mq-gf-score {font:600 clamp(9px,.76vw,13px)/1.15 'Segoe UI',Arial,sans-serif!important}
+  #battle .av-match-info1567 small,#battle #mqGrandFinalBanner .mq-gf-score {margin-top:1px!important}
+  #battle #turn,#battle #mqEventBanner {font-size:clamp(9px,.8vw,13px)!important;line-height:1.15!important;padding:2px 8px!important;min-height:0!important}
+  #battle #fullscreen-wrapper .qa {
+    grid-area:2/1!important; flex:none!important; z-index:2!important; width:100%!important; min-height:0!important; height:auto!important;
+    margin:0!important; padding:clamp(7px,1.3vh,17px) clamp(10px,2.4vw,42px)!important; gap:clamp(4px,.8vh,10px)!important;
+    border:3px solid #c18a2e!important; border-radius:clamp(15px,2.4vw,35px)!important;
+    background:radial-gradient(ellipse at top,#fffef8 20%,#fff6de 76%,#f3dcaa)!important;
+    box-shadow:inset 0 0 0 2px #ffefbc,0 -2px 0 #ffdc79!important; overflow:visible!important;
+  }
+  #battle #fullscreen-wrapper .qa #question {font-size:calc(clamp(21px,2.4vw,42px) * var(--av-t-question1557,1))!important;line-height:1.16!important;color:#102f50!important}
+  #battle #fullscreen-wrapper .qa #display:empty,#battle #fullscreen-wrapper .qa #battleMsg:empty {display:none!important}
+  #battle #fullscreen-wrapper .qa .timerRow {width:min(86%,1250px)!important; margin:0 auto!important; gap:6px!important; flex-shrink:0!important}
+  #battle #fullscreen-wrapper .qa .timerShell {height:clamp(13px,2.1vh,23px)!important; border:1px solid #b08b34!important; border-radius:999px!important; background:#e8ebcb!important}
+  #battle #fullscreen-wrapper .qa .timerBar {background:linear-gradient(#3ae72f,#05aa32)!important;border-radius:999px!important}
+  #battle #fullscreen-wrapper .qa .timerText {border:1px solid #bba95c!important; border-radius:999px!important; background:#fff5d5!important; color:#173f3c!important; padding:2px 10px!important; font-weight:800!important}
+  #battle #arena .name[data-gender]::after {
+    display:inline-flex!important;align-items:center;justify-content:center;flex:none;
+    width:1.25em;height:1.25em;border-radius:50%;font:800 clamp(10px,.85vw,14px)/1 'Segoe UI Symbol','Segoe UI',sans-serif;
+    background:#efeace;color:#4c4735;margin-left:2px;
+  }
+  #battle #arena .name[data-gender=male]::after {content:'♂'}
+  #battle #arena .name[data-gender=female]::after {content:'♀'}
+  #battle #arena #mqGrandFinalBanner {position:static!important;inset:auto!important;transform:none!important}
+  #battle #arena #mqEventBanner.av-hide-classic1567 {display:none!important}
+  #battle #arena #pause {z-index:8!important}
+  #tournamentRoster button.av-face-fit {position:relative!important;z-index:8!important;min-height:30px!important;margin:3px auto 0!important;padding:4px 10px!important;border:1px solid #86b5aa!important;border-radius:9px!important;background:#f1fbf6!important;color:#245548!important;font:700 13px/1.25 'Segoe UI',sans-serif!important}
+  @media(max-width:760px){
+    #battle #arena :is(#blueSide,#redSide) {--panel-width:94%;--panel-top:55px;--panel-height:36px}
+    #battle #arena {--performer-top:95px;--ground:12%}
+    #battle #top-stats-bar {max-width:98%!important;top:2px!important}
+    #battle #arena .av-battle-stats1567 {top:auto!important; bottom:2%!important; width:max-content!important; max-width:91%!important; min-height:23px!important}
+    #battle .av-match-heading1567 {max-width:31%!important}
+    #battle #arena .av-team-label1567 {padding:2px 12px!important}
+  }
+  @media(max-width:480px){
+    #battle #fullscreen-wrapper {grid-template-rows:minmax(280px,1fr) max-content!important}
+    #battle #arena :is(#blueSide,#redSide) {--panel-top:62px;--panel-height:34px}
+    #battle #arena {--performer-top:98px}
+    #battle #top-stats-bar .actions button {min-height:22px!important;padding:3px 4px!important;font-size:9px!important}
+    #battle #arena :is(#blueName,#redName) {font-size:12px!important;--rank-size:13px}
+    #battle #arena :is(#blueHpText,#redHpText) {font-size:10px!important}
+  }
 }
 #avFaceDialog1594{box-sizing:border-box;width:min(650px,95vw);max-height:90vh;overflow:auto;margin:auto;padding:18px 22px;border:2px solid #8bb7a5;border-radius:18px;background:#fffef7;color:#173e41;box-shadow:0 12px 60px #10252769;font:16px/1.4 'Segoe UI',Arial,sans-serif;text-align:left}
 #avFaceDialog1594::backdrop{background:#12363380}
@@ -74,3 +231,16 @@
 #avPackGrid img{width:52px;height:52px;object-fit:cover;border-radius:7px}
 #avPackGrid button[aria-pressed=true]{outline:2px solid #248c70;outline-offset:-2px}
 @media(max-width:490px){#avFaceDialog1594{padding:12px}#avFaceDialog1594 section{padding:6px}#avFaceDialog1594 .av-fit-grid{gap:6px}#avFaceSource{max-height:165px}}
+
+#avPlacement {margin-top:10px}
+#avPlacement summary{font-weight:700;cursor:pointer;color:#215a52}
+#avPlacement .av-fit-sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-top:6px}
+#avPlacement input{display:block;width:100%;accent-color:#176a57}
+#avPlacement output{float:right;font-variant-numeric:tabular-nums}
+#avResetPlacement{margin-top:5px}
+
+:is(#tournamentRoster,#avFaceDialog1594) .av-gender-picker {display:flex!important;justify-content:center!important;align-items:stretch!important;gap:4px!important;flex-wrap:wrap;padding:3px 0;position:relative;z-index:8}
+:is(#tournamentRoster,#avFaceDialog1594) .av-gender-picker button {min-width:0!important;min-height:30px!important;padding:3px 8px!important;border:1px solid #92aea9!important;border-radius:8px!important;background:#fffefa!important;color:#294b4c!important;font:700 12px/1.1 'Segoe UI',sans-serif!important;box-shadow:none!important;cursor:pointer!important}
+:is(#tournamentRoster,#avFaceDialog1594) .av-gender-picker button span {font:800 17px/1 'Segoe UI Symbol','Segoe UI',sans-serif;vertical-align:middle}
+:is(#tournamentRoster,#avFaceDialog1594) .av-gender-picker button[aria-pressed=true] {background:#11594e!important;border-color:#11594e!important;color:white!important;box-shadow:inset 0 0 0 1px #64a58e!important}
+:is(#tournamentRoster,#avFaceDialog1594) .av-gender-picker button:focus-visible {outline:3px solid #f1b23c!important;outline-offset:2px}

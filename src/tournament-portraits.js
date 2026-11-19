@@ -1,4 +1,4 @@
-/* Local photo fitting for the two front-facing 320 x 887 uniform plates. */
+/* Local photo fitting for the registered 320 x 887 uniform plates. */
 (() => {
   'use strict';
   const target = [
@@ -108,15 +108,20 @@
     const a=4*(iy*photo.w+ix)+ch,b=a+(ix+1<photo.w?4:0),row=iy+1<photo.h?4*photo.w:0;
     return (1-fy)*((1-fx)*photo.pixels[a]+fx*photo.pixels[b])+fy*((1-fx)*photo.pixels[a+row]+fx*photo.pixels[b+row]);
   }
-  function harmonize(data,points,portrait) {
+  function harmonize(data,points,portrait,side) {
     const cheeks=[average([points[12],points[16],points[18]]),average([points[4],points[17],points[18]])];
-    const gain=[217,162,124].map((v,c)=>clamp(cheeks.reduce((n,p)=>n+sample(portrait,p[0],p[1],c),0)/(2*v),.4,1.62));
+    const neck=[[148,190],[153,191],[157,188]].map(([x,y])=>4*(320*y+(side==='blue'?319-x:x)));
+    const gain=[0,1,2].map(c=>{
+      const litFace=cheeks.reduce((v,p)=>v+sample(portrait,p[0],p[1],c),0)/cheeks.length;
+      const plateNeck=neck.reduce((v,i)=>v+data[i+c],0)/neck.length;
+      return clamp(litFace*.88/Math.max(45,plateNeck),.51,1.6);
+    });
     for (let i=0;i<data.length;i+=4) {
       if (!data[i+3]) continue;
       const y=Math.floor(i/(4*320)),r=data[i],g=data[i+1],b=data[i+2];
       if (y>790 || r<45 || r<=g || g<=b) continue;
-      // Only warm skin hues. Reds in the skin exceed the red-green difference in the yellow shirt.
-      const hue=(r-g)/Math.max(1,r-b), coverage=clamp((hue-.25)*9,0,1)*clamp((.91-hue)*10,0,1);
+      const hue=(r-g)/Math.max(1,r-b);
+      const coverage=clamp((hue-.25)*9,0,1)*clamp((.91-hue)*10,0,1)*clamp((r-b-13)/20,0,1);
       for (let c=0;c<3;c++) data[i+c]*=1+coverage*(gain[c]-1);
     }
   }
@@ -149,12 +154,12 @@
   }
   // A plain school-photo backdrop lets us keep the actual hair, ears, expression and face shape.
   // Complex or tightly cropped backdrops use the fitted facial mesh instead.
-  function naturalHead(out,source,portrait,side,look) {
+  function naturalHead(out,source,portrait,side) {
     const eyes=average([source[16],source[17]]),chin=source[8];
     const dx=source[17][0]-source[16][0],dy=source[17][1]-source[16][1],span=Math.hypot(dx,dy);
     const ux=dx/span,uy=dy/span,down=(chin[1]-eyes[1])*ux-(chin[0]-eyes[0])*uy;
     if(down<8)return false;
-    const scale=75/down,center=side==='blue'?165:155;
+    const scale=.76*(75/down)+.24*clamp(47/span,.85*75/down,1.15*75/down),center=side==='blue'?165:155;
     const toSource=(x,y)=>[chin[0]+((x-center)*ux-(y-180)*uy)/scale,chin[1]+((x-center)*uy+(y-180)*ux)/scale];
     const colors=[];
     for(const x of [.04,.96]) for(const y of [.04,.17,.30,.43]){
@@ -163,7 +168,7 @@
     const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
     const background=[0,1,2].map(c=>colors.map(v=>v[c]).sort((a,b)=>a-b)[4]);
     const palette=colors.filter(v=>dist(v,background)<66);
-    if(palette.length<6 || toSource(center,16)[1]<1)return false;
+    if(palette.length<6 || toSource(center,25)[1]<-3)return false;
     const outline=source.slice(0,16).map(([x,y])=>[center+scale*((x-chin[0])*ux+(y-chin[1])*uy),180+scale*((y-chin[1])*ux-(x-chin[0])*uy)]);
     function inside(x,y) {
       let hit=false;
@@ -173,7 +178,7 @@
       }
       return hit;
     }
-    const width=196,height=212,left=center-width/2;
+    const width=232,height=264,left=center-width/2;
     const rgb=new Uint8ClampedArray(width*height*3),alpha=new Float32Array(width*height);
     let upperHair=0,outer=0;
     for(let y=0;y<height;y++)for(let col=0;col<width;col++){
@@ -194,22 +199,24 @@
       if(core)a=1;
       else if(y>110){
         // Let ears extend slightly past the measured jaw; long dark hair may extend farther.
-        const ear=Math.max(2,13-Math.abs(y-123)*.3);
+        const ear=Math.max(2,15-Math.abs(y-120)*.24);
+        const neckSkin=y>160 && fromCenter<32 && pixel[0]>pixel[2]+14 && pixel[0]>pixel[1]+4;
+        const neck=neckSkin?clamp((198-y)/12,0,1)*clamp((31-fromCenter)/7,0,1):0;
         const edge=clamp((ear+4-distanceToEdge(x,y,outline))/4,0,1);
         const hair=clamp((125-Math.max(...pixel))/35,0,1);
-        a*=Math.max(edge,hair);
+        a*=Math.max(edge,hair,neck);
       }
       // Preserve dark locks at the sides; feather the original neck into the neutral collar.
       if(y>172){
         const neckWidth=Math.max(12,32-(y-172)*.35);
-        const neck=clamp((neckWidth+3-fromCenter)/6,0,1)*clamp((193-y)/12,0,1);
-        const hair=clamp((122-Math.max(...pixel))/30,0,1)*clamp((fromCenter-19)/9,0,1)*clamp((210-y)/10,0,1);
+        const neck=clamp((neckWidth+3-fromCenter)/6,0,1)*clamp((198-y)/13,0,1);
+        const hair=clamp((122-Math.max(...pixel))/30,0,1)*clamp((fromCenter-19)/9,0,1)*clamp((254-y)/20,0,1);
         a*=Math.max(neck,hair,core?1:0);
       }
-      a*=clamp((95-fromCenter)/8,0,1)*clamp((y+1)/3,0,1);
+      a*=clamp((113-fromCenter)/11,0,1)*clamp((y+1)/3,0,1);
       alpha[offset]=a;
       if(y<60&&fromCenter<35&&a>.9)upperHair++;
-      if(y<100&&fromCenter>83&&a>.55)outer++;
+      if(y<90&&fromCenter>100&&a>.55)outer++;
     }
     if(upperHair<220||outer>430)return false;
     // Keep the connected head only; a shadow or another object on the wall cannot become hair.
@@ -224,16 +231,34 @@
     }
     for(let y=0;y<height;y++)for(let col=0;col<width;col++){
       const x=left+col,idx=4*(y*320+x),p=y*width+col;
-      const nativeX=side==='blue'?319-x:x;
-      if(y<180 || (look==='yellow' && nativeX>194 && y<180+(nativeX-194)*.5 && y<203))out[idx+3]=0;
       if(!connected[p])continue;
-      const a=alpha[p],old=out[idx+3]/255,opacity=a+old*(1-a);
-      for(let c=0;c<3;c++)out[idx+c]=(rgb[3*p+c]*a+out[idx+c]*old*(1-a))/opacity;
-      out[idx+3]=opacity*255;
+      const a=alpha[p];
+      for(let c=0;c<3;c++) out[idx+c]=rgb[3*p+c];
+      out[idx+3]=Math.round(a*255);
     }
     return true;
   }
-  async function render(look,side,portrait,normalized) {
+  function placement(value) {
+    const bounded=(key,min,max,fallback)=>Number.isFinite(value?.[key])?Math.round(clamp(value[key],min,max)):fallback;
+    return {size:bounded('size',90,112,100),x:bounded('x',-10,10,0),y:bounded('y',-8,8,0)};
+  }
+  // Split at the real neckline. The upper neck remains behind the moving head.
+  function separateHead(frame,head,side,look,usePlateHair) {
+    for(let y=0;y<204;y++)for(let x=0;x<320;x++){
+      const localX=side==='blue'?319-x:x,i=4*(y*320+x);
+      const ponytail=look==='yellow' && localX>194 && y<Math.min(203,180+(localX-194)*.5);
+      const mainHead=y<180 && (y<165 || Math.abs(localX-155)<64-(y-165)*1.5);
+      if(!ponytail&&!mainHead)continue;
+      if(usePlateHair)for(let c=0;c<4;c++)head[i+c]=frame[i+c];
+      if(y<163 || Math.abs(localX-155)>20) {
+        frame[i+3]=0;
+      } else {
+        const neck=4*(188*320+x);
+        for(let c=0;c<4;c++) frame[i+c]=frame[neck+c];
+      }
+    }
+  }
+  async function render(look,side,portrait,normalized,adjustment) {
     const body=await plate(look==='white'?'teal':look),el=canvas(320,887),ctx=el.getContext('2d',{willReadFrequently:true});
     if(side==='blue'){ctx.translate(320,0);ctx.scale(-1,1);}
     ctx.drawImage(body,0,0);ctx.resetTransform();
@@ -250,10 +275,19 @@
         frame.data[i]=white-2;frame.data[i+1]=white;frame.data[i+2]=Math.min(255,white+3);
       }
     }
-    harmonize(frame.data,source,portrait);
-    if(!naturalHead(frame.data,source,portrait,side,look)) compositeFace(frame.data,source,dest,portrait);
+    harmonize(frame.data,source,portrait,side);
+    const head=canvas(320,264),headContext=head.getContext('2d');
+    const layer=headContext.createImageData(head.width,head.height);
+    const hasHair=naturalHead(layer.data,source,portrait,side);
+    separateHead(frame.data,layer.data,side,look,!hasHair);
+    if(!hasHair)compositeFace(layer.data,source,dest,portrait);
+    headContext.putImageData(layer,0,0);
     ctx.putImageData(frame,0,0);
+    const fit=placement(adjustment),anchor=side==='blue'?165:155;
+    ctx.translate(anchor+(side==='blue'?-fit.x:fit.x),180+fit.y);
+    ctx.scale(fit.size/100,fit.size/100);
+    ctx.drawImage(head,-anchor,-180);
     return el.toDataURL('image/webp',.93);
   }
-  window.AVTournamentPortraits1594={photo,fit,fromPins,validPins,render};
+  window.AVTournamentPortraits1594={photo,fit,fromPins,validPins,render,placement};
 })();
