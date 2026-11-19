@@ -30,6 +30,14 @@ async function verifyTournament(page) {
   assert.equal(await f.locator('#avFaceLook').inputValue(),'skirt');
   await f.locator('#avFacePreview[data-face-state=ready]').waitFor({timeout:25000});
   assert.equal(await f.locator('#avFaceZoom').isVisible(),true);
+  const hairCoverage=await f.locator('#avFacePreview').evaluate(img=>{
+    const canvas=document.createElement('canvas');canvas.width=47;canvas.height=1;
+    const ctx=canvas.getContext('2d');ctx.drawImage(img,132,39,47,1,0,0,47,1);
+    const pixels=ctx.getImageData(0,0,47,1).data;
+    let covered=0;for(let i=3;i<pixels.length;i+=4)if(pixels[i]>240)covered++;
+    return covered/47;
+  });
+  assert.ok(hairCoverage>.90,'Original dark hair stays solid against a black photo backdrop');
   if(process.env.ARALVERSE_TOURNAMENT_SHOTS)await page.screenshot({path:process.env.ARALVERSE_TOURNAMENT_SHOTS+'-fit.png'});
   await f.locator('#avFaceLook').selectOption('skirt');
   await f.locator('#avFacePreview[data-face-state=ready]').waitFor();

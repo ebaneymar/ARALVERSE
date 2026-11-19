@@ -167,6 +167,7 @@
     }
     const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
     const background=[0,1,2].map(c=>colors.map(v=>v[c]).sort((a,b)=>a-b)[4]);
+    const darkBackdrop=Math.max(...background)<32;
     const palette=colors.filter(v=>dist(v,background)<66);
     if(palette.length<6 || toSource(center,25)[1]<-3)return false;
     const outline=source.slice(0,16).map(([x,y])=>[center+scale*((x-chin[0])*ux+(y-chin[1])*uy),180+scale*((y-chin[1])*ux-(x-chin[0])*uy)]);
@@ -186,7 +187,8 @@
       if(sx<1||sy<1||sx>=portrait.w-1||sy>=portrait.h-1)continue;
       const pixel=[0,1,2].map(c=>sample(portrait,sx,sy,c));rgb.set(pixel,offset*3);
       const fromCenter=Math.abs(x-center),colorGap=Math.min(...palette.map(v=>dist(pixel,v)));
-      let a=clamp((colorGap-24)/25,0,1);
+      // Dark hair can sit only a few color levels above a black studio backdrop.
+      let a=darkBackdrop?clamp((colorGap-3)/6,0,1):clamp((colorGap-24)/25,0,1);
       // A wall shadow has nearly the same chromaticity as the wall in direct light.
       const light=pixel[0]+pixel[1]+pixel[2],ref=background[0]+background[1]+background[2];
       const brightness=light/Math.max(1,ref);
