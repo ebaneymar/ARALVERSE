@@ -53,7 +53,6 @@ body.avle-editing1580 #petPauseBanner{display:none!important}
 .pet-scene[data-celebration] .pet-sheet{animation:none}
 .pet-scene[data-celebration] .pet-growth::after{display:none}
 .pet-scene[data-celebration] .food-bowl img{opacity:0}
-.pet-scene:is([data-celebration=owl],[data-celebration=carabao]) .food-bowl::after{content:'';position:absolute;inset:0;background:center/contain no-repeat url('pet-empty-bowl-1593.webp')}
 .pet-scene[data-celebration=puppy] .finish-bowl{display:block;left:27%;top:43%;width:35%;height:23%;background-image:url('pet-empty-bowl-1593.webp')}
 .pet-scene[data-celebration=puppy] .pet-performance{animation:pet-bring-bowl 1.8s ease-in-out both}
 .pet-scene[data-celebration=owl] .pet-performance{animation:pet-fly-to-branch 1.35s ease-in-out both}

@@ -44,3 +44,7 @@ The four transparent WebP props accompany the existing pet sprites. The built-in
 > Make a 2-by-2 transparent picture-book game sprite sheet for a Filipino schoolyard. Top left, an empty royal-blue bowl with a white paw and a gold rim. Top right, a short horizontal brown branch with green leaves at the right tip. Bottom left, a shallow cocoa-brown mud puddle. Bottom right, two outward arcs of muddy droplets. Use warm dark outlines and sunny upper-left light. Keep each object centered and separate, with no text or scenery.
 
 The packaged files are `pet-empty-bowl-1593.webp`, `pet-branch-1593.webp`, `pet-puddle-1593.webp`, and `pet-splash-1593.webp`.
+
+## v1.5.94
+
+The grass pile and sprig are for the carabao, and the crickets and leaf are for the owl. The two transparent Tournament uniform plates have their facial features removed. The renderer fits the active roster photo locally. The fictional portrait in the test fixtures is excluded from the game package.

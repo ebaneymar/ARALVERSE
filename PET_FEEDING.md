@@ -1,4 +1,4 @@
-# Pakainin ang mga Alaga — v1.5.90
+# Pakainin ang mga Alaga — v1.5.94
 
 Choose **Pakainin ang mga Alaga** from the game-mode menu. Nina, the girl in
 yellow from the user's story, is a selectable full-body character seen from
@@ -24,8 +24,7 @@ The manual layout editor can move/resize the new scene's character, pet, questio
 panel, and other objects. The live energy/hunger fills are excluded from resizing.
 
 The game-mode card uses the supplied illustration within the same standard card and thumbnail layout as the other modes. The activity has a
-wide Philippine schoolyard scene with a blue food bowl, a sad/happy puppy, and
-large question and answer panels. The puppy still grows after every feeding.
+wide Philippine schoolyard scene with large question and answer panels. The puppy receives kibble in a blue bowl, the owl receives crickets on a leaf, and the carabao receives fresh grass. Each toss also shows the selected pet’s food. The puppy still grows after every feeding.
 
 Use **FONT / LAKI NG TEKSTO** in setup, or **FONT** during play, to change the font
 family, title size, question size, answer size, label size, boldness, and text

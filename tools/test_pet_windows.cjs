@@ -80,6 +80,14 @@ const {_electron:electron}=require('./windows/node_modules/playwright');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avManualLayouts1580')&&JSON.parse(value)['petFeeding:petGame']?.items['#petFoodBowl']?.hidden===true),'Hidden object state reaches the real desktop save file');
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avClassroomProjector1593')&&value==='on'));
   assert.ok(Object.entries(saved.localStorage).some(([key,value])=>key.endsWith('avPetFeedingPreferencesV1')&&JSON.parse(value).hints===true));
+  await page.locator('[data-projector-tools]').click();await frame.locator('#petHome').click();
+  for(const [pet,food] of [['owl','pet-cricket-leaf-1594'],['carabao','pet-grass-1594']]){
+    await frame.locator('.pet-choice[data-pet='+pet+']').click();await frame.locator('#petStart').click();
+    assert.equal(await frame.locator('#petFoodBowl img').getAttribute('src'),'assets/'+food+'.webp');
+    await frame.locator('#petFoodBowl img').evaluate(img=>img.decode());await frame.locator('#petHome').click();
+  }
+  await page.locator('[data-projector-toggle]').click();
+  await require('./test_tournament_faces.cjs').verifyTournament(page);
   await running.close();running=null;
   console.log('PASS: real Windows EXE opens, feeds/grows, uses saved question order, layouts, fonts and bulk deletion, shows projector and clues, celebrates, reviews and persists teacher preferences.');
  }finally{

@@ -5,7 +5,11 @@
   const questions = window.AVSinglePlayerQuestions1582;
   const store = window.ARAL_STORAGE;
   const PREFS = 'avPetFeedingPreferencesV1', CHARACTERS = 'avPetFeedingCharactersV1';
-  const pets = { puppy: { name: 'Tuta', x: 0 }, owl: { name: 'Kuwago', x: 50 }, carabao: { name: 'Kalabaw', x: 100 } };
+  const pets = {
+    puppy: { name: 'Tuta', x: 0, food: 'pagkaing pang-aso', ground: 'pet-food-1583', toss: 'pet-food-1583', description: 'Pagkaing pang-aso sa asul na mangkok' },
+    owl: { name: 'Kuwago', x: 50, food: 'kuliglig', ground: 'pet-cricket-leaf-1594', toss: 'pet-cricket-1594', description: 'Mga kuliglig sa dahon para sa kuwago' },
+    carabao: { name: 'Kalabaw', x: 100, food: 'sariwang damo', ground: 'pet-grass-1594', toss: 'pet-grass-sprig-1594', description: 'Tumpok ng sariwang damo para sa kalabaw' }
+  };
   const nina = { id: 'nina', name: 'Nina', image: 'assets/nina-back-1582.webp' };
   const read = (key, fallback) => { try { return JSON.parse(store.getItem(key)) || fallback; } catch (_) { return fallback; } };
   const loadedCharacters = read(CHARACTERS, []);
@@ -33,7 +37,13 @@
     $('petHeroPreview').alt = hero().name === 'Nina' ? 'Nina sa dilaw na damit, tanaw mula sa likod' : 'Tauhang ' + hero().name;
   }
   function updatePetButtons() {
-    for (const button of document.querySelectorAll('[data-pet]')) button.setAttribute('aria-pressed', String(button.dataset.pet === pet));
+    for (const button of document.querySelectorAll('.pet-choice[data-pet]')) button.setAttribute('aria-pressed', String(button.dataset.pet === pet));
+    const food = pets[pet];
+    const serving = $('petFoodBowl').firstElementChild;
+    serving.src = 'assets/' + food.ground + '.webp';
+    serving.alt = food.description;
+    $('petFoodBowl').dataset.avLayoutObject = pet === 'puppy' ? 'Food bowl' : food.description;
+    $('petFoodToken').firstElementChild.src = 'assets/' + food.toss + '.webp';
   }
   function meters() {
     $('petEnergyLabel').textContent = 'Lakas ni ' + hero().name;
@@ -176,7 +186,7 @@
     if (choice === String(question.answer)) {
       phase = 'feeding'; feedbackCorrect = true;
       button.classList.add('correct');
-      $('petFeedback').textContent = `Tama! Nagbibigay si ${hero().name} ng pagkain at pag-aalaga.`;
+      $('petFeedback').textContent = `Tama! Nagbibigay si ${hero().name} ng ${pets[pet].food} sa ${pets[pet].name.toLowerCase()}.`;
       $('petThought').textContent = 'Salamat!';
       $('petHeroActor').classList.add('feeding'); $('petFoodToken').classList.remove('toss'); void $('petFoodToken').offsetWidth; $('petFoodToken').classList.add('toss');
       cue('correct'); controls();
@@ -211,7 +221,7 @@
   function back() {
     cancelAction(); pauses.clear(); phase = 'setup'; $('petGame').classList.remove('active'); $('petSetup').classList.add('active'); controls(); questions.refresh();
   }
-  for (const button of document.querySelectorAll('[data-pet]')) button.onclick = () => { pet = button.dataset.pet; updatePetButtons(); savePreferences(); };
+  for (const button of document.querySelectorAll('.pet-choice[data-pet]')) button.onclick = () => { pet = button.dataset.pet; updatePetButtons(); savePreferences(); };
   $('petHeroSelect').onchange = () => { heroId = $('petHeroSelect').value; updateHeroes(); savePreferences(); };
   $('petActivityName').value = typeof saved.activity === 'string' ? saved.activity.slice(0,70) : '';
   $('petActivityName').onchange = savePreferences;
@@ -238,7 +248,6 @@
   $('petSound').onclick = () => { sound = !sound; savePreferences(); controls(); };
   $('petFull').onclick = async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await $('fullscreen-wrapper').requestFullscreen(); } catch (_) {} };
   $('petQuestions').onclick = () => questions.open(false);
-  $('petFoodToken').innerHTML = '<img src="assets/pet-food-1583.webp" alt="">';
   $('petAddCharacter').onclick = () => { $('petCharacterForm').reset(); $('petCharacterStatus').textContent = ''; $('petCharacterDialog').showModal(); $('petCharacterName').focus(); };
   $('petCharacterCancel').onclick = () => { imageToken++; $('petCharacterDialog').close(); };
   $('petCharacterDialog').addEventListener('cancel', () => { imageToken++; });

@@ -48,7 +48,7 @@ sys.stdout.buffer.write(out.getvalue())`;
     const errors = []; page.on('pageerror', error => errors.push(error.message)); page.setDefaultTimeout(12000);
     await page.addInitScript(() => {
       if (window !== window.top) return;
-      window.mathAPangDesktop = { isDesktop:true, saveNow:async()=>({ok:true}), activation:{ status:async()=>({ state:'trial',canPlay:true,activated:false,remainingDays:7,deviceCode:'AV-00000000-00000000-00000000-00000000',trialEndsAt:Date.now()+604800000 }) }, updater:{ info:async()=>({version:'1.5.93',configured:false,config:{autoCheck:false}}),onProgress:()=>()=>{} } };
+      window.mathAPangDesktop = { isDesktop:true, saveNow:async()=>({ok:true}), activation:{ status:async()=>({ state:'trial',canPlay:true,activated:false,remainingDays:7,deviceCode:'AV-00000000-00000000-00000000-00000000',trialEndsAt:Date.now()+604800000 }) }, updater:{ info:async()=>({version:'1.5.94',configured:false,config:{autoCheck:false}}),onProgress:()=>()=>{} } };
     });
     const url = 'http://127.0.0.1:' + server.address().port + '/game.html';
     await page.goto(url); await page.waitForFunction(() => window.AVActivation1581?.getStatus().canPlay);
@@ -96,9 +96,24 @@ sys.stdout.buffer.write(out.getvalue())`;
     async function advance() {
       await frame.locator('#petQuestion').click(); await page.keyboard.press('Enter'); await frame.waitForSelector('body[data-phase=question]');
     }
-    async function feedFive(already = 0) {
+    const diets={puppy:['pet-food-1583','pet-food-1583','pang-aso'],owl:['pet-cricket-leaf-1594','pet-cricket-1594','kuliglig'],carabao:['pet-grass-1594','pet-grass-sprig-1594','damo']};
+    async function checkFood(pet) {
+      const [ground,toss,label]=diets[pet];
+      const plate=frame.locator('#petFoodBowl img'),token=frame.locator('#petFoodToken img');
+      assert.equal(await plate.getAttribute('src'),'assets/'+ground+'.webp');
+      assert.equal(await token.getAttribute('src'),'assets/'+toss+'.webp');
+      assert.match(await plate.getAttribute('alt'),new RegExp(label,'i'));
+      await Promise.all([plate.evaluate(img=>img.decode()),token.evaluate(img=>img.decode())]);
+    }
+    await checkFood('puppy');
+    async function feedFive(already = 0,pet = 'puppy') {
       for (let i=already; i<5; i++) {
-        await pick('5'); await frame.waitForFunction(count=>AVPetFeeding1582.getState().feeds===count, i+1);
+        await pick('5');
+        if(i===0){
+          await frame.locator('#petFoodToken.toss').waitFor({state:'attached'});
+          assert.match(await frame.locator('#petFeedback').textContent(),new RegExp(diets[pet][2],'i'));
+        }
+        await frame.waitForFunction(count=>AVPetFeeding1582.getState().feeds===count, i+1);
         if (i<4) await advance();
       }
     }
@@ -137,9 +152,11 @@ sys.stdout.buffer.write(out.getvalue())`;
       await tools.click(); await frame.locator('#petHome').click(); await frame.locator('.pet-choice[data-pet='+pet+']').click();
       await frame.locator('#petStart').click(); await tools.click();
       assert.equal(await frame.locator('#petSceneCanvas').getAttribute('data-celebration'),null);
-      await feedFive();
+      await checkFood(pet); await feedFive(0,pet);
       assert.equal(await frame.locator('#petSceneCanvas').getAttribute('data-celebration'),pet);
       assert.equal(await frame.locator('.finish-ground').isVisible(),true);
+      assert.equal(await frame.locator('.finish-bowl').isVisible(),false);
+      assert.doesNotMatch(await frame.locator('#petFoodBowl').evaluate(el=>getComputedStyle(el,'::after').backgroundImage),/bowl/);
       assert.equal(await frame.locator('#petReview').isVisible(),false);
       if (pet === 'carabao') assert.ok(await frame.locator('.finish-splash').isVisible());
       await captureCelebration(pet);

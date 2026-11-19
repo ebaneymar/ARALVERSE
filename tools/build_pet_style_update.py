@@ -1,4 +1,4 @@
-"""Build v1.5.93 from the exact published v1.5.82 package."""
+"""Build v1.5.94 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -7,9 +7,10 @@ import json
 from pathlib import Path
 import re
 import zipfile
+from tournament_assets import package_tournament, tournament_template
 from classroom_questions import add_editor_hints, add_import_hints
 
-VERSION = '1.5.93'
+VERSION = '1.5.94'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -66,6 +67,10 @@ def build(base, root, output):
     other_modes = ['PVE_SOURCE','PVP_SOURCE','TOURNAMENT_SOURCE','TEAM_TOURNAMENT_SOURCE','BOSS_SOURCE','PROGRESS_SOURCE']
     preserved_ranges = [packed_source(game,name)[1:] for name in other_modes]
     game = re.sub(r'1\.5\.82', lambda match: match.group() if any(start <= match.start() < end for start,end in preserved_ranges) else VERSION, game)
+    tournament, start, end = packed_source(game, 'TOURNAMENT_SOURCE')
+    tournament['template'] = tournament_template(tournament['template'], once)
+    game = game[:start] + encode(tournament) + game[end:]
+    package_tournament(files, root)
     files['app/game.html'] = game.encode('utf-8')
     files['app/main.js'] = once(files['app/main.js'].decode(), '"1.5.82"', json.dumps(VERSION)).encode()
     package = json.loads(files['app/package.json']); package['version'] = VERSION
@@ -73,6 +78,9 @@ def build(base, root, output):
     for source, destination in [('pet-feeding.js','pet-feeding-1583.js'),('pet-feeding.css','pet-feeding-1583.css'),('pet-fonts.js','pet-fonts-1583.js'),('single-player-questions.js','single-player-questions-1582.js')]:
         files['app/assets/' + destination] = (root / 'src' / source).read_bytes()
     for name in ['pet-garden-1583.webp','pet-food-1583.webp','puppy-emotions-1583.webp','pet-mode-card-1583.webp']:
+        files['app/assets/' + name] = (root / 'src/assets' / name).read_bytes()
+    for prop in ['grass', 'grass-sprig', 'cricket-leaf', 'cricket']:
+        name = f'pet-{prop}-1594.webp'
         files['app/assets/' + name] = (root / 'src/assets' / name).read_bytes()
     for prop in ['empty-bowl', 'branch', 'puddle', 'splash']:
         name = f'pet-{prop}-1593.webp'
@@ -89,8 +97,8 @@ def build(base, root, output):
   if(badge){badge.hidden=status.activated;if(status.activated)badge.style.setProperty('display','none','important');else badge.style.removeProperty('display')}
 ''')
     files['app/assets/activation-ui-1581.js'] = activation_ui.encode('utf-8')
-    # Other game modes remain byte-identical to the published base.
-    for name in other_modes:
+    # Only the Tournament portrait renderer and the pet activity change.
+    for name in (mode for mode in other_modes if mode != 'TOURNAMENT_SOURCE'):
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
     files['UPLOAD_INSTRUCTIONS.txt'] = f'ARALVERSE {VERSION}\nPublish this ZIP together with its exact update-manifest.json.\n'.encode()
     output.mkdir(parents=True, exist_ok=True)
@@ -104,6 +112,9 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
+        'Pakainin ang mga Alaga gives the puppy kibble, the carabao fresh grass, and the owl crickets on a leaf. The character tosses the matching food.',
+        'Tournament players appear as full-body characters with their own roster faces. Facial landmarks align each photo to the uniform and the edges blend on the device.',
+        'In the Tournament roster, choose Iayos ang mukha to preview the face, adjust its landmarks, or change the uniform. A missing photo shows a neutral silhouette.',
         'Pang-projector enlarges questions and answers across game modes. Gamit ng guro opens the classroom controls. Correct and incorrect choices show a check or cross.',
         'In Pakainin ang mga Alaga, enable Pahiwatig muna for a clue on the first miss. Enter optional clues in the Excel/CSV Pahiwatig column or in Question Editor.',
         'Each pet celebrates its fifth feeding. Use Balikan natin after Busog na to revisit a question that needed a clue and reveal the answer for discussion.',
@@ -115,7 +126,7 @@ def build(base, root, output):
         'Use Hide object / Show object in LAYOUT, or Delete while selecting an object, to hide it and restore it later. Hidden objects stay in the object list; Undo and saved layouts include their visibility.',
         'Move and resize one object without pushing nearby objects. The scene background, character, pet, food bowl, and question-box background are separate editable layers.',
         'Resizing text or a button keeps its original space in the layout. Save, Undo/Redo, Reset, and Cancel work with the independent object positions.',
-        'Feed the pet with a blue food bowl instead of hearts. The puppy becomes happy after feeding, grows with correct answers, and looks sad when hungry.',
+        'Feed the puppy with a blue food bowl. The puppy becomes happy after feeding, grows with correct answers, and looks sad when hungry.',
         'Use FONT in the activity to preview and save font family, title/question/answer/label sizes, boldness, and text color. Cancel or restore defaults anytime.',
         'Answer with A, B, or C for the left, middle, or right choice. Press Enter for the next question or retry. Shortcuts also work when focus is on the launcher.',
         'Other game modes, imported questions, classroom saves, manual layouts, device trial, and activation are retained.'
