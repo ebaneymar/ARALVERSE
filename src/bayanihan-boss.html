@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fil" data-av-mode="bayanihanBoss">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bayanihan Boss · ARALVERSE</title>
+<style>
+@font-face{font-family:'AV Modern UI';src:url('data:font/ttf;base64,@@AV_ASSET_1540_89@@') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:'AV Modern UI';src:url('data:font/ttf;base64,@@AV_ASSET_1540_90@@') format('truetype');font-weight:700 1000;font-display:swap}
+</style>
+<link rel="stylesheet" href="assets/bayanihan-boss.css">
+<script>window.ARAL_STORAGE=window.parent.ARAL_STORAGE;</script>
+__BAYANIHAN_CURRICULUM__
+</head>
+<body>
+<main>
+  <section id="setup" class="screen active" aria-labelledby="setupTitle">
+    <header class="arena welcome">
+      <div><h1 id="setupTitle">Bayanihan Boss</h1><p>Itaas ang sagot! Bawat batang tama ay bawas na <strong>10 HP</strong> sa boss.</p></div>
+      <img class="boss-sprite" src="assets/bayanihan-cloud.webp" alt="Boss na ulap na may kidlat">
+    </header>
+    <form id="setupForm" class="paper" novalidate>
+      <p id="lesson"></p>
+      <div class="settings-grid">
+        <label for="classSize">Ilang bata ang sasagot?
+          <input id="classSize" type="number" inputmode="numeric" min="1" step="1" required placeholder="Hal. 30">
+        </label>
+        <label for="difficulty">Lakas ng boss
+          <select id="difficulty">
+            <option value="3">Madali · 3 buong atake</option>
+            <option value="5" selected>Katamtaman · 5 buong atake</option>
+            <option value="7">Mahirap · 7 buong atake</option>
+          </select>
+        </label>
+      </div>
+      <small>Buong atake kapag tama ang sagot ng lahat.</small>
+      <div id="questionTools"></div>
+      <p id="setupError" class="error" role="alert"></p>
+      <button class="action" id="start" type="submit">Simulan ang laban</button>
+    </form>
+  </section>
+
+  <section id="game" class="screen" aria-labelledby="battleTitle" hidden>
+    <header class="arena battle-head">
+      <div><p id="roundLabel"></p><h1 id="battleTitle">Bayanihan Boss</h1>
+        <div class="boss-health"><progress id="bossHp" aria-label="HP ng boss" value="1" max="1"></progress><strong id="hpText"></strong></div>
+      </div>
+      <img class="boss-sprite" id="bossSprite" src="assets/bayanihan-cloud.webp" alt="">
+    </header>
+    <section class="paper question-area" aria-labelledby="questionPrompt">
+      <h2 id="questionPrompt" tabindex="-1"></h2>
+      <div id="equation" class="visual"></div>
+      <ol id="answers" aria-label="Mga pagpipilian"></ol>
+    </section>
+    <section class="paper teacher" aria-label="Kontrol ng guro">
+      <p id="feedback" role="status" aria-live="polite" tabindex="-1"></p>
+      <button id="reveal" class="action" type="button">Ipakita ang tamang sagot</button>
+      <form id="tally" novalidate hidden>
+        <label for="correctCount">Ilang bata ang tama?</label>
+        <div class="count-row">
+          <input id="correctCount" type="number" inputmode="numeric" min="0" step="1" required autocomplete="off" aria-describedby="countRange">
+          <span id="countRange"></span><output id="damagePreview" for="correctCount"></output>
+          <button id="attack" class="action" type="submit">Ilapat ang atake</button>
+        </div>
+      </form>
+      <p id="roundError" class="error" role="alert"></p>
+      <button id="next" class="action" type="button" hidden>Susunod na tanong</button>
+    </section>
+  </section>
+
+  <section id="result" class="screen" aria-labelledby="resultTitle" hidden>
+    <header class="arena welcome">
+      <div><h1 id="resultTitle" tabindex="-1">Panalo ang klase!</h1><p>Natalo ninyo ang Bayanihan Boss.</p></div>
+      <img class="boss-sprite" src="assets/bayanihan-cloud.webp" alt="">
+    </header>
+    <div class="paper"><p id="summary"></p><button id="again" type="button" class="action">Maglaro muli</button></div>
+  </section>
+</main>
+<script src="assets/single-player-questions-1582.js"></script>
+<script src="assets/bayanihan-boss.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-"""Build v1.5.97 from the exact published v1.5.82 package."""
+"""Build v1.5.98 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -10,7 +10,7 @@ import zipfile
 from tournament_assets import package_tournament, tournament_template
 from classroom_questions import add_editor_hints, add_import_hints
 
-VERSION = '1.5.97'
+VERSION = '1.5.98'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -27,6 +27,41 @@ def packed_source(game, name):
 
 def encode(value):
     return json.dumps(value, ensure_ascii=True, separators=(',', ':')).replace('</', '<\\/')
+
+
+def add_bayanihan_boss(game, root, files):
+    classic, _, _ = packed_source(game, 'BOSS_SOURCE')
+    engines = []
+    for name in ('mq-curriculum-engine-v190', 'aral-barangay-battle-engine-v120'):
+        match = re.search(fr'<script id="{name}">[\s\S]*?</script>', classic['template'])
+        assert match, 'Missing classroom curriculum script: ' + name
+        engines.append(match.group())
+    template = (root / 'src/bayanihan-boss.html').read_text(encoding='utf-8')
+    template = once(template, '__BAYANIHAN_CURRICULUM__', '\n'.join(engines))
+    packed = encode({'avPacked1540': True, 'template': template})
+    game = once(game, 'const BOSS_SOURCE = ', 'const BAYANIHAN_BOSS_SOURCE = ' + packed + ';\nconst BOSS_SOURCE = ')
+    tile = '''<button type="button" class="mode-card" id="bayanihanBossMode" style="--av-i:3" onclick="launchGame('bayanihanBoss')">
+        <span class="mode-art" aria-hidden="true"><img src="assets/bayanihan-cloud.webp" alt=""></span>
+        <strong>BAYANIHAN BOSS</strong><small>Itaas ang sagot. Bawat batang tama ay 10 damage sa boss.</small>
+        <span class="mode-play">PLAY →</span></button>'''
+    marker = '<button class="mode-card boss-card"'
+    game = once(game, marker, tile + '\n      ' + marker)
+    styles = '''<style>
+#modeMenu #bayanihanBossMode .mode-art{position:relative;background:radial-gradient(ellipse at center,#4e617f,#202b4d)!important;overflow:hidden}
+#modeMenu #bayanihanBossMode .mode-art img{display:block;width:100%;height:100%;object-fit:contain}
+</style>'''
+    game = once(game, '</head>', styles + '\n</head>')
+    for prefix, branch in [
+        ('const html = decodeHtml(', 'mode === "bayanihanBoss" ? BAYANIHAN_BOSS_SOURCE : '),
+        ('label.textContent = ', 'mode === "bayanihanBoss" ? "Bayanihan Boss" : '),
+        ('const modeName=', 'mode==="bayanihanBoss"?"BAYANIHAN BOSS":'),
+    ]:
+        existing = prefix + ('mode==="petFeeding"?' if prefix == 'const modeName=' else 'mode === "petFeeding" ?')
+        game = once(game, existing, prefix + branch + existing[len(prefix):])
+    for name in ('bayanihan-boss.js', 'bayanihan-boss.css'):
+        files['app/assets/' + name] = (root / 'src' / name).read_bytes()
+    files['app/assets/bayanihan-cloud.webp'] = (root / 'src/assets/bayanihan-cloud.webp').read_bytes()
+    return game
 
 
 def build(base, root, output):
@@ -71,6 +106,7 @@ def build(base, root, output):
     tournament['template'] = tournament_template(tournament['template'], once)
     game = game[:start] + encode(tournament) + game[end:]
     package_tournament(files, root)
+    game = add_bayanihan_boss(game, root, files)
     files['app/game.html'] = game.encode('utf-8')
     files['app/main.js'] = once(files['app/main.js'].decode(), '"1.5.82"', json.dumps(VERSION)).encode()
     package = json.loads(files['app/package.json']); package['version'] = VERSION
@@ -97,7 +133,7 @@ def build(base, root, output):
   if(badge){badge.hidden=status.activated;if(status.activated)badge.style.setProperty('display','none','important');else badge.style.removeProperty('display')}
 ''')
     files['app/assets/activation-ui-1581.js'] = activation_ui.encode('utf-8')
-    # Only the Tournament portrait renderer and the pet activity change.
+    # The cooperative activity uses a new template. Preserve existing battle templates.
     for name in (mode for mode in other_modes if mode != 'TOURNAMENT_SOURCE'):
         assert packed_source(files['app/game.html'].decode(),name)[0] == packed_source(original['app/game.html'].decode(),name)[0], name
     files['UPLOAD_INSTRUCTIONS.txt'] = f'ARALVERSE {VERSION}\nPublish this ZIP together with its exact update-manifest.json.\n'.encode()
@@ -112,6 +148,9 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
+        'Start Game → Bayanihan Boss lets the class raise their letter answers to a projected multiple-choice question. Choose a lesson and enter the number of participating pupils.',
+        'Reveal the correct choice, count the pupils who got it right, then apply the attack. Each correct pupil deals 10 damage. Zero correct deals zero damage. The teacher advances each question.',
+        'Bayanihan Boss supports built-in lessons and imported or teacher-edited questions. Choose an easy, medium or hard boss scaled to the size of your class.',
         'Layout now supports multi-select with Ctrl-click, Command-click, or the Multi-select objects control. Drag the selection or use the arrow keys to move it together.',
         'Each tournament HP bar moves with its player name, rank emblem, team tab, and gold plate. Enable Select small parts inside an object to edit an individual piece.',
         'The Avengers Series adds ten Tournament skins in both avatar styles. Each Tournament match medal unlocks one skin, starting with Iron Guard. Select Tournament skins on a player to equip it or switch back to their uniform.',
