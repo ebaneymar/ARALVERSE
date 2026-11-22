@@ -64,12 +64,12 @@
   const css = document.createElement('style');
   css.textContent = '.av-sp-questions1582{padding:13px 15px;margin:12px 0;background:#fffdf6;border:1px solid #b9d7cb;border-radius:15px;text-align:left;color:#234b47}.av-sp-questions1582 label{display:block;font-size:14px;font-weight:800;margin:0 0 6px}.av-sp-questions1582 .av-sp-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.av-sp-questions1582 select,.av-sp-questions1582 button{min-height:42px;font:inherit;font-size:14px;padding:8px 12px;border:1px solid #8db8ac;border-radius:9px;color:#174c45;background:white;cursor:pointer}.av-sp-questions1582 select{flex:1;min-width:180px}.av-sp-questions1582 button{font-weight:800;background:#e3f5ed}.av-sp-questions1582 p{font-size:12px;line-height:1.4;margin:7px 0 0;color:#4c6962}.av-sp-questions1582 p[data-error=true]{color:#a03725}';
   document.head.append(css);
-  function bind(host) {
+  function bind(host, sourceLabel = 'Single-player question source') {
     if (!host || host.querySelector('.av-sp-questions1582')) return;
     const box = document.createElement('section'); box.className = 'av-sp-questions1582';
     const label = document.createElement('label'); label.textContent = 'MGA TANONG / QUESTIONS';
     const tools = document.createElement('div'); tools.className = 'av-sp-tools';
-    const select = document.createElement('select'); select.id = 'av-sp-source-' + controls.size; label.htmlFor = select.id; select.setAttribute('aria-label', 'Single-player question source');
+    const select = document.createElement('select'); select.id = 'av-sp-source-' + controls.size; label.htmlFor = select.id; select.setAttribute('aria-label', sourceLabel);
     for (const [value, text] of [['builtin', 'Use Built-in Questions'], ['edited', 'Use Imported / Edited Questions']]) {
       const option = document.createElement('option'); option.value = value; option.textContent = text; select.append(option);
     }

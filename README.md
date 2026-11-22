@@ -1,5 +1,11 @@
 # ARALVERSE
 
+## Bayanihan Boss
+
+Open **Start Game → Bayanihan Boss**, enter the number of pupils answering, and choose the difficulty. The boss uses the selected lesson’s built-in questions or your imported questions.
+
+Project each question and have pupils hold up the letter of their answer. Select **Ipakita ang tamang sagot**, count the pupils holding up the correct letter, and enter the count under **Ilang bata ang tama?**. Select **Ilapat ang atake**. Each correct pupil deals 10 damage, so 12 correct pupils take 120 HP off the boss. Enter 0 if nobody was correct. Choose **Susunod na tanong** when the class is ready.
+
 ## Tournament players
 
 The schoolyard match shows each name, rank badge and live HP in the upper corners. Reward counters sit beside the players, with the question, countdown and answer buttons below.
