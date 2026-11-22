@@ -1,4 +1,4 @@
-/* ARALVERSE 1.5.90 — easier object selection; existing layout keys/API retained. */
+/* ARALVERSE 1.5.97 — individual, multiple and linked object selection; existing layout keys/API retained. */
 (() => {
   'use strict';
   const STORAGE_KEY = 'avManualLayouts1580';
@@ -30,6 +30,8 @@
     html body .avle-status[data-error=true]{color:#9a2431!important;background:#ffedf0!important;}
     html body .avle-outline{position:fixed!important;z-index:2147483646!important;pointer-events:none!important;box-sizing:border-box!important;border:2px solid #0ab3cb!important;background:#17bad014!important;margin:0!important;padding:0!important;transform:none!important;translate:none!important;box-shadow:0 0 0 1px #fff!important;}
     html body .avle-outline[hidden],html body .avle-hover[hidden]{display:none!important;}
+    html body.avle-editing1580 [data-avle-selected]{outline:2px dashed #087f8c!important;outline-offset:2px!important;}
+    html body .avle-outline[data-multiple] .avle-handle{display:none!important;}
     html body .avle-hover{position:fixed!important;z-index:2147483645!important;pointer-events:none!important;border:2px dashed #07889b!important;background:#17bad00a!important;margin:0!important;padding:0!important;}
     html body .avle-hover span{position:absolute!important;left:-2px!important;bottom:calc(100% + 4px)!important;max-width:260px!important;padding:4px 8px!important;border-radius:5px!important;background:#075a68!important;color:white!important;font-size:13px!important;line-height:1.3!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
     html body .avle-hover[data-below=true] span{bottom:auto!important;top:calc(100% + 4px)!important;}
@@ -100,7 +102,7 @@
   class LayoutEditor {
     constructor(doc,mode){
       this.doc=doc;this.win=doc.defaultView;this.mode=mode;this.base=new Map();this.overflowBase=new Map();
-      this.active=false;this.screen='';this.layout={fullWidth:false,items:{}};this.raf=0;this.drag=null;this.selection=null;
+      this.active=false;this.screen='';this.layout={fullWidth:false,items:{}};this.raf=0;this.drag=null;this.selection=null;this.selected=new Set();
       installStyle(doc);
       this.observer=new this.win.MutationObserver(()=>this.schedule());
       this.observer.observe(doc.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden']});
@@ -125,7 +127,7 @@
       }
       return layout;
     }
-    isHidden(el){return !!el&&this.layout.items[this.selector(el)]?.hidden===true}
+    isHidden(el){return !!el?.isConnected&&this.layout.items[this.selector(el)]?.hidden===true}
     visible(el,allowHidden=false){
       if(!el||!el.isConnected||el.closest('.avle-ui,.avle-settings-row,.avle-frame-entry,dialog,[role=dialog],#pause,#pauseOverlay'))return false;
       const restoreHidden=allowHidden&&this.isHidden(el);
@@ -264,7 +266,7 @@
       this.restoreFocus=this.doc.activeElement;this.release=this.pause();this.active=true;
       this.doc.body.classList.add('avle-editing1580');this.mount();this.apply();this.refreshList();
       const first=this.candidates().find(x=>x.id==='blueSide')||this.candidates().find(x=>x.matches('.qa,.question-area,.question-box'))||this.candidates()[0];
-      if(first)this.select(first);this.status('Move or resize one object. Other objects keep their place.');
+      if(first)this.select(first);
       this.capture=e=>this.onCapture(e);
       for(const type of ['pointerdown','pointermove','pointerup','pointercancel','click','dblclick','contextmenu','keydown','keyup','dragstart'])this.doc.addEventListener(type,this.capture,true);
       this.toolbar.querySelector('select').focus({preventScroll:true});
@@ -272,15 +274,22 @@
     mount(){
       const d=this.doc;
       this.toolbar=d.createElement('aside');this.toolbar.className='avle-ui avle-toolbar';this.toolbar.setAttribute('aria-label','Game layout editor');
-      this.toolbar.innerHTML=`<header title="Drag this header to move the editor"><strong>✥ Edit layout</strong><button type="button" data-action="pick" aria-pressed="false" title="Clear the panel, then click an object on the scene">Pick object</button><button type="button" data-action="minimize" aria-label="Collapse layout editor">−</button></header><div class="avle-content"><p>Click an object, then drag or resize it. Pick object clears this panel. Alt + click selects an object underneath.</p><label>Selected object<select aria-label="Selected object"></select></label><label class="avle-check"><input type="checkbox" data-detail> Select small parts inside an object</label><label class="avle-check"><input type="checkbox" data-groups> Select a group of objects</label><div class="avle-grid"><label>Left (X)<input type="number" data-field="x" step="1" aria-label="Left position"></label><label>Top (Y)<input type="number" data-field="y" step="1" aria-label="Top position"></label><label>Width<input type="number" data-field="w" min="16" step="1" aria-label="Object width"></label><label>Height<input type="number" data-field="h" min="16" step="1" aria-label="Object height"></label></div><p>Values are in pixels. Arrow keys move; Shift + arrows move 10 pixels. Delete hides the selected object.</p><label class="avle-check"><input type="checkbox" data-wide> Use full width · reduce side gaps</label><div class="avle-actions"><button type="button" data-action="hide">Hide object</button><button type="button" data-action="parent">Select parent</button><button type="button" data-action="reset">Reset object</button><button type="button" data-action="undo">Undo</button><button type="button" data-action="redo">Redo</button><button type="button" data-action="resetAll">Reset this screen</button></div><div class="avle-status" role="status" aria-live="polite"></div><div class="avle-actions"><button type="button" data-action="save">Save layout</button><button type="button" data-action="cancel">Cancel</button></div></div>`;
+      this.toolbar.innerHTML=`<header title="Drag this header to move the editor"><strong>✥ Edit layout</strong><button type="button" data-action="pick" aria-pressed="false" title="Clear the panel, then click an object on the scene">Pick object</button><button type="button" data-action="minimize" aria-label="Collapse layout editor">−</button></header><div class="avle-content"><p>Click an object to edit it. Ctrl or ⌘ + click adds or removes objects. Drag a selection to move it. Alt + click picks underneath.</p><label>Selected object<select aria-label="Selected object"></select></label><label class="avle-check"><input type="checkbox" data-multi> Multi-select objects</label><label class="avle-check"><input type="checkbox" data-detail> Select small parts inside an object</label><label class="avle-check"><input type="checkbox" data-groups> Select a group of objects</label><div class="avle-grid"><label>Left (X)<input type="number" data-field="x" step="1" aria-label="Left position"></label><label>Top (Y)<input type="number" data-field="y" step="1" aria-label="Top position"></label><label>Width<input type="number" data-field="w" min="16" step="1" aria-label="Object width"></label><label>Height<input type="number" data-field="h" min="16" step="1" aria-label="Object height"></label></div><p>Values are in pixels. Arrow keys move; Shift + arrows move 10 pixels. Delete hides the selected object.</p><label class="avle-check"><input type="checkbox" data-wide> Use full width · reduce side gaps</label><div class="avle-actions"><button type="button" data-action="hide">Hide object</button><button type="button" data-action="parent">Select parent</button><button type="button" data-action="reset">Reset object</button><button type="button" data-action="undo">Undo</button><button type="button" data-action="redo">Redo</button><button type="button" data-action="resetAll">Reset this screen</button></div><div class="avle-status" role="status" aria-live="polite"></div><div class="avle-actions"><button type="button" data-action="save">Save layout</button><button type="button" data-action="cancel">Cancel</button></div></div>`;
       this.outline=d.createElement('div');this.outline.className='avle-ui avle-outline';this.outline.hidden=true;
       this.hover=d.createElement('div');this.hover.className='avle-ui avle-hover';this.hover.hidden=true;this.hover.append(d.createElement('span'));this.hover.setAttribute('aria-hidden','true');
       for(const dir of ['nw','n','ne','e','se','s','sw','w']){const h=d.createElement('button');h.type='button';h.className='avle-handle';h.dataset.dir=dir;h.setAttribute('aria-label','Resize '+dir);this.outline.append(h)}
       (d.fullscreenElement||d.body).append(this.toolbar,this.outline,this.hover);
       this.toolbar.style.setProperty('left',Math.max(8,this.win.innerWidth-326)+'px','important');this.toolbar.style.setProperty('top','16px','important');
-      this.toolbar.querySelector('select').onchange=e=>{try{this.select(d.querySelector(e.target.value))}catch(_){}};
+      this.toolbar.querySelector('select').onchange=e=>{
+        if(e.target.value)this.select(d.querySelector(e.target.value),this.toolbar.querySelector('[data-multi]').checked);
+      };
+      this.toolbar.querySelector('[data-multi]').onchange=e=>{
+        if(e.target.checked)this.setSelection([]);
+        else if(this.selection)this.select(this.selection);
+      };
       for(const input of this.toolbar.querySelectorAll('[data-detail],[data-groups]'))input.onchange=()=>{
         this.listSignature='';
+        if(this.visible(this.selection,true)){this.select(this.selection);return}
         if(!this.visible(this.selection)){
           const object=this.selection?.closest('[data-av-layout-object]');this.selection=null;
           this.refreshList();const next=this.visible(object)?object:this.candidates().find(el=>el.id==='petArena')||this.candidates()[0];
@@ -335,27 +344,74 @@
       if(!this.toolbar)return;
       const list=this.candidates(),signature=list.map(x=>this.selector(x)).join('|');
       if(signature===this.listSignature)return;this.listSignature=signature;
-      const select=this.toolbar.querySelector('select'),value=this.selection?this.selector(this.selection):select.value;select.replaceChildren();
+      const select=this.toolbar.querySelector('select'),value=this.selection?.isConnected?this.selector(this.selection):select.value;select.replaceChildren();
+      const prompt=this.doc.createElement('option');prompt.value='';prompt.textContent='Choose an object';select.append(prompt);
       for(const el of list){const option=this.doc.createElement('option');option.value=this.selector(el);option.textContent=this.name(el)+(this.isHidden(el)?' · hidden':'');select.append(option)}
       if([...select.options].some(x=>x.value===value))select.value=value;
     }
-    select(el){if(!el||!this.visible(el,true))return;this.selection=el;this.refreshList();this.toolbar.querySelector('select').value=this.selector(el);this.updateOutline();this.status(this.name(el)+(this.isHidden(el)?' is hidden. Choose Show object to restore it.':' selected. Drag it or use the controls.'))}
+    selectionUnit(el){
+      const link=el.dataset.avLayoutLink;
+      if(!link||this.isHidden(el)||this.toolbar.querySelector('[data-detail]').checked)return [el];
+      return [...this.doc.querySelectorAll('[data-av-layout-link]')].filter(part=>part.dataset.avLayoutLink===link&&this.visible(part));
+    }
+    select(el,additive=false){
+      if(!this.visible(el,true))return;
+      const unit=this.selectionUnit(el);
+      if(!additive){this.setSelection(unit,el);return}
+      if(this.isHidden(el)){this.setSelection([el],el);return}
+      const members=new Set([...this.selected].filter(part=>this.visible(part)));
+      const remove=unit.every(part=>members.has(part));
+      for(const part of unit){if(remove)members.delete(part);else members.add(part)}
+      this.setSelection([...members],remove?null:el);
+    }
+    setSelection(members,primary){
+      for(const el of this.selected)el.removeAttribute('data-avle-selected');
+      this.selected=new Set(members);
+      this.selection=this.selected.has(primary)?primary:(members.at(-1)||null);
+      if(members.length>1)for(const el of members)el.setAttribute('data-avle-selected','');
+      this.refreshList();
+      const multi=this.toolbar.querySelector('[data-multi]').checked;
+      this.toolbar.querySelector('select').value=this.selection&&!multi?this.selector(this.selection):'';
+      this.updateOutline();
+      if(!this.selection){this.status('Choose objects on the scene or from the list.');return}
+      if(members.length>1){this.status(members.length+' objects selected. Drag any selected object or use X and Y to move them together.');return}
+      this.status(this.name(this.selection)+(this.isHidden(this.selection)?' is hidden. Choose Show object to restore it.':' selected.'));
+    }
+    bounds(){
+      const boxes=[...this.selected].filter(el=>el.isConnected).map(el=>el.getBoundingClientRect());
+      if(!boxes.length)return null;
+      const left=Math.min(...boxes.map(b=>b.left)),top=Math.min(...boxes.map(b=>b.top));
+      return {left,top,width:Math.max(...boxes.map(b=>b.right))-left,height:Math.max(...boxes.map(b=>b.bottom))-top};
+    }
+    moveMembers(){
+      // A selected parent already carries each of its children.
+      return [...this.selected].filter(el=>el.isConnected&&![...this.selected].some(parent=>parent!==el&&parent.contains(el)));
+    }
+    translate(members,dx,dy){
+      for(const el of members){
+        const item=this.entry(el);item.dx+=dx/this.win.innerWidth;item.dy+=dy/this.win.innerHeight;
+      }
+      this.apply();
+    }
     status(message,error=false){const node=this.toolbar?.querySelector('.avle-status');if(node){node.textContent=message;node.dataset.error=String(error)}}
     updateOutline(){
       if(!this.active||!this.outline)return;
       const hidden=this.isHidden(this.selection),available=this.visible(this.selection,true);
-      const hide=this.toolbar.querySelector('[data-action=hide]');hide.textContent=hidden?'Show object':'Hide object';hide.disabled=!available;
-      for(const field of this.toolbar.querySelectorAll('[data-field]'))field.disabled=!available||hidden;
+      const multiple=this.selected.size>1;
+      this.outline.toggleAttribute('data-multiple',multiple);
+      const hide=this.toolbar.querySelector('[data-action=hide]');hide.textContent=hidden?'Show object':'Hide object';hide.disabled=!available||multiple;
+      for(const action of ['parent','reset'])this.toolbar.querySelector('[data-action='+action+']').disabled=!available||multiple;
+      for(const field of this.toolbar.querySelectorAll('[data-field]'))field.disabled=!available||hidden||(multiple&&['w','h'].includes(field.dataset.field));
       this.toolbar.querySelector('[data-action=undo]').disabled=!this.undoStack?.length;this.toolbar.querySelector('[data-action=redo]').disabled=!this.redoStack?.length;
       if(this.picking&&!this.drag){this.outline.hidden=true;return}
       if(!this.selection?.isConnected||!this.visible(this.selection)){this.outline.hidden=true;return}
-      const r=this.selection.getBoundingClientRect();this.outline.hidden=false;
+      const r=this.bounds();this.outline.hidden=false;
       for(const[p,v]of Object.entries({left:r.left,top:r.top,width:r.width,height:r.height}))this.outline.style.setProperty(p,v+'px','important');
       const values={x:r.left+this.win.scrollX,y:r.top+this.win.scrollY,w:r.width,h:r.height};
       for(const field of this.toolbar.querySelectorAll('[data-field]'))if(this.doc.activeElement!==field)field.value=Math.round(values[field.dataset.field]);
     }
     checkpoint(){this.undoStack.push(copy(this.layout));if(this.undoStack.length>80)this.undoStack.shift();this.redoStack=[]}
-    entry(){const selector=this.selector(this.selection);return this.layout.items[selector]||(this.layout.items[selector]={dx:0,dy:0})}
+    entry(el=this.selection){const selector=this.selector(el);return this.layout.items[selector]||(this.layout.items[selector]={dx:0,dy:0})}
     anchor(left,top){
       if(!this.selection)return;
       const r=this.selection.getBoundingClientRect(),item=this.entry();
@@ -363,7 +419,13 @@
       if(Math.abs(dx)>.2||Math.abs(dy)>.2){item.dx+=dx/this.win.innerWidth;item.dy+=dy/this.win.innerHeight;this.apply()}
     }
     numeric(field,value){
-      if(!this.selection||!this.visible(this.selection)||!Number.isFinite(value))return;this.checkpoint();const r=this.selection.getBoundingClientRect(),item=this.entry();
+      if(!this.selection||!this.visible(this.selection)||!Number.isFinite(value))return;
+      if(this.selected.size>1){
+        if(field!=='x'&&field!=='y')return;
+        const r=this.bounds();this.checkpoint();
+        this.translate(this.moveMembers(),field==='x'?value-r.left-this.win.scrollX:0,field==='y'?value-r.top-this.win.scrollY:0);return;
+      }
+      this.checkpoint();const r=this.selection.getBoundingClientRect(),item=this.entry();
       if(field==='x')item.dx+=(value-r.left-this.win.scrollX)/this.win.innerWidth;
       if(field==='y')item.dy+=(value-r.top-this.win.scrollY)/this.win.innerHeight;
       if(field==='w')item.w=clamp(value,16,this.win.innerWidth*2)/this.win.innerWidth;
@@ -382,11 +444,11 @@
         if(e.type==='keyup')return;
         if(e.key==='Escape'){e.preventDefault();this.finish(false);return}
         if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();this.action(e.shiftKey?'redo':'undo');return}
-        if((e.key==='Delete'||e.key==='Backspace')&&this.selection){e.preventDefault();if(!e.repeat&&!this.isHidden(this.selection))this.action('hide');return}
+        if((e.key==='Delete'||e.key==='Backspace')&&this.selection){e.preventDefault();if(!e.repeat&&this.selected.size===1&&!this.isHidden(this.selection))this.action('hide');return}
         if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)&&this.selection&&this.visible(this.selection)){
           e.preventDefault();const h=handle?.dataset.dir;
           if(h){const r=this.selection.getBoundingClientRect();const step=e.shiftKey?10:1;this.numeric(e.key==='ArrowLeft'||e.key==='ArrowRight'?'w':'h',(e.key==='ArrowLeft'||e.key==='ArrowRight'?r.width:r.height)+(['ArrowRight','ArrowDown'].includes(e.key)?step:-step))}
-          else{this.checkpoint();const item=this.entry(),step=e.shiftKey?10:1;item.dx+=({'ArrowLeft':-step,'ArrowRight':step}[e.key]||0)/this.win.innerWidth;item.dy+=({'ArrowUp':-step,'ArrowDown':step}[e.key]||0)/this.win.innerHeight;this.apply()}
+          else{this.checkpoint();const step=e.shiftKey?10:1;this.translate(this.moveMembers(),{'ArrowLeft':-step,'ArrowRight':step}[e.key]||0,{'ArrowUp':-step,'ArrowDown':step}[e.key]||0)}
         }
         return;
       }
@@ -395,7 +457,9 @@
       }
       if(e.type==='pointermove'&&!this.drag){this.updateHover(handle?null:this.targetsAt(e.clientX,e.clientY)[0]);return}
       if(e.type==='pointerup'||e.type==='pointercancel'){
-        if(this.drag&&!this.drag.toolbar){e.preventDefault();e.stopImmediatePropagation();try{this.doc.documentElement.releasePointerCapture(e.pointerId)}catch(_){}this.drag=null;this.refreshList();this.updateOutline();if(this.picking)this.pick(false)}return;
+        if(this.drag&&!this.drag.toolbar){e.preventDefault();e.stopImmediatePropagation();try{this.doc.documentElement.releasePointerCapture(e.pointerId)}catch(_){}const gesture=this.drag;this.drag=null;
+          if(e.type==='pointerup'&&!gesture.moved&&gesture.reselect)this.select(gesture.target,gesture.additive);
+          this.refreshList();this.updateOutline();if(this.picking)this.pick(false)}return;
       }
       if(e.type!=='pointerdown'){if(['click','dblclick','contextmenu','dragstart'].includes(e.type)){e.preventDefault();e.stopImmediatePropagation()}return}
       if(e.button!==0)return;
@@ -406,16 +470,28 @@
         const hits=this.targetsAt(e.clientX,e.clientY);target=hits[e.altKey?(hits.indexOf(this.selection)+1)%hits.length:0];
       }
       if(!target||!this.visible(target))return;
-      this.updateHover(null);this.select(target);const r=target.getBoundingClientRect();
-      this.drag={pointer:e.pointerId,x:e.clientX,y:e.clientY,rect:r,initial:copy(this.layout.items[this.selector(target)]||{dx:0,dy:0}),dir:handle?.dataset.dir||'',moved:false};
-      this.doc.activeElement?.blur?.();this.doc.documentElement.setPointerCapture(e.pointerId);
+      this.updateHover(null);
+      const additive=e.ctrlKey||e.metaKey||this.toolbar.querySelector('[data-multi]').checked;
+      const already=this.selected.has(target);
+      if(!handle&&!already)this.select(target,additive);
+      const r=this.bounds();
+      if(!r)return;
+      this.doc.activeElement?.blur?.();
+      this.drag={pointer:e.pointerId,x:e.clientX,y:e.clientY,rect:r,target,additive,reselect:already&&!handle,members:this.moveMembers(),lastX:0,lastY:0,initial:copy(this.layout.items[this.selector(target)]||{dx:0,dy:0}),dir:handle?.dataset.dir||'',moved:false};
+      this.doc.documentElement.setPointerCapture(e.pointerId);
     }
     move(e){
       const g=this.drag;if(e.pointerId!==g.pointer)return;
       let dx=e.clientX-g.x,dy=e.clientY-g.y;
       if(!g.moved){if(Math.hypot(dx,dy)<5)return;this.checkpoint();g.moved=true}
       if(e.shiftKey){dx=Math.round(dx/10)*10;dy=Math.round(dy/10)*10}
-      const item=this.entry(),vw=this.win.innerWidth,vh=this.win.innerHeight,r=g.rect;
+      const vw=this.win.innerWidth,vh=this.win.innerHeight,r=g.rect;
+      if(!g.dir&&this.selected.size>1){
+        dx=clamp(dx,-r.left,Math.max(0,vw-r.width)-r.left);
+        dy=Math.max(-r.top-this.win.scrollY,dy);
+        this.translate(g.members,dx-g.lastX,dy-g.lastY);g.lastX=dx;g.lastY=dy;return;
+      }
+      const item=this.entry();
       if(!g.dir){
         dx=clamp(dx,-r.left,Math.max(0,vw-r.width)-r.left);
         dy=Math.max(-r.top-this.win.scrollY,dy);
@@ -456,7 +532,8 @@
       }else this.layout=copy(this.before);
       this.active=false;
       if(this.drag&&!this.drag.toolbar)try{this.doc.documentElement.releasePointerCapture(this.drag.pointer)}catch(_){}
-      this.drag=null;this.picking=false;this.doc.body.classList.remove('avle-editing1580');
+      for(const el of this.selected)el.removeAttribute('data-avle-selected');
+      this.selected.clear();this.drag=null;this.picking=false;this.doc.body.classList.remove('avle-editing1580');
       for(const type of ['pointerdown','pointermove','pointerup','pointercancel','click','dblclick','contextmenu','keydown','keyup','dragstart'])this.doc.removeEventListener(type,this.capture,true);
       this.toolbar?.remove();this.outline?.remove();this.hover?.remove();this.toolbar=null;this.outline=null;this.hover=null;this.selection=null;this.listSignature='';
       this.apply();this.release?.();this.release=null;this.restoreFocus?.focus?.({preventScroll:true});return true;
