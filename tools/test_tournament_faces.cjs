@@ -26,6 +26,29 @@ async function verifyTournament(page) {
   await f.waitForFunction(()=>JSON.parse(ARAL_STORAGE.getItem('avTournamentAppearance1594:test-1'))?.gender==='female'&&JSON.parse(ARAL_STORAGE.getItem('avTournamentAppearance1594:test-2'))?.gender==='male');
   await f.evaluate(()=>renderTournamentRoster());
   assert.equal(await female.getAttribute('aria-pressed'),'true');assert.equal(await male.getAttribute('aria-pressed'),'true');
+  const openSkins=()=>card('test-1').getByRole('button',{name:/Tournament skins/}).click();
+  const gallery=f.locator('#avTournamentSkins');
+  const choices=gallery.locator('[data-skin]');
+  await openSkins();
+  assert.equal(await choices.count(),10);
+  assert.equal(await gallery.locator('[data-skin]:disabled').count(),10);
+  await gallery.getByRole('button',{name:'Isara'}).click();
+  // The existing match-medal award is the same one the bracket calls on a win.
+  await f.evaluate(()=>addMatchMedal('test-1'));
+  await openSkins();
+  const iron=gallery.locator('[data-skin="iron-guard"]');
+  assert.equal(await iron.isEnabled(),true);
+  assert.equal(await gallery.locator('[data-skin]:disabled').count(),9);
+  assert.match(await iron.locator('img').getAttribute('src'),/iron-guard-female/);
+  await iron.click();
+  assert.equal(await iron.getAttribute('aria-pressed'),'true');
+  await gallery.getByRole('button',{name:'Isara'}).click();
+  await f.evaluate(()=>renderTournamentRoster());
+  await openSkins();
+  assert.equal(await iron.getAttribute('aria-pressed'),'true');
+  await gallery.getByRole('button',{name:'Gamitin ang uniporme'}).click();
+  assert.equal(await iron.getAttribute('aria-pressed'),'false');
+  await gallery.getByRole('button',{name:'Isara'}).click();
   await card('test-1').getByRole('button',{name:/Iayos ang mukha/}).click();
   assert.equal(await f.locator('#avFaceLook').inputValue(),'skirt');
   await f.locator('#avFacePreview[data-face-state=ready]').waitFor({timeout:25000});
@@ -105,6 +128,33 @@ async function verifyTournament(page) {
   await f.locator('#redPhoto[data-player-id="test-1"][data-face-state=ready]').waitFor();
   assert.equal(await f.locator('#blueName').getAttribute('data-gender'),'male');
   assert.notEqual(await f.locator('#redPhoto').getAttribute('src'),original);assert.match(await f.locator('#blueHpText').textContent(),/65/);assert.equal(await f.getByRole('meter',{name:/Manlalaro B/}).getAttribute('aria-valuenow'),'65');
+  const blueHp=f.locator('#blueHp');
+  assert.match(await blueHp.evaluate(el=>getComputedStyle(el).backgroundImage),/rgb\(22, 119, 215\)/);
+  for(const hp of [100,35,0]){
+    await f.evaluate(value=>{blue[0].hp=value;update();},hp);
+    await f.waitForFunction(expected=>{
+      const fill=document.getElementById('blueHp'),meter=fill.parentElement;
+      return meter.clientWidth>0 && meter.clientHeight>0 &&
+        Math.abs(fill.getBoundingClientRect().width/meter.clientWidth-expected/100)<.02 &&
+        meter.getAttribute('aria-valuenow')===String(expected);
+    },hp);
+  }
+  await f.evaluate(()=>{for(let i=0;i<10;i++)addMatchMedal('test-1');});
+  await f.evaluate(()=>show('tournamentSetup'));
+  await openSkins();
+  assert.equal(await gallery.locator('[data-skin]:disabled').count(),0);
+  await f.waitForFunction(()=>[...document.querySelectorAll('#avTournamentSkins img')].every(img=>img.naturalWidth>0));
+  await gallery.locator('[data-skin="ant-might"]').click();
+  if(process.env.ARALVERSE_TOURNAMENT_SHOTS)await page.screenshot({path:process.env.ARALVERSE_TOURNAMENT_SHOTS+'-collection.png'});
+  await gallery.getByRole('button',{name:'Isara'}).click();
+  await f.evaluate(()=>{show('battle');update();});
+  await f.locator('#redPhoto[data-skin="ant-might"]').waitFor();
+  assert.match(await f.locator('#redPhoto').getAttribute('src'),/ant-might-female/);
+  assert.equal(await f.locator('#bluePhoto').getAttribute('data-skin'),null);
+  await f.locator('#redPhoto').evaluate(img=>img.decode());
+  if(process.env.ARALVERSE_TOURNAMENT_SHOTS)await page.screenshot({path:process.env.ARALVERSE_TOURNAMENT_SHOTS+'-equipped.png'});
+  await f.evaluate(()=>{const saved=loadStudentRewards(); saved['test-1'].medals=1; saveStudentRewards(saved);update();});
+  await f.locator('#redPhoto:not([data-skin])[data-face-state="ready"]').waitFor();
   await f.evaluate(()=>{blue=[{id:'empty',name:'Bagong manlalaro',image:'',hp:100}];update();});
   await f.locator('#bluePhoto[data-face-state=missing]').waitFor();assert.ok(await f.locator('#blueFaceNote1594').isVisible());
   return f;
@@ -124,10 +174,10 @@ if(require.main===module)(async()=>{
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage'],...(process.env.ARALVERSE_BROWSER?{executablePath:process.env.ARALVERSE_BROWSER}:{})});
     const page=await browser.newPage({viewport:{width:1366,height:768}});page.setDefaultTimeout(12000);
     const errors=[];page.on('pageerror',e=>errors.push(e.message));
-    await page.addInitScript(()=>{if(window===window.top)window.mathAPangDesktop={isDesktop:true,saveNow:async()=>({ok:true}),activation:{status:async()=>({state:'trial',canPlay:true,activated:false,remainingDays:7})},updater:{info:async()=>({version:'1.5.95',configured:false,config:{autoCheck:false}}),onProgress:()=>()=>{}}};});
+    await page.addInitScript(()=>{if(window===window.top)window.mathAPangDesktop={isDesktop:true,saveNow:async()=>({ok:true}),activation:{status:async()=>({state:'trial',canPlay:true,activated:false,remainingDays:7})},updater:{info:async()=>({version:'1.5.96',configured:false,config:{autoCheck:false}}),onProgress:()=>()=>{}}};});
     await page.goto('http://127.0.0.1:'+server.address().port+'/game.html');await page.waitForFunction(()=>window.AVActivation1581?.getStatus().canPlay);
     await page.evaluate(()=>ARAL_STORAGE.setItem('mqCurriculumSelectionV190',JSON.stringify({term:'2',subject:'math',topic:'m2_subtraction'})));
     await verifyTournament(page);assert.deepEqual(errors,[]);
-    console.log('PASS: roster photo assignments, offline landmarks, five-point adjustment, both full-body players, swaps, HP, questions and missing-photo fallback.');
+    console.log('PASS: tournament skin locks, both roster styles, equipping and medal rollback, blue HP fill at full/partial/empty, roster faces, swaps and match questions.');
   }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}
 })().catch(e=>{console.error(e);process.exitCode=1;});

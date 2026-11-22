@@ -97,12 +97,22 @@
     height:100%!important; border-radius:999px!important; background:linear-gradient(#67ff59 0%,#20df39 40%,#08ae28 91%)!important;
     box-shadow:inset 0 1px 1px #f0ffa2!important; transition:width .32s ease!important;
   }
+  #battle #arena #blueHp {
+    background:linear-gradient(#49bdff 0%,#1677d7 45%,#0752a5 100%)!important;
+    box-shadow:inset 0 1px 1px #bcefff!important;
+  }
+  #battle #arena #blueSide>.hpShell {
+    background:linear-gradient(#192f50,#29496d)!important;
+  }
   #battle #arena :is(#blueHpText,#redHpText) {
     position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important;
     width:100%!important; height:100%!important; padding:0 2px!important; margin:0!important; white-space:nowrap!important;
     color:#082725!important; background:none!important; border:0!important;
     font:800 calc(clamp(12px,1.2vw,21px) * var(--av-t-menu1557,1))/1 'Segoe UI',Arial,sans-serif!important;
     font-variant-numeric:tabular-nums!important; text-shadow:0 1px 2px #f4ffc4a6!important;
+  }
+  #battle #arena #blueSide #blueHpText {
+    color:white!important; text-shadow:0 1px 2px #061b3e,0 0 2px #061b3e!important;
   }
   #battle #arena :is(#bluePhoto,#redPhoto) {
     position:absolute!important; inset:auto!important; z-index:1!important; bottom:var(--ground)!important;
@@ -244,3 +254,29 @@
 :is(#tournamentRoster,#avFaceDialog1594) .av-gender-picker button span {font:800 17px/1 'Segoe UI Symbol','Segoe UI',sans-serif;vertical-align:middle}
 :is(#tournamentRoster,#avFaceDialog1594) .av-gender-picker button[aria-pressed=true] {background:#11594e!important;border-color:#11594e!important;color:white!important;box-shadow:inset 0 0 0 1px #64a58e!important}
 :is(#tournamentRoster,#avFaceDialog1594) .av-gender-picker button:focus-visible {outline:3px solid #f1b23c!important;outline-offset:2px}
+
+#avTournamentSkins {
+  box-sizing:border-box; width:min(720px,94vw); max-height:90vh; padding:clamp(14px,3vw,26px);
+  overflow:auto; color:#f6f8ff; background:#101c32; border:1px solid #446184;
+  border-radius:18px; font:16px/1.35 "Segoe UI",Arial,sans-serif;
+}
+#avTournamentSkins::backdrop {background:#081221bd}
+#avTournamentSkins header,#avTournamentSkins footer {display:flex;align-items:center;justify-content:space-between;gap:12px}
+#avTournamentSkins h2 {font:800 clamp(22px,4vw,30px)/1.1 "Segoe UI",sans-serif;color:#ffdc80;margin:0}
+#avTournamentSkins p {margin:4px 0;color:#d7e6fa}
+#avTournamentSkins button {font:inherit;color:inherit;cursor:pointer}
+#avTournamentSkins .av-skin-close,#avTournamentSkins .av-skin-uniform {background:#243956;border:1px solid #748eab;border-radius:8px;padding:6px 12px}
+#avTournamentSkins .av-skin-close {font-size:24px;line-height:1}
+#avTournamentSkins .av-skin-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,105px),1fr));gap:8px;margin:16px 0}
+#avTournamentSkins .av-skin-grid button {
+  min-width:0;display:grid;justify-items:center;align-content:start;gap:3px;padding:7px 4px 9px;
+  border:1px solid #4d6b90;border-radius:10px;background:linear-gradient(#243d61,#182b45);
+}
+#avTournamentSkins .av-skin-grid img {display:block;width:100%;height:95px;object-fit:contain}
+#avTournamentSkins strong {font-size:14px}
+#avTournamentSkins small {font-size:12px;color:#c4d4e8}
+#avTournamentSkins .av-skin-grid button[aria-pressed=true] {border-color:#ffda78;box-shadow:inset 0 0 0 2px #ffda78}
+#avTournamentSkins button:disabled {cursor:default}
+#avTournamentSkins button:disabled img {opacity:.66}
+#avTournamentSkins button:focus-visible {outline:3px solid white;outline-offset:2px}
+#avTournamentSkins footer {flex-wrap:wrap;font-size:14px}

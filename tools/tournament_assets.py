@@ -48,6 +48,9 @@ def package_tournament(files, root):
     yard = 'tournament-schoolyard-1595.webp'
     files[prefix + yard] = (root / 'src/assets' / yard).read_bytes()
     files[prefix + 'tournament-art-1594.js'] = assignment('AVTournamentArt1594', art)
+    for image in sorted((root / 'src/assets/tournament-skins').glob('*.webp')):
+        files[prefix + 'tournament-skins/' + image.name] = image.read_bytes()
+    files[prefix + 'tournament-skins.js'] = (root / 'src/tournament-skins.js').read_bytes()
     for source in ('tournament-portraits.js', 'tournament-players.js', 'tournament-players.css'):
         stem, extension = source.rsplit('.', 1)
         files[prefix + stem + '-1594.' + extension] = (root / 'src' / source).read_bytes()
@@ -57,6 +60,7 @@ def tournament_template(template, once):
     assets = ('<link rel="stylesheet" href="assets/tournament-players-1594.css">'
               '<script src="assets/tournament-art-1594.js"></script>'
               '<script src="assets/tournament-portraits-1594.js"></script>'
+              '<script src="assets/tournament-skins.js"></script>'
               '<script src="assets/tournament-players-1594.js"></script>')
     template = once(template, '<head>', '<head>' + assets)
     start = '  $("bluePhoto").onerror=function(){this.onerror=null;this.src=MQ_BATTLE_PLACEHOLDER};'

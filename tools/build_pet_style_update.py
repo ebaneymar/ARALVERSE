@@ -1,4 +1,4 @@
-"""Build v1.5.95 from the exact published v1.5.82 package."""
+"""Build v1.5.96 from the exact published v1.5.82 package."""
 import argparse
 from datetime import date
 import hashlib
@@ -10,7 +10,7 @@ import zipfile
 from tournament_assets import package_tournament, tournament_template
 from classroom_questions import add_editor_hints, add_import_hints
 
-VERSION = '1.5.95'
+VERSION = '1.5.96'
 BASE_SHA256 = 'ede5d588f50f6c336b6ed0d2dfe644700e75761ddf29c4c1ec5307c891378c2c'
 
 
@@ -112,6 +112,8 @@ def build(base, root, output):
     manifest = {'app':'ARALVERSE','version':VERSION,'published':str(date.today()),'packageType':'app',
       'downloadUrl':f'https://raw.githubusercontent.com/ebaneymar/ARALVERSE/main/{package.name}?sha256={digest}',
       'sha256':digest,'size':len(raw),'notes':[
+        'The Avengers Series adds ten Tournament skins in both avatar styles. Each Tournament match medal unlocks one skin, starting with Iron Guard. Select Tournament skins on a player to equip it or switch back to their uniform.',
+        'The blue player now has a blue HP fill with a dark track that shows the health lost.',
         'Tournament battles use the schoolyard layout with full-height players, live name and HP panels at the top, reward counters alongside, and questions, answer choices and timer below.',
         'Select Lalaki or Babae on each roster card to set a polo with shorts or a blouse with a pleated skirt. The choice is saved per student and shown beside their name.',
         'Face fitting now blends the actual jaw, neck and hair into the collar. Adjust head size and placement for each pupil on the device.',
