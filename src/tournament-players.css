@@ -37,7 +37,8 @@
     inset:0 0 0 auto!important; --team:#c52e29; --team-dark:#8e231e; --team-gloss:#f45742; --wash:#ffebe1;
     --panel-left:calc(96.5% - var(--panel-width));
   }
-  #battle #arena .side::before {
+  #battle #arena .side::before {content:none!important}
+  #battle #arena .side>.av-nameplate {
     content:""!important; position:absolute!important; z-index:2!important; inset:auto!important;
     left:var(--panel-left)!important; top:var(--panel-top)!important; width:var(--panel-width)!important;
     height:var(--panel-height)!important; border-radius:999px!important; box-sizing:border-box!important;

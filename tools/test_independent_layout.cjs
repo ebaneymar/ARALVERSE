@@ -161,6 +161,62 @@ const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<2,`${m
   await page.locator('#avleLauncher1580').click();const redBefore=await rects(['#redSide']);const blueBox=await frame.locator('#blueSide').boundingBox();
   await edit('#blueSide','h',Math.round(blueBox.height+45));await unchanged(redBefore,'Other battle player stays in place');
   await frame.locator('[data-action=cancel]').click();
+  // On the actual tournament screen, a nameplate is linked by default.
+  const meter='#blueSide > .hpShell',rank='#blueName .mq-v163-rank-icon';
+  const nameplate=['#blueName',rank,meter,'#blueHpText','#blueNameplate','#blueSide .av-team-label1567'];
+  const stationary=['#bluePhoto','#redName','#redSide > .hpShell','#redNameplate'];
+  const hudBefore=await rects(nameplate),otherBefore=await rects(stationary);
+  const delta=async(before,dx,dy,label)=>{
+    const after=await rects(Object.keys(before));
+    for(const key of Object.keys(before)){
+      near(after[key].x,before[key].x+dx,label+' X '+key);
+      near(after[key].y,before[key].y+dy,label+' Y '+key);
+    }
+  };
+  async function dragObject(selector,dx,dy,fractionX=.5){
+    const box=await frame.locator(selector).boundingBox(),x=box.x+box.width*fractionX,y=box.y+box.height/2;
+    await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+dx,y+dy,{steps:5});await page.mouse.up();
+  }
+  await page.locator('#avleLauncher1580').click();
+  await dragObject(meter,32,17,.14);
+  await delta(hudBefore,32,17,'Dragging the HP bar carries the nameplate');
+  await delta(otherBefore,0,0,'Other player and characters stay put');
+  assert.equal(await frame.locator('[data-avle-selected]').count(),4);
+  await frame.locator('[data-action=undo]').click();await delta(hudBefore,0,0,'Undo whole panel');
+  await frame.locator('[data-action=redo]').click();await delta(hudBefore,32,17,'Redo whole panel');
+  await frame.locator('[data-action=save]').click();
+  await page.locator('#avleLauncher1580').click();
+  await delta(hudBefore,32,17,'Saved linked positions');
+  // Small-parts mode can move a single HP shell, with its live value inside.
+  await frame.locator('[data-detail]').check();
+  const hpKey=await frame.locator(meter).evaluate(el=>AVLayoutEditor1580.selector(el));
+  await frame.locator('.avle-toolbar select').selectOption(hpKey);
+  const meterNow=await rects([meter,'#blueHpText']),nameNow=await rects(['#blueName',rank,'#blueNameplate']);
+  const y=frame.locator('[data-field=y]');await y.fill(String(Number(await y.inputValue())+18));await y.press('Tab');
+  await delta(meterNow,0,18,'Individual HP edit');await delta(nameNow,0,0,'Name and emblem independent');
+  await frame.locator('[data-action=cancel]').click();await delta(hudBefore,32,17,'Cancel individual edit');
+
+  await page.locator('#avleLauncher1580').click();
+  await frame.locator('[data-multi]').check();
+  const picked=['#bluePhoto','#blueStats1567'];
+  const beforeMulti=await rects(picked);
+  const choose=frame.locator('.avle-toolbar select');
+  for(const id of picked)await choose.selectOption(id);
+  assert.equal(await frame.locator('[data-avle-selected]').count(),2);
+  const groupX=frame.locator('[data-field=x]');
+  await groupX.fill(String(Math.round(Number(await groupX.inputValue()))+15));await groupX.press('Tab');
+  await delta(beforeMulti,15,0,'Multi-select numeric movement');
+  await dragObject('#bluePhoto',10,7);await delta(beforeMulti,25,7,'Drag an already selected member');
+  await page.keyboard.press('ArrowDown');await delta(beforeMulti,25,8,'Arrow key moves the entire selection');
+  await choose.selectOption(picked[1]);
+  assert.equal(await frame.evaluate(()=>AVLayoutEditor1580.selected.size),1);
+  await frame.locator('[data-multi]').uncheck();
+  const statsBox=await frame.locator('#blueStats1567').boundingBox();
+  await page.mouse.move(statsBox.x+5,statsBox.y+statsBox.height/2);
+  await page.keyboard.down('Control');await page.mouse.down();await page.mouse.up();await page.keyboard.up('Control');
+  assert.equal(await frame.evaluate(()=>AVLayoutEditor1580.selected.size),2,'Ctrl-click adds a member');
+  await frame.locator('[data-action=cancel]').click();await delta(beforeMulti,0,0,'Cancel group moves');
+  await delta(hudBefore,32,17,'Previous saved nameplate remains positioned');
   await page.evaluate(async()=>{const current=AVActivation1581.getStatus();mathAPangDesktop.activation.status=async()=>({...current,state:'activated',activated:true,canPlay:true});await AVActivation1581.refresh()});
   assert.equal(await page.locator('#avActivationBadge1581').isVisible(),false,'Activated devices have no floating activation badge');
   assert.match(await page.locator('#avActivationSettings1581 [data-av-activation-status]').textContent(),/Activated/,'Activation status remains in Settings');

@@ -13,3 +13,7 @@ To use a private class photo pack, open **Mga larawan ng klase → Buksan ang ph
 Photos are processed on the classroom device. A player without a usable photo appears as a neutral silhouette until the teacher adds or aligns a photo.
 
 Choose **Tournament skins** on a roster card to see that player's Avengers Series collection. Each tournament match medal unlocks the next skin in poster order, from Iron Guard at one win to Ant-Might at ten. Select an unlocked skin to wear its illustrated avatar in matches. The roster's Lalaki / Babae choice selects its artwork. **Gamitin ang uniporme** restores the player's uniform and fitted roster photo.
+
+## Moving tournament panels in Layout
+
+Drag either player's HP bar to move its name, rank emblem, team tab and gold plate together. To edit a single piece, enable **Select small parts inside an object**. For other combinations, Ctrl-click (Command-click on Mac), or enable **Multi-select objects** and choose objects on the scene or from the list. Drag any selected object, use the arrow keys, or set X and Y to move the selection. Choose **Save layout** to keep the positions.

@@ -296,6 +296,13 @@
       $(team+'Name').dataset.avLayoutObject=label+' player name';
       const meter=$(team+'Hp').parentElement;
       meter.dataset.avLayoutObject=label+' HP bar';
+      // Keep the existing live elements and their saved selectors in place.
+      const plate=document.createElement('span');
+      plate.id=team+'Nameplate';plate.className='av-nameplate';plate.setAttribute('aria-hidden','true');
+      plate.dataset.avLayoutObject=label+' nameplate background';side.append(plate);
+      for(const part of [plate,meter,$(team+'Name'),side.querySelector('.av-team-label1567')]){
+        part.dataset.avLayoutLink=team+'-nameplate';
+      }
       const stats=$(team+'Stats1567');
       stats.dataset.avLayoutObject=label+' player stats';
       stats.setAttribute('role','group');
