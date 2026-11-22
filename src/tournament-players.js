@@ -63,7 +63,8 @@
   function paint(side,person) {
     if(!person) return;
     const img=$(side+'Photo'),name=mqBattleLabel(person,side),url=rosterPhoto(person),prefs=settings(person.id);
-    const previous=current.get(img),saved=JSON.stringify(prefs);
+    const skin=window.AVTournamentSkins.equipped(person.id);
+    const previous=current.get(img),saved=JSON.stringify([prefs,skin?.id]);
     const meter=$(side+'Hp').parentElement;
     meter.setAttribute('role','meter');
     meter.setAttribute('aria-label','HP · '+name);
@@ -78,7 +79,7 @@
     }
     if(choice){nameEl.dataset.gender=prefs.gender;nameEl.title=name+' · '+choice.label;}
     else{delete nameEl.dataset.gender;nameEl.title=name;}
-    img.alt='Tauhan ni '+name;
+    img.alt=skin?name+' · '+skin.name:'Tauhan ni '+name;
     if(previous?.url===url && previous.id===person.id && previous.saved===saved) return;
     const request={url,id:person.id,saved};current.set(img,request);
     img.dataset.avLayoutObject=side==='blue'?'Blue player character':'Red player character';
@@ -87,6 +88,13 @@
     let note=$(side+'FaceNote1594');
     if(!note){note=document.createElement('small');note.id=side+'FaceNote1594';note.className='av-face-note';$(side+'Side').append(note);}
     function status(state){img.dataset.faceState=state;note.textContent=notes[state];note.hidden=!notes[state];}
+    if(skin){
+      img.dataset.skin=skin.id;
+      img.src=window.AVTournamentSkins.image(skin,prefs.gender);
+      status('ready');
+      return;
+    }
+    delete img.dataset.skin;
     status(url?'pending':'missing');
     img.src=art[prefs.look]||art.teal;
     if(!url) return;
@@ -315,7 +323,8 @@
             showGender(group,settings(person.id).gender);
           }catch(error){showGender(group,settings(person.id).gender);window.alert(error.message);}
         });
-        card.append(picker,button);
+        const skins=window.AVTournamentSkins.rosterButton(person,()=>settings(person.id).gender);
+        card.append(picker,button,skins);
       });
     }
     new MutationObserver(decorate).observe(host,{childList:true});decorate();
